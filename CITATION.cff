@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+title: LipoScope
+type: software
+authors:
+  - family-names: Cildir
+    given-names: Selin
+version: 1.0.0
+date-released: 2026-08-03
+repository-code: https://github.com/LipoScope/LipoScope_v1.0.0
+url: https://github.com/LipoScope/LipoScope_v1.0.0
+license: MIT
+keywords:
+  - lipoedema
+  - lipedema
+  - PubMed
+  - CCRF
+  - research software
+message: Please cite the accompanying LipoScope manuscript and the exact software version used.

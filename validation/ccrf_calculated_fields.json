@@ -1,0 +1,419 @@
+{
+  "ccrf_version": "Version 1",
+  "schema_version": "ccrf-source-schema-1.0.2",
+  "policy": "Execute only an exact official CCRF calculation expression after its REDCap behaviour is validated. The current official dictionaries mark calculated fields but provide blank calculation expressions, so LipoScope does not calculate those values.",
+  "calculated_rows_across_cumulative_dictionaries": 37,
+  "unique_calculated_variables": [
+    "age",
+    "age_onset",
+    "beight_49under",
+    "beight_over50",
+    "beighton_score",
+    "bmi",
+    "she_current_calc",
+    "she_current_percep",
+    "she_prior_calc",
+    "she_prior_percep",
+    "soaal_rapprich",
+    "waist_height_ratio",
+    "waist_hip_ratio"
+  ],
+  "official_expression_rows": 0,
+  "classifications": {
+    "exploratory": {
+      "calculated_rows": 13,
+      "official_expression_rows": 0,
+      "rows": [
+        {
+          "variable": "age",
+          "label": "<font color=\"#ff0000\">Age (Hidden)</font>",
+          "form": "Record Information",
+          "section": "Record Information",
+          "source_row": 6,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "beighton_score",
+          "label": "Total Score",
+          "form": "Diagnostics/Symptoms",
+          "section": "Diagnostics/Symptoms questions",
+          "source_row": 93,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "beight_over50",
+          "label": "<p>Result</p>",
+          "form": "Diagnostics/Symptoms",
+          "section": "Diagnostics/Symptoms questions",
+          "source_row": 94,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "beight_49under",
+          "label": "<p>Result</p>",
+          "form": "Diagnostics/Symptoms",
+          "section": "Diagnostics/Symptoms questions",
+          "source_row": 95,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "bmi",
+          "label": "BMI Calculated",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 104,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "waist_hip_ratio",
+          "label": "<font color=\"#ff0000\">Waist to Hip Ratio WHR</font>",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 118,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "waist_height_ratio",
+          "label": "<font color=\"#ff0000\">Waist to Height Ratio WHtR</font>",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 119,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "age_onset",
+          "label": "Age (hidden)",
+          "form": "Participant Questionnaire",
+          "section": "Symptoms/Experience",
+          "source_row": 233,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "soaal_rapprich",
+          "label": "<font color=\"#ff0000\">Rapprich score</font>",
+          "form": "Participant Questionnaire",
+          "section": "Symptoms/Experience",
+          "source_row": 318,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_current_calc",
+          "label": "Average Score of Current Acceptance",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 679,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_current_percep",
+          "label": "Average Score of Current Perception",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 680,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_prior_calc",
+          "label": "Average Score of Prior Acceptance",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 688,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_prior_percep",
+          "label": "Average Score of Prior Perception",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 689,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        }
+      ]
+    },
+    "supplemental": {
+      "calculated_rows": 10,
+      "official_expression_rows": 0,
+      "rows": [
+        {
+          "variable": "age",
+          "label": "<font color=\"#ff0000\">Age (Hidden)</font>",
+          "form": "Record Information",
+          "section": "Record Information",
+          "source_row": 6,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "bmi",
+          "label": "BMI Calculated",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 89,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "waist_hip_ratio",
+          "label": "<font color=\"#ff0000\">Waist to Hip Ratio WHR</font>",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 103,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "waist_height_ratio",
+          "label": "<font color=\"#ff0000\">Waist to Height Ratio WHtR</font>",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 104,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "age_onset",
+          "label": "Age (hidden)",
+          "form": "Participant Questionnaire",
+          "section": "Symptoms/Experience",
+          "source_row": 204,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "soaal_rapprich",
+          "label": "<font color=\"#ff0000\">Rapprich score</font>",
+          "form": "Participant Questionnaire",
+          "section": "Symptoms/Experience",
+          "source_row": 289,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_current_calc",
+          "label": "Average Score of Current Acceptance",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 641,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_current_percep",
+          "label": "Average Score of Current Perception",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 642,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_prior_calc",
+          "label": "Average Score of Prior Acceptance",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 650,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_prior_percep",
+          "label": "Average Score of Prior Perception",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 651,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        }
+      ]
+    },
+    "supplemental_highly_recommended": {
+      "calculated_rows": 10,
+      "official_expression_rows": 0,
+      "rows": [
+        {
+          "variable": "age",
+          "label": "<font color=\"#ff0000\">Age (Hidden)</font>",
+          "form": "Record Information",
+          "section": "Record Information",
+          "source_row": 6,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "bmi",
+          "label": "BMI Calculated",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 89,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "waist_hip_ratio",
+          "label": "<font color=\"#ff0000\">Waist to Hip Ratio WHR</font>",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 103,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "waist_height_ratio",
+          "label": "<font color=\"#ff0000\">Waist to Height Ratio WHtR</font>",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 104,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "age_onset",
+          "label": "Age (hidden)",
+          "form": "Participant Questionnaire",
+          "section": "Symptoms/Experience",
+          "source_row": 171,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "soaal_rapprich",
+          "label": "<font color=\"#ff0000\">Rapprich score</font>",
+          "form": "Participant Questionnaire",
+          "section": "Symptoms/Experience",
+          "source_row": 210,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_current_calc",
+          "label": "Average Score of Current Acceptance",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 436,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_current_percep",
+          "label": "Average Score of Current Perception",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 437,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_prior_calc",
+          "label": "Average Score of Prior Acceptance",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 445,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "she_prior_percep",
+          "label": "Average Score of Prior Perception",
+          "form": "Participant Questionnaire",
+          "section": "Quality of Life",
+          "source_row": 446,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        }
+      ]
+    },
+    "core": {
+      "calculated_rows": 4,
+      "official_expression_rows": 0,
+      "rows": [
+        {
+          "variable": "age",
+          "label": "<font color=\"#ff0000\">Age (Hidden)</font>",
+          "form": "Record Information",
+          "section": "Record Information",
+          "source_row": 6,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "bmi",
+          "label": "BMI Calculated",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 86,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "waist_hip_ratio",
+          "label": "<font color=\"#ff0000\">Waist to Hip Ratio WHR</font>",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 100,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        },
+        {
+          "variable": "waist_height_ratio",
+          "label": "<font color=\"#ff0000\">Waist to Height Ratio WHtR</font>",
+          "form": "Measurements",
+          "section": "Measurements",
+          "source_row": 101,
+          "official_expression": null,
+          "expression_available": false,
+          "liposcope_action": "leave unavailable; do not infer or substitute a formula"
+        }
+      ]
+    }
+  },
+  "passed": true
+}

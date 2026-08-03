@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+node_modules/
+playwright-report/
+test-results/
+
+# Preserve directory guides while excluding release-specific network snapshots by default.
+data/molecular_signal_atlas/raw/*
+!data/molecular_signal_atlas/raw/README.md
+data/molecular_signal_atlas/intermediate/*
+!data/molecular_signal_atlas/intermediate/README.md
+
+# Creator-supplied corpus exports may be large; release maintainers explicitly add frozen files.
+data/molecular_signal_atlas/input/*
+!data/molecular_signal_atlas/input/README.md

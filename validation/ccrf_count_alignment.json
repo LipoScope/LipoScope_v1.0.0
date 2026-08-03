@@ -1,0 +1,86 @@
+{
+  "source_url": "https://www.lipedema.org/ccrf",
+  "source_accessed_date": "2026-08-02",
+  "count_definitions": {
+    "official_cdes": "Published CDE count for each cumulative CCRF classification.",
+    "dictionary_rows": "Rows in the corresponding REDCap implementation workbook, including response fields, instructions, calculations, identifiers and other technical rows.",
+    "completion_denominator": "Currently applicable required response fields; identifiers excluded from browser storage are reported separately."
+  },
+  "classifications": {
+    "core": {
+      "official_cdes": 288,
+      "clinical_cdes": 86,
+      "participant_cdes": 202,
+      "dictionary_rows": 300,
+      "response_rows": 284,
+      "required_response_rows_before_branching": 266,
+      "checks": {
+        "official_total_matches_source": true,
+        "clinical_count_matches_source": true,
+        "participant_count_matches_source": true,
+        "clinical_plus_participant_equals_total": true,
+        "dictionary_metadata_matches_fields": true,
+        "response_metadata_matches_fields": true,
+        "required_response_metadata_matches_fields": true
+      },
+      "passed": true
+    },
+    "supplemental_highly_recommended": {
+      "official_cdes": 424,
+      "clinical_cdes": 89,
+      "participant_cdes": 335,
+      "dictionary_rows": 445,
+      "response_rows": 414,
+      "required_response_rows_before_branching": 394,
+      "checks": {
+        "official_total_matches_source": true,
+        "clinical_count_matches_source": true,
+        "participant_count_matches_source": true,
+        "clinical_plus_participant_equals_total": true,
+        "dictionary_metadata_matches_fields": true,
+        "response_metadata_matches_fields": true,
+        "required_response_metadata_matches_fields": true
+      },
+      "passed": true
+    },
+    "supplemental": {
+      "official_cdes": 618,
+      "clinical_cdes": 89,
+      "participant_cdes": 529,
+      "dictionary_rows": 650,
+      "response_rows": 608,
+      "required_response_rows_before_branching": 585,
+      "checks": {
+        "official_total_matches_source": true,
+        "clinical_count_matches_source": true,
+        "participant_count_matches_source": true,
+        "clinical_plus_participant_equals_total": true,
+        "dictionary_metadata_matches_fields": true,
+        "response_metadata_matches_fields": true,
+        "required_response_metadata_matches_fields": true
+      },
+      "passed": true
+    },
+    "exploratory": {
+      "official_cdes": 682,
+      "clinical_cdes": 120,
+      "participant_cdes": 562,
+      "dictionary_rows": 739,
+      "response_rows": 682,
+      "required_response_rows_before_branching": 642,
+      "checks": {
+        "official_total_matches_source": true,
+        "clinical_count_matches_source": true,
+        "participant_count_matches_source": true,
+        "clinical_plus_participant_equals_total": true,
+        "dictionary_metadata_matches_fields": true,
+        "response_metadata_matches_fields": true,
+        "required_response_metadata_matches_fields": true
+      },
+      "passed": true
+    }
+  },
+  "cumulative_dictionary_rows_across_four_workbooks": 2134,
+  "passed": true,
+  "cumulative_count_note": "The four classifications are cumulative and overlap. The summed dictionary-row count is a technical reconciliation total, not a count of unique CDEs."
+}

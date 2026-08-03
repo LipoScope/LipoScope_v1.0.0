@@ -1,0 +1,14 @@
+{
+  "measure": "Cumulative REDCap data-dictionary rows across four overlapping CCRF classifications",
+  "rows": 2134,
+  "matched": 2134,
+  "different": 0,
+  "official_cdes_by_classification": {
+    "exploratory": 682,
+    "supplemental": 618,
+    "supplemental_highly_recommended": 424,
+    "core": 288
+  },
+  "counting_note": "Dictionary-row reconciliation is a technical implementation check. The classifications overlap and the row total is not a count of unique CCRF CDEs.",
+  "passed": true
+}

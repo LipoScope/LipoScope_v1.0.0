@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "navigation_mode": "set_content_fallback",
+  "tabs": {
+    "resources": true,
+    "browse": true,
+    "live": true,
+    "analytics": true,
+    "ccrf": true,
+    "about": true
+  },
+  "structure": {
+    "ccrf_panel": true,
+    "builder": true,
+    "gap_radar": true,
+    "dictionary_export": true,
+    "section_order": true
+  },
+  "ccrf": {
+    "core": {
+      "official_count": true,
+      "split": true,
+      "dictionary_rows": true,
+      "meta": true,
+      "render_count": true,
+      "completion_denominator": true,
+      "no_inferred_calc": true
+    },
+    "supplemental_highly_recommended": {
+      "official_count": true,
+      "split": true,
+      "dictionary_rows": true,
+      "meta": true,
+      "render_count": true,
+      "completion_denominator": true,
+      "no_inferred_calc": true
+    },
+    "supplemental": {
+      "official_count": true,
+      "split": true,
+      "dictionary_rows": true,
+      "meta": true,
+      "render_count": true,
+      "completion_denominator": true,
+      "no_inferred_calc": true
+    },
+    "exploratory": {
+      "official_count": true,
+      "split": true,
+      "dictionary_rows": true,
+      "meta": true,
+      "render_count": true,
+      "completion_denominator": true,
+      "no_inferred_calc": true
+    },
+    "self_tests": true,
+    "inactive_retention": true
+  },
+  "page_errors": [],
+  "console_errors": []
+}

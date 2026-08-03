@@ -1,0 +1,9 @@
+{
+  "generated_at": "2026-08-03T12:09:53+00:00",
+  "schema_embedded_exactly": true,
+  "template_matches": true,
+  "release_copy_matches": true,
+  "html_sha256": "a528d4134ec16ccb84021ca9a749187090a6ba94c0430042ac4bef45f8bb25c9",
+  "schema_sha256": "8f80d7e35f153ab4c2c443bd8d2e5ea5df0c6edbe8b0e690c1815a8ef07dbf6c",
+  "passed": true
+}

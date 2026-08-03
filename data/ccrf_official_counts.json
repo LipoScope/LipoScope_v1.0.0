@@ -1,0 +1,40 @@
+{
+  "source_title": "Lipedema Foundation Common Case Report Form (CCRF)",
+  "source_url": "https://www.lipedema.org/ccrf",
+  "accessed_date": "2026-08-02",
+  "definition": "Official website counts of substantive common data elements (CDEs), reported separately from technical REDCap data-dictionary rows.",
+  "classifications": {
+    "core": {
+      "label": "Core",
+      "official_cdes": 288,
+      "clinical_cdes": 86,
+      "participant_cdes": 202,
+      "estimated_minutes_clinical": 13,
+      "estimated_minutes_participant": 16
+    },
+    "supplemental_highly_recommended": {
+      "label": "Supplemental Highly Recommended",
+      "official_cdes": 424,
+      "clinical_cdes": 89,
+      "participant_cdes": 335,
+      "estimated_minutes_clinical": 13,
+      "estimated_minutes_participant": 19
+    },
+    "supplemental": {
+      "label": "Supplemental",
+      "official_cdes": 618,
+      "clinical_cdes": 89,
+      "participant_cdes": 529,
+      "estimated_minutes_clinical": 13,
+      "estimated_minutes_participant": 42
+    },
+    "exploratory": {
+      "label": "Exploratory (Complete CCRF)",
+      "official_cdes": 682,
+      "clinical_cdes": 120,
+      "participant_cdes": 562,
+      "estimated_minutes_clinical": 18,
+      "estimated_minutes_participant": 45
+    }
+  }
+}

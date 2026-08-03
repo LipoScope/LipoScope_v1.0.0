@@ -1,0 +1,103 @@
+{
+  "generated_at": "2026-08-03T12:09:53+00:00",
+  "application_version": "v1.0.0",
+  "html_sha256": "a528d4134ec16ccb84021ca9a749187090a6ba94c0430042ac4bef45f8bb25c9",
+  "ccrf": {
+    "version": "Version 1",
+    "classifications": {
+      "exploratory": {
+        "official_cdes": 682,
+        "clinical_cdes": 120,
+        "participant_cdes": 562,
+        "dictionary_rows": 739
+      },
+      "supplemental": {
+        "official_cdes": 618,
+        "clinical_cdes": 89,
+        "participant_cdes": 529,
+        "dictionary_rows": 650
+      },
+      "supplemental_highly_recommended": {
+        "official_cdes": 424,
+        "clinical_cdes": 89,
+        "participant_cdes": 335,
+        "dictionary_rows": 445
+      },
+      "core": {
+        "official_cdes": 288,
+        "clinical_cdes": 86,
+        "participant_cdes": 202,
+        "dictionary_rows": 300
+      }
+    }
+  },
+  "automated_tests": {
+    "passed": 35,
+    "failed": 0
+  },
+  "browser_test": {
+    "passed": true,
+    "navigation_mode": "set_content_fallback",
+    "tabs": {
+      "resources": true,
+      "browse": true,
+      "live": true,
+      "analytics": true,
+      "ccrf": true,
+      "about": true
+    },
+    "structure": {
+      "ccrf_panel": true,
+      "builder": true,
+      "gap_radar": true,
+      "dictionary_export": true,
+      "section_order": true
+    },
+    "ccrf": {
+      "core": {
+        "official_count": true,
+        "split": true,
+        "dictionary_rows": true,
+        "meta": true,
+        "render_count": true,
+        "completion_denominator": true,
+        "no_inferred_calc": true
+      },
+      "supplemental_highly_recommended": {
+        "official_count": true,
+        "split": true,
+        "dictionary_rows": true,
+        "meta": true,
+        "render_count": true,
+        "completion_denominator": true,
+        "no_inferred_calc": true
+      },
+      "supplemental": {
+        "official_count": true,
+        "split": true,
+        "dictionary_rows": true,
+        "meta": true,
+        "render_count": true,
+        "completion_denominator": true,
+        "no_inferred_calc": true
+      },
+      "exploratory": {
+        "official_count": true,
+        "split": true,
+        "dictionary_rows": true,
+        "meta": true,
+        "render_count": true,
+        "completion_denominator": true,
+        "no_inferred_calc": true
+      },
+      "self_tests": true,
+      "inactive_retention": true
+    },
+    "page_errors": [],
+    "console_errors": []
+  },
+  "python_syntax_errors": [],
+  "static_html_validation_passed": true,
+  "deterministic_rebuild_passed": true,
+  "passed": true
+}

@@ -1,0 +1,38 @@
+ccrf_version: Version 1
+schema_version: ccrf-source-schema-1.0.2
+schema_generated_at: "2026-08-02T10:05:00+00:00"
+official_counts_snapshot: data/ccrf_official_counts.json
+official_page: https://www.lipedema.org/ccrf
+terms_url: https://www.lipedema.org/terms-of-use
+sources:
+  exploratory:
+    url: https://www.lipedema.org/s/CCRF-Exploratory-DataDictionary.xlsx
+    filename: CCRF_Exploratory_DataDictionary.xlsx
+    sha256: a9b4817136b70e670ac93f0ff9d10bb36735479f232e382e825db128bc409ac8
+    expected_rows: 739
+    bytes: 126959
+  supplemental:
+    url: https://www.lipedema.org/s/CCRF-Supplemental-DataDictionary.xlsx
+    filename: CCRF_Supplemental_DataDictionary.xlsx
+    sha256: d9b6c8bb4ff07be0e63d4fb82cf91a5d301a80db0a23ce89a7565151f80cea69
+    expected_rows: 650
+    bytes: 115829
+  supplemental_highly_recommended:
+    url: https://www.lipedema.org/s/CCRF-Supplemental-HR-DataDictionary.xlsx
+    filename: CCRF_Supplemental_Highly_Recommended_DataDictionary.xlsx
+    sha256: 5bcfd2130ffd6e27fe92e5dd561b440c710011cdcc37fa65d598b56c71037255
+    expected_rows: 445
+    bytes: 105521
+  core:
+    url: https://www.lipedema.org/s/CCRF-Core-DataDictionary.xlsx
+    filename: CCRF_Core_DataDictionary.xlsx
+    sha256: d507515eb1bf677f444cad03010ff8dc8dcae82986e5bfc25c9bf94dd0151765
+    expected_rows: 300
+    bytes: 94699
+
+crosscheck_sources:
+  all_classifications_crosscheck:
+    url: https://www.lipedema.org/s/Lipedema-CCRF-All-Classifications.xlsx
+    filename: Lipedema_CCRF_All_Classifications_official.xlsx
+    sha256: c72b3b391cdd29a43e218d928a6a1cd2e5c90c3b49986d589499968153f938af
+    bytes: 1033075

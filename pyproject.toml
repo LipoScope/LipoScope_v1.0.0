@@ -1,0 +1,10 @@
+[project]
+name = "liposcope-release"
+version = "1.0.0"
+requires-python = ">=3.12,<3.14"
+description = "Build, CCRF source-alignment and validation workflow for LipoScope"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = ["browser: Playwright browser tests"]
