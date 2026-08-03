@@ -32,7 +32,7 @@ def main()->int:
     # Keep template and both distributed copies identical.
     for path in [template_path,Path(args.output),Path(args.release_output)]:
         path.parent.mkdir(parents=True,exist_ok=True)
-        path.write_text(updated,encoding='utf-8')
+        path.write_text(updated,encoding='utf-8',newline='\n')
         print(f'Wrote {path}')
     return 0
 if __name__=='__main__':raise SystemExit(main())

@@ -19,7 +19,7 @@ def test_ccrf_embed_script_preserves_distributed_copies(tmp_path):
     template=tmp_path/'template.html'
     output=tmp_path/'LipoScope.html'
     release=tmp_path/'release.html'
-    template.write_text((ROOT/'templates/LipoScope.template.html').read_text(encoding='utf-8'),encoding='utf-8')
+    template.write_bytes((ROOT/'templates/LipoScope.template.html').read_bytes())
     subprocess.run([sys.executable,str(ROOT/'scripts/ccrf/08_embed_ccrf_schema.py'),'--template',str(template),'--output',str(output),'--release-output',str(release)],check=True)
     assert template.read_bytes()==output.read_bytes()==release.read_bytes()
     assert output.read_bytes()==(ROOT/'LipoScope.html').read_bytes()
