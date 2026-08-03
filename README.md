@@ -4,6 +4,8 @@ LipoScope is a browser-local research workbench for lipoedema/lipedema literatur
 
 **Canonical repository:** https://github.com/LipoScope/LipoScope_v1.0.0
 
+**Launch LipoScope:** https://liposcope.github.io/LipoScope_v1.0.0/
+
 ## Application tabs
 
 - **Start Here** — orientation, visual guides and workflow overview.
@@ -15,7 +17,7 @@ LipoScope is a browser-local research workbench for lipoedema/lipedema literatur
 
 ## Run LipoScope
 
-Open `LipoScope.html` in a current desktop browser. An internet connection is required only for live PubMed, Google Scholar, metadata and open-access figure services. Browse customisation, notes, locally uploaded PDF previews and CCRF records are stored in the current browser unless exported.
+Use the [hosted LipoScope application](https://liposcope.github.io/LipoScope_v1.0.0/) or open `LipoScope.html` locally in a current desktop browser. An internet connection is required only for live PubMed, Google Scholar, metadata and open-access figure services. Browse customisation, notes, locally uploaded PDF previews and CCRF records are stored in the current browser unless exported.
 
 ## CCRF source implementation
 
@@ -46,6 +48,7 @@ The source-to-schema workflow is documented in `scripts/ccrf/README.md`. The imp
 
 ## Package structure
 
+- `index.html` — GitHub Pages entry point that opens the application.
 - `LipoScope.html` — complete browser application.
 - `data/` — CCRF schema, source manifest, official counts and frozen row snapshot.
 - `scripts/ccrf/` — CCRF source capture, validation and schema-generation scripts.

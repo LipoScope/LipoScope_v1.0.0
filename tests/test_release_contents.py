@@ -18,8 +18,11 @@ def test_licence_files_and_html_are_consistent():
 
 
 def test_release_support_files_exist():
-    for name in ['ARCHITECTURE.md','RELEASE_STATUS.md','NOTICE.md','CONTRIBUTING.md','Dockerfile','.github/workflows/ci.yml','requirements.lock','docs/CCRF_WORKSPACE_GUIDE.md','docs/CCRF_IMPLEMENTATION_SCOPE.md']:
+    for name in ['index.html','ARCHITECTURE.md','RELEASE_STATUS.md','NOTICE.md','CONTRIBUTING.md','Dockerfile','.github/workflows/ci.yml','requirements.lock','docs/CCRF_WORKSPACE_GUIDE.md','docs/CCRF_IMPLEMENTATION_SCOPE.md']:
         assert (ROOT/name).exists(),name
+    entry=(ROOT/'index.html').read_text(encoding='utf-8')
+    assert 'url=LipoScope.html' in entry
+    assert 'window.location.replace' in entry
 
 
 def test_no_embedded_git_history_or_release_instructions(tmp_path):
@@ -30,6 +33,7 @@ def test_no_embedded_git_history_or_release_instructions(tmp_path):
     )
     with zipfile.ZipFile(archive) as z:
         members=[Path(name) for name in z.namelist() if not name.endswith('/')]
+    assert Path('LipoScope-v1.0.0/index.html') in members
     assert Path('LipoScope-v1.0.0/LipoScope.html') in members
     assert not any('.git' in member.parts for member in members)
     assert not any(member.suffix.lower()=='.bundle' for member in members)
