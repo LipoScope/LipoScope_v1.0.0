@@ -24,15 +24,20 @@ def main():
 
     schema=json.loads((ROOT/'data/ccrf_schema.json').read_text(encoding='utf-8'))
     compact=json.dumps(schema,ensure_ascii=False,separators=(',',':'))
+    jszip_path=ROOT/'vendor/jszip/jszip.min.js';jszip=jszip_path.read_text(encoding='utf-8').strip()
+    jszip_block='<!-- BEGIN LIPOSCOPE_JSZIP -->\n<script>\n'+jszip+'\n</script>\n<!-- END LIPOSCOPE_JSZIP -->'
     rebuild={
       'generated_at':utc_now(),
       'schema_embedded_exactly':('var CCRF_SCHEMA='+compact+';') in html,
+      'jszip_version':'3.10.1',
+      'jszip_sha256':sha256_file(jszip_path),
+      'jszip_embedded_exactly':jszip_block in html,
       'template_matches':(ROOT/'templates/LipoScope.template.html').read_bytes()==html_path.read_bytes(),
       'release_copy_matches':(ROOT/'releases/LipoScope_v1.0.0.html').read_bytes()==html_path.read_bytes(),
       'html_sha256':sha256_file(html_path),
       'schema_sha256':sha256_file(ROOT/'data/ccrf_schema.json'),
     }
-    rebuild['passed']=rebuild['schema_embedded_exactly'] and rebuild['template_matches'] and rebuild['release_copy_matches']
+    rebuild['passed']=rebuild['schema_embedded_exactly'] and rebuild['jszip_embedded_exactly'] and rebuild['template_matches'] and rebuild['release_copy_matches']
     dump_json(VALIDATION/'deterministic_rebuild.json',rebuild)
 
     py_errors=[];py_files=list((ROOT/'scripts').rglob('*.py'))+list((ROOT/'tests').rglob('*.py'))
@@ -51,8 +56,8 @@ def main():
     dump_json(VALIDATION/'local_validation_summary.json',summary)
     lines=['# LipoScope v1.0.0 validation report','',f"Generated: {summary['generated_at']}",'','## Application structure','',f"- Six main tabs and panels: **{'passed' if static['main_panels_present'] else 'failed'}**",f"- CCRF Workspace section order: **{'passed' if static['ccrf_order_matches'] else 'failed'}**",f"- Duplicate HTML identifiers: **{len(static['duplicate_html_ids'])}**",'','## CCRF Version 1','']
     for key,c in summary['ccrf']['classifications'].items():lines.append(f"- {key}: {c['official_cdes']} official CDEs ({c['clinical_cdes']} clinician; {c['participant_cdes']} participant); {c['dictionary_rows']} technical REDCap rows")
-    lines += ['','The four dictionaries are cumulative. Technical row totals are not presented as unique CDE totals. Completion uses currently applicable required response fields and excludes direct identifiers from local assessment.','','## Validation','',f"- Automated tests: **{tests.get('passed','not recorded')} passed; {tests.get('failed','not recorded')} failed**",f"- Browser audit: **{'passed' if browser.get('passed') else 'not passed or not recorded'}**",f"- Python syntax errors: **{len(py_errors)}**",f"- Static HTML validation: **{'passed' if static['passed'] else 'failed'}**",f"- Deterministic schema and HTML-copy check: **{'passed' if rebuild['passed'] else 'failed'}**"]
-    (VALIDATION/'release_validation_report.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+    lines += ['','The four dictionaries are cumulative. Technical row totals are not presented as unique CDE totals. Completion uses currently applicable required response fields and excludes direct identifiers from local assessment.','','## Validation','',f"- Automated tests: **{tests.get('passed','not recorded')} passed; {tests.get('failed','not recorded')} failed**",f"- Browser audit: **{'passed' if browser.get('passed') else 'not passed or not recorded'}**",f"- JSZip {rebuild['jszip_version']} embedded ZIP component: **{'passed' if rebuild['jszip_embedded_exactly'] else 'failed'}**",f"- Python syntax errors: **{len(py_errors)}**",f"- Static HTML validation: **{'passed' if static['passed'] else 'failed'}**",f"- Deterministic schema and HTML-copy check: **{'passed' if rebuild['passed'] else 'failed'}**"]
+    (VALIDATION/'release_validation_report.md').write_text('\n'.join(lines)+'\n',encoding='utf-8',newline='\n')
     if not summary['passed']:raise SystemExit('Validation failed')
     print('Validation reports generated')
     return 0

@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: install syntax test browser reports package
+.PHONY: install syntax embed-jszip test browser reports package
 
 install:
 	$(PYTHON) -m pip install -r requirements.lock
@@ -8,6 +8,9 @@ install:
 
 syntax:
 	$(PYTHON) -m py_compile scripts/ccrf/*.py scripts/*.py tests/*.py
+
+embed-jszip:
+	$(PYTHON) scripts/19_embed_jszip.py
 
 test: syntax
 	$(PYTHON) -m pytest -q

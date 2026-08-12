@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.0 maintenance correction — 13 August 2026
+
+- Embedded the pinned JSZip 3.10.1 browser build so complete CCRF research-package ZIP exports work in the standalone application and on GitHub Pages.
+- Added an end-to-end browser check that creates and reopens the ZIP and verifies all seven expected research-package files.
+
 ## v1.0.0 — 3 August 2026
 
 - Released the browser-local LipoScope literature workbench.

@@ -9,5 +9,5 @@ def test_ccrf_pipeline_files_exist():
 
 
 def test_main_validation_scripts_exist():
-    for name in ['18_browser_smoke_test.py','20_generate_validation_reports.py','21_build_distribution_archive.py']:
+    for name in ['18_browser_smoke_test.py','19_embed_jszip.py','20_generate_validation_reports.py','21_build_distribution_archive.py']:
         assert (ROOT/'scripts'/name).exists(),name

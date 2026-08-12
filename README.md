@@ -39,6 +39,7 @@ Create the Python environment and run:
 ```bash
 python -m pip install -r requirements.lock
 python -m playwright install chromium
+python scripts/19_embed_jszip.py
 python -m pytest -q
 python scripts/18_browser_smoke_test.py --html LipoScope.html
 python scripts/20_generate_validation_reports.py
@@ -52,6 +53,7 @@ The source-to-schema workflow is documented in `scripts/ccrf/README.md`. The imp
 - `LipoScope.html` — complete browser application.
 - `data/` — CCRF schema, source manifest, official counts and frozen row snapshot.
 - `scripts/ccrf/` — CCRF source capture, validation and schema-generation scripts.
+- `vendor/jszip/` — pinned JSZip browser build and upstream licence used for ZIP research-package exports.
 - `tests/` — structural, CCRF, browser, export and package tests.
 - `validation/` — generated source reconciliation and validation reports.
 - `templates/` and `releases/` — byte-identical HTML copies used by deterministic build checks.

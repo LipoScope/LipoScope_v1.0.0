@@ -1,9 +1,12 @@
 {
-  "generated_at": "2026-08-03T12:09:53+00:00",
+  "generated_at": "2026-08-12T15:39:55+00:00",
   "schema_embedded_exactly": true,
+  "jszip_version": "3.10.1",
+  "jszip_sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e",
+  "jszip_embedded_exactly": true,
   "template_matches": true,
   "release_copy_matches": true,
-  "html_sha256": "a528d4134ec16ccb84021ca9a749187090a6ba94c0430042ac4bef45f8bb25c9",
+  "html_sha256": "056d2ea06fe7cca6c1a98779473b50fd2614ca75486bdf300f192ae1088384d8",
   "schema_sha256": "8f80d7e35f153ab4c2c443bd8d2e5ea5df0c6edbe8b0e690c1815a8ef07dbf6c",
   "passed": true
 }

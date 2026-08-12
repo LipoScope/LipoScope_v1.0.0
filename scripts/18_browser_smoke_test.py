@@ -71,10 +71,32 @@ def main():
             self_tests=page.evaluate('runCcrfBrowserSelfTests()')
             ccrf['self_tests']=all(x.get('pass') for x in self_tests)
             ccrf['inactive_retention']=page.evaluate("""()=>{const f={variable:'follow_up',type:'text',required:false,branching:"[parent]='1'"};return CCRFEngine.assessField(f,{parent:'0',follow_up:'kept'},{excludeIdentifiers:true}).status==='inactive_with_value';}""")
+            ccrf['zip_export']=page.evaluate("""async()=>{
+              const expected=['CCRF_data_dictionary.csv','CCRF_data_quality_report.csv','CCRF_records_coded.csv','CCRF_records_codes_and_labels.csv','CCRF_records_human_readable.csv','CCRF_records_long.csv','CCRF_source_manifest.txt'].sort();
+              if(typeof JSZip!=='function')return {component_available:false,download_created:false,contents_match:false};
+              const cls=CCRF_SCHEMA.classifications.core;
+              const field=cls.fields.find(f=>!f.identifier&&!f.branching&&!['calc','descriptive','file'].includes(f.type));
+              const choices=CCRFEngine.parseChoices(field.choices);
+              const record=CCRFEngine.createRecord(CCRF_SCHEMA,'core');
+              record.responses[field.variable]=choices.length?choices[0].code:'browser-smoke-test';
+              CCRF_APP_STATE.classification='core';CCRF_APP_STATE.record=record;CCRF_APP_STATE.records=[];
+              return await new Promise(resolve=>{
+                const original=ccrfDownloadBlob;
+                const timer=setTimeout(()=>{ccrfDownloadBlob=original;resolve({component_available:true,download_created:false,contents_match:false});},15000);
+                ccrfDownloadBlob=(filename,blob)=>{
+                  blob.arrayBuffer().then(data=>JSZip.loadAsync(data)).then(zip=>{
+                    clearTimeout(timer);ccrfDownloadBlob=original;
+                    const names=Object.keys(zip.files).filter(name=>!zip.files[name].dir).sort();
+                    resolve({component_available:true,download_created:/^LipoScope_CCRF_Research_Export_.*\\.zip$/.test(filename)&&blob.size>0,contents_match:JSON.stringify(names)===JSON.stringify(expected)});
+                  }).catch(()=>{clearTimeout(timer);ccrfDownloadBlob=original;resolve({component_available:true,download_created:false,contents_match:false});});
+                };
+                ccrfDownloadResearchPackage();
+              });
+            }""")
             effective=[e for e in errors if not(mode=='set_content_fallback' and 'localStorage' in e and 'Access is denied' in e)]
             passed=all(tabs.values()) and all(structure.values()) and not effective and not console and all(all(v for v in x.values()) for x in ccrf.values() if isinstance(x,dict)) and ccrf['self_tests'] and ccrf['inactive_retention']
             report={'passed':passed,'navigation_mode':mode,'tabs':tabs,'structure':structure,'ccrf':ccrf,'page_errors':effective,'console_errors':console}
-            VALIDATION.mkdir(parents=True,exist_ok=True);(VALIDATION/'browser_smoke_test.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+            VALIDATION.mkdir(parents=True,exist_ok=True);(VALIDATION/'browser_smoke_test.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
             browser.close()
             print(json.dumps(report,indent=2));return 0 if passed else 1
 if __name__=='__main__':raise SystemExit(main())

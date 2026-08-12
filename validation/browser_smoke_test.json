@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "navigation_mode": "set_content_fallback",
+  "navigation_mode": "local_http",
   "tabs": {
     "resources": true,
     "browse": true,
@@ -54,7 +54,12 @@
       "no_inferred_calc": true
     },
     "self_tests": true,
-    "inactive_retention": true
+    "inactive_retention": true,
+    "zip_export": {
+      "component_available": true,
+      "download_created": true,
+      "contents_match": true
+    }
   },
   "page_errors": [],
   "console_errors": []
