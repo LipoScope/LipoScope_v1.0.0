@@ -13790,7 +13790,7 @@ async function runAutoDiscovery() {
     '<strong>Added to database:</strong> ' + _discStats.added + '<br>' +
     '<strong>Skipped (duplicates):</strong> ' + _discStats.skipped + '<br>' +
     (_discStats.errors ? '<strong style="color:var(--rose)">Errors:</strong> ' + _discStats.errors + '<br>' : '') +
-    '<br>All papers classified using MeSH-first hybrid topic evidence and study type. Summaries were generated from structured PubMed abstracts. Navigate to <strong>Browse Papers</strong> to see them.';
+    '<br>All imported papers were processed using LipoScope’s versioned, rule-based topic and study-type classifiers. MeSH and other PubMed metadata were used where available, together with title and abstract evidence. Records with insufficient or conflicting evidence remain classified as Unsupported records or Unclassified/Other. Summaries were generated deterministically from retrieved PubMed abstracts, using structured sections where available. Navigate to <strong>Browse Papers</strong> to review the imported records.';
 
   discLog('🏁 Done. Added ' + _discStats.added + ', skipped ' + _discStats.skipped + ' dupes, ' + _discStats.errors + ' errors.');
 
@@ -14094,7 +14094,6 @@ setTimeout(primeVisiblePaperSummaries, 4500);
 </script>
 </body>
 </html>
-
 
 
 
