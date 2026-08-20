@@ -10857,7 +10857,7 @@ async function renderAnalytics() {
     var maxTy = Math.max(1,typeSorted.length ? typeSorted[0][1] : 0);
     var typeReasons = Object.keys(stats.unclassifiedTypeReasons || {}).map(function(reason){return [reason,stats.unclassifiedTypeReasons[reason]];}).sort(function(a,b){return b[1]-a[1];});
     document.getElementById('chart-types').innerHTML =
-      '<div style="font-size:10.5px;color:var(--text-soft);margin-bottom:8px">Classification hierarchy: specific NLM PubMed Publication Type metadata → identity-verified PMC JATS article type → MeSH study-design descriptors → structured abstract Methods/design evidence → available PMC Methods evidence. Records still unresolved remain Unclassified / Other.</div><div class="bar-chart">' +
+      '<div style="font-size:10.5px;color:var(--text-soft);margin-bottom:8px">LipoScope generates scored study-type candidates from specific PubMed Publication Type metadata, stored PMC JATS article-type information when available, MeSH study-design descriptors, structured Methods/design sections or complete-abstract fallback evidence, stored PMC/full-text Methods and Results evidence when available, and selected precise title expressions. The highest-scoring candidate is assigned when the available evidence supports a sufficiently distinct classification; conflicting or insufficient evidence results in Unclassified / Other.</div><div class="bar-chart">' +
       typeSorted.map(function(arr){
         var t=arr[0],c=arr[1],col=TYPE_COLORS[t] || '#888';
         return '<div class="bar-row"><div class="bar-label">' + t + '</div><div class="bar-track"><div class="bar-fill" style="width:' + Math.round(c/maxTy*100) + '%;background:' + col + '"></div></div><div class="bar-count">' + c.toLocaleString() + '</div></div>';
@@ -14094,7 +14094,6 @@ setTimeout(primeVisiblePaperSummaries, 4500);
 </script>
 </body>
 </html>
-
 
 
 
