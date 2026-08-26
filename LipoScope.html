@@ -12319,9 +12319,9 @@ function ccrfToggleFilter(kind){var el=document.getElementById(kind==='required'
 function ccrfRenderBuilder(){
   var empty=document.getElementById('ccrf-builder-empty'),workspace=document.getElementById('ccrf-builder-workspace'),cls=ccrfClass();
   if(!empty||!workspace)return;
-  if(!cls){empty.style.display='block';workspace.style.display='none';empty.innerHTML='<h4>Select a CCRF classification</h4><p>Choose Core, Supplemental Highly Recommended, Supplemental, or Exploratory. LipoScope will render the exact fields, coded choices, required flags, and branching rules from that official data dictionary.</p>';ccrfRenderLedger();return;}
+  if(!cls){empty.style.display='block';workspace.style.display='none';empty.innerHTML='<h4>Select a CCRF classification</h4><p>Choose Core, Supplemental Highly Recommended, Supplemental, or Exploratory. LipoScope will generate browser-based controls from the fields, coded choices, required flags and branching rules represented in that official source dictionary. Some native REDCap presentation features, including matrix grouping and shared matrix instructions, are not reproduced in the Builder.</p>';ccrfRenderLedger();return;}
   empty.style.display='none';workspace.style.display='block';ccrfEnsureRecord();ccrfPopulateNavigation(cls);
-  var meta=document.getElementById('ccrf-classification-meta');if(meta)meta.innerHTML='<strong>'+ccrfEsc(cls.label)+'</strong>: '+cls.official_cdes+' official CDEs ('+cls.clinical_cdes+' clinician-completed and '+cls.participant_cdes+' participant-completed). LipoScope uses '+cls.dictionaryRows+' REDCap dictionary rows to preserve the questions together with instructions, identifiers, calculated-field definitions and conditional logic. Conditional questions are included normally when their official branching conditions are met. Completion below is calculated only from applicable required response fields that can be assessed in this browser; it is not a percentage of all '+cls.official_cdes+' CDEs.';
+  var meta=document.getElementById('ccrf-classification-meta');if(meta)meta.innerHTML='<strong>'+ccrfEsc(cls.label)+'</strong>: '+cls.official_cdes+' official CDEs ('+cls.clinical_cdes+' clinician-completed and '+cls.participant_cdes+' participant-completed). LipoScope uses '+cls.dictionaryRows+' REDCap dictionary rows as the official source dictionary for this browser-based implementation, preserving the represented source schema and metadata while adapting some presentation features for the LipoScope interface. Native REDCap matrix grouping and shared matrix instructions are not reproduced in the Builder. Conditional questions are included normally when their official branching conditions are met. Completion below is calculated only from applicable required response fields that can be assessed in this browser; it is not a percentage of all '+cls.official_cdes+' CDEs.';
   var search=document.getElementById('ccrf-search');if(search&&search.value!==CCRF_APP_STATE.search)search.value=CCRF_APP_STATE.search;
   var req=document.getElementById('ccrf-required-only');if(req)req.checked=CCRF_APP_STATE.requiredOnly;
   var miss=document.getElementById('ccrf-missing-only');if(miss)miss.checked=CCRF_APP_STATE.missingOnly;
@@ -14094,7 +14094,6 @@ setTimeout(primeVisiblePaperSummaries, 4500);
 </script>
 </body>
 </html>
-
 
 
 
