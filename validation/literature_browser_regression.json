@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "label": "partial ESearch pagination must throw",
+      "passed": true
+    },
+    {
+      "label": "complete ESearch pagination accepted",
+      "passed": true
+    },
+    {
+      "label": "verified PubMed/DOI match accepted",
+      "passed": true
+    },
+    {
+      "label": "conflicting PMID rejected",
+      "passed": true
+    },
+    {
+      "label": "title-only Semantic Scholar abstract rejected when PMID available",
+      "passed": true
+    },
+    {
+      "label": "LiDo title accepted",
+      "passed": true
+    },
+    {
+      "label": "MeSH entry-term title accepted",
+      "passed": true
+    },
+    {
+      "label": "all 2 canonical ESearch PMIDs retained even if no abstract disease-text",
+      "passed": true
+    },
+    {
+      "label": "MeSH or entry-term retrieval not double-filtered by missing abstract",
+      "passed": true
+    }
+  ],
+  "failures": [],
+  "retrieval_debug": {
+    "error": "",
+    "papers": [
+      "99910",
+      "99911"
+    ],
+    "mockCalls": "function"
+  },
+  "mock_data_notice": "All PMID and citation data in this JS regression are synthetic test fixtures, not observed PubMed results."
+}

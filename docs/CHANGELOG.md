@@ -1,3 +1,12 @@
+# Maintained build — 21 October 2026
+
+- Extended canonical PubMed terminology to recognised lipedema synonyms and lipohyperplasia dolorosa.
+- Strengthened PubMed PMID completeness, metadata retrieval, book-record parsing and attribution safeguards.
+- Improved handling of failed New Paper Alerts requests and safe display of returned citation text.
+- Displayed source-defined CCRF matrix instructions and masked inactive response values in analysis exports.
+- Preserved the version-pinned official CCRF Version 1 source definitions.
+- Added reproducible source and browser regression checks.
+
 # Changelog
 
 ## v1.0.0 maintenance correction — 13 August 2026

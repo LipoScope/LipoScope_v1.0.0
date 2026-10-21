@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "Journal PMID retained from mixed EFetch",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Book PMID retained from mixed EFetch",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Book source and year preserved",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Book abstract preserved",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Failed PubMed alert request does not advance clock",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Successful zero-result check advances clock",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Failed ESummary does not advance clock",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "notice": "Only synthetic PubMed XML and network outcomes were used."
+}

@@ -2122,6 +2122,10 @@ select:focus{border-color:var(--rose)}
 .ccrf-section-heading h4{font-family:'Playfair Display',serif;font-size:1.02rem;color:var(--text);margin-bottom:3px}
 .ccrf-section-heading p{font-size:11.5px;color:var(--text-soft)}
 .ccrf-field-list{display:grid;gap:10px}
+.ccrf-matrix-context{border:1px solid var(--teal);border-left:4px solid var(--teal);border-radius:10px;background:var(--teal-pale);padding:12px 14px;color:var(--text);line-height:1.55}
+.ccrf-matrix-context strong{display:block;margin-bottom:5px;font-size:12px}
+.ccrf-matrix-context p{font-size:12px;margin:0 0 4px;line-height:1.65}
+.ccrf-matrix-context .ccrf-matrix-info{font-size:11px;color:var(--text-soft)}
 .ccrf-field-card{border:1px solid var(--border);background:#fff;border-radius:11px;padding:12px 14px;border-left:4px solid #b9b2aa}
 .ccrf-field-card.ready{border-left-color:var(--teal)}
 .ccrf-field-card.missing{border-left-color:var(--rose)}
@@ -2348,7 +2352,7 @@ select:focus{border-color:var(--rose)}
     <div class="tab-guide"><strong>Analytics:</strong> Compare two signals that should not be mixed: the live PubMed lipoedema landscape at the top, and your currently visible Browse workspace below. Use this tab to see whether your local curation over- or under-represents topics and years relative to the broader field.</div>
     <div class="analytics-source-note">
       <span class="analytics-source-badge" id="analytics-source-badge">🟢 Live</span>
-      The top charts track the <strong>complete live PubMed landscape</strong> for lipedema/lipoedema using one consistent disease query: <code style="font-family:monospace;font-size:10px;background:rgba(255,255,255,0.5);padding:1px 5px;border-radius:3px">lipedema[Title/Abstract] OR lipoedema[Title/Abstract] OR &quot;Lipedema&quot;[Mesh]</code>. Record-level charts use exhaustive paginated retrieval; topic counts use the exact category queries opened by the topic links. The visible-corpus charts below update immediately when users add, hide, restore, or expand papers.
+      The top charts track the <strong>complete live PubMed landscape</strong> for lipedema/lipoedema using one consistent disease query: <code style="font-family:monospace;font-size:10px;background:rgba(255,255,255,0.5);padding:1px 5px;border-radius:3px">lipedema[Title/Abstract] OR lipoedema[Title/Abstract] OR &quot;Lipedema&quot;[Mesh] OR lipedemas[Title/Abstract] OR lipoedemas[Title/Abstract] OR lipolymphedema[Title/Abstract] OR lipolymphedemas[Title/Abstract] OR &quot;lipohyperplasia dolorosa&quot;[Title/Abstract]</code>. Record-level charts use exhaustive paginated retrieval; topic counts use the exact category queries opened by the topic links. The visible-corpus charts below update immediately when users add, hide, restore, or expand papers.
       <span id="analytics-fetch-date" style="margin-left:auto;font-size:10px;color:var(--text-faint)"></span>
     </div>
     <div class="stat-row" id="stat-row"></div>
@@ -2617,7 +2621,7 @@ select:focus{border-color:var(--rose)}
       <!-- ── Live Database Stats ── -->
       <div class="about-section">
         <h2>📊 Live Database Summary <span style="font-size:11px;font-weight:400;color:var(--text-faint);margin-left:8px">PubMed · canonical lipedema/lipoedema query</span></h2>
-        <p style="font-size:11.5px;color:var(--text-soft);margin-bottom:14px;line-height:1.7">These counts use the same canonical PubMed disease query as Analytics: title or abstract occurrences of lipedema or lipoedema, plus records indexed with the Lipedema MeSH heading. Record-level analytics use paginated retrieval rather than a fixed record cap. The “Curated Papers” count reflects your visible Browse workspace.</p>
+        <p style="font-size:11.5px;color:var(--text-soft);margin-bottom:14px;line-height:1.7">These counts use the same canonical PubMed disease query as Analytics: title or abstract occurrences of lipedema/lipoedema and NLM-listed entry terms, plus lipohyperplasia dolorosa and records indexed with the Lipedema MeSH heading. Record-level analytics use paginated retrieval rather than a fixed record cap. The “Curated Papers” count reflects your visible Browse workspace.</p>
         <div class="about-stat-grid" id="about-stat-grid">
           <!-- Populated by updateAboutStats() -->
         </div>
@@ -3007,7 +3011,7 @@ select:focus{border-color:var(--rose)}
 
 <footer class="app-footer">
   <span><strong>LipoScope</strong> <span id="app-version-label">v1.0.0</span> · Lipoedema literature, research evidence mapping, and official CCRF data standardisation</span>
-  <span>Updated <span id="app-updated-label">3 August 2026</span> · Public GitHub Pages build</span>
+  <span>Updated <span id="app-updated-label">22 October 2026</span> · Public GitHub Pages build</span>
 </footer>
 <button class="scroll-top-btn" id="scroll-top-btn" onclick="scrollToTop()" title="Back to top" aria-label="Back to top">↑</button>
 
@@ -3025,6 +3029,7 @@ select:focus{border-color:var(--rose)}
       <div class="modal-section" id="modal-aims-section">
         <div class="modal-section-title">🎯 Aims &amp; Background</div>
         <p id="modal-aims"></p>
+        <p id="modal-abstract-provenance" style="font-size:11px;color:var(--text-soft);margin-top:8px"></p>
       </div>
       <div class="modal-section" id="modal-methods-section">
         <div class="modal-section-title">🔬 Methods</div>
@@ -3066,7 +3071,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
 <script>
 const LIPOSCOPE_VERSION = 'v1.0.0';
-const LIPOSCOPE_UPDATED = '3 August 2026';
+const LIPOSCOPE_UPDATED = '22 October 2026';
 
 const PAPERS = [
   {
@@ -7361,7 +7366,7 @@ const TYPE_COLORS = {
 function currentYear()  { return new Date().getFullYear(); }
 function recentCutoff() { return currentYear() - 5; }
 function recentLabel()  { return "Since " + recentCutoff(); }
-var LIPOEDEMA_PUBMED_QUERY = '(lipedema[Title/Abstract] OR lipoedema[Title/Abstract] OR "Lipedema"[Mesh])';
+var LIPOEDEMA_PUBMED_QUERY = '(lipedema[Title/Abstract] OR lipoedema[Title/Abstract] OR "Lipedema"[Mesh] OR lipedemas[Title/Abstract] OR lipoedemas[Title/Abstract] OR lipolymphedema[Title/Abstract] OR lipolymphedemas[Title/Abstract] OR "lipohyperplasia dolorosa"[Title/Abstract])';
 
 // ═══════════════════════════════════════════════════════════════════════
 //  PROFILE / USER ISOLATION SYSTEM
@@ -8252,6 +8257,8 @@ function persistPaperSummary(paperId, data) {
     if (data.findings && data.findings.length) p.findings = data.findings;
     if (data.summary) p.summary = data.summary;
     p.summarySource = data.summarySource || 'structured_summary_auto';
+    p.summaryAbstractSource = data.summaryAbstractSource || 'unavailable';
+    p.summaryIdentityVerified = !!data.summaryIdentityVerified;
     p.summaryGeneratedAt = new Date().toISOString();
     return true;
   }
@@ -8363,7 +8370,7 @@ async function bootstrapDefaultCorpus(force) {
   if (force) showToast('Updating default literature from PubMed...', 'info');
   try {
     var base = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
-    var term = encodeURIComponent('lipedema[tiab] OR lipoedema[tiab]');
+    var term = encodeURIComponent(LIPOEDEMA_PUBMED_QUERY);
     var importLimit = Math.max(0, DEFAULT_CORPUS_TARGET - PAPERS.length);
     var sr = await fetch(base + 'esearch.fcgi?db=pubmed&term=' + term + '&retmax=' + (DEFAULT_CORPUS_TARGET + PAPERS.length) + '&sort=date&retmode=json');
     var sd = await sr.json();
@@ -8520,6 +8527,8 @@ function openModal(id) {
 
   renderModalAuthorInfo(p);
   refreshPaperAuthorsFromPubMed(p.id);
+  var abstractProvenanceEl=document.getElementById('modal-abstract-provenance');
+  if(abstractProvenanceEl) abstractProvenanceEl.textContent = p.summaryAbstractSource ? ('Abstract source: '+p.summaryAbstractSource+' · identity verified: '+(p.summaryIdentityVerified?'yes':'no')) : 'Abstract source verification: not established for this saved summary';
 
   var aimsEl  = document.getElementById('modal-aims');
   var aimsSec = document.getElementById('modal-aims-section');
@@ -10357,7 +10366,7 @@ function buildPaperStructuredSummary(paper, abstractText, structuredSections) {
 
 function paperSummaryNeedsEnrichment(paper) {
   if (!paper || !paper.pmid) return false;
-  if (paper.summarySource !== 'structured_summary_auto') return true;
+  if (paper.summarySource !== 'structured_summary_auto' || !paper.summaryAbstractSource) return true;
   var genericFindings = !paper.findings || !paper.findings.length || paper.findings.some(isGenericFindingText);
   var labelledAims = hasStructuredSummaryLabels(paper.aims || '') || hasStructuredSummaryLabels(paper.summary || '');
   var weakMethods = !paper.methods || /not available|see full text|did not report a formal/i.test(String(paper.methods || '')) || isMalformedSummaryFragment(paper.methods) || !methodTextLooksUsable(paper.methods);
@@ -10380,6 +10389,8 @@ function refreshOpenModalSummarySections(paper) {
   var findEl  = document.getElementById('modal-findings');
   if (aimsEl && aimsSec) { aimsEl.textContent = displaySummary.aims; aimsSec.style.display = ''; }
   if (methEl && methSec) { methEl.textContent = displaySummary.methods; methSec.style.display = ''; }
+  var provEl=document.getElementById('modal-abstract-provenance');
+  if(provEl) provEl.textContent = paper.summaryAbstractSource ? ('Abstract source: '+paper.summaryAbstractSource+' · identity verified: '+(paper.summaryIdentityVerified?'yes':'no')) : 'Abstract source verification: not established for this saved summary';
   if (findEl) {
     findEl.innerHTML = displaySummary.findings.map(function(f) { return '<li>' + escHtml(f) + '</li>'; }).join('');
     findEl.parentElement.style.display = '';
@@ -10397,13 +10408,15 @@ async function ensurePaperStructuredSummary(paperId, opts) {
   }
   PAPER_SUMMARY_ENRICHING[paperId] = true;
   try {
-    var profile = null;
+    var profile = null, provenance = 'unavailable';
     if (p.pmid) {
       var absData = await fetchPubMedAbstract(p.pmid);
       profile = buildPaperStructuredSummary(p, absData.fullText || '', absData.sections || {});
+      if (!profile.isFallback && absData.fullText) provenance = 'PubMed';
       if (profile.isFallback) {
         var alt = await fetchAlternativeAbstract(p);
         if (alt && (alt.aims || (alt.findings && alt.findings.length))) {
+          provenance = alt.source || 'unavailable';
           profile = buildPaperStructuredSummary(p, [alt.aims, alt.methods, (alt.findings || []).join(' ')].join(' '), {
             BACKGROUND: alt.aims || '',
             METHODS: alt.methods || '',
@@ -10419,7 +10432,9 @@ async function ensurePaperStructuredSummary(paperId, opts) {
       methods:profile.methods,
       findings:profile.findings,
       summary:profile.summary,
-      summarySource:'structured_summary_auto'
+      summarySource:'structured_summary_auto',
+      summaryAbstractSource:provenance,
+      summaryIdentityVerified:provenance!=='unavailable'
     });
     var updated = getPaperById(paperId);
     if (opts.refreshModal) refreshOpenModalSummarySections(updated);
@@ -10438,6 +10453,25 @@ async function generateAISummary(paperId) {
   return ensurePaperStructuredSummary(paperId, { silent:false, refreshModal:true, refreshCards:true });
 }
 
+// Verify publication identity before accepting external source text.
+// A known identifier conflict always rejects a candidate. Exact normalised title matching
+// is used only when the external provider gives no usable publication identifier.
+function externalAbstractIdentityMatches(paper, candidate) {
+  if(!paper || !candidate) return false;
+  var ids=candidate.externalIds||{};
+  var expectedPmid=String(paper.pmid||'').trim();
+  var expectedDoi=String(paper.doi||'').trim().toLowerCase().replace(/^https?:\/\/(dx\.)?doi\.org\//,'');
+  var actualPmid=String(ids.PubMed||ids.PMID||candidate.pmid||'').trim();
+  var actualDoi=String(ids.DOI||candidate.doi||'').trim().toLowerCase().replace(/^https?:\/\/(dx\.)?doi\.org\//,'');
+  if(expectedPmid && actualPmid && expectedPmid!==actualPmid) return false;
+  if(expectedDoi && actualDoi && expectedDoi!==actualDoi) return false;
+  if(expectedPmid && actualPmid && expectedPmid===actualPmid) return true;
+  if(expectedDoi && actualDoi && expectedDoi===actualDoi) return true;
+  // If identifiers are expected, absent candidate IDs are insufficient for identity verification.
+  if(expectedPmid || expectedDoi) return false;
+  return !!(paper.title && candidate.title && normalizePubMedTitle(paper.title)===normalizePubMedTitle(candidate.title));
+}
+
 // ── Alternative Abstract Sources (Europe PMC, Semantic Scholar) ──
 async function fetchAlternativeAbstract(paper) {
   var aims = '', methods = '', findings = [];
@@ -10450,7 +10484,7 @@ async function fetchAlternativeAbstract(paper) {
       if (epmcResp.ok) {
         var epmcData = await epmcResp.json();
         var result = epmcData.result;
-        if (result && result.abstractText) {
+        if (result && result.abstractText && externalAbstractIdentityMatches(paper, {pmid:result.id||result.pmid,doi:result.doi,title:result.title})) {
           var epmcProfile = buildPaperStructuredSummary(paper, result.abstractText, null);
           aims = epmcProfile.aims;
           methods = epmcProfile.methods;
@@ -10465,16 +10499,19 @@ async function fetchAlternativeAbstract(paper) {
   // 2. Try Semantic Scholar (free, no API key needed)
   try {
     var s2Query = encodeURIComponent(paper.title.slice(0, 200));
-    var s2Resp = await fetch('https://api.semanticscholar.org/graph/v1/paper/search?query=' + s2Query + '&limit=1&fields=abstract,title');
+    var s2Resp = await fetch('https://api.semanticscholar.org/graph/v1/paper/search?query=' + s2Query + '&limit=5&fields=abstract,title,externalIds');
     if (s2Resp.ok) {
       var s2Data = await s2Resp.json();
-      if (s2Data.data && s2Data.data.length > 0 && s2Data.data[0].abstract) {
-        var s2Profile = buildPaperStructuredSummary(paper, s2Data.data[0].abstract, null);
+      if (s2Data.data && s2Data.data.length > 0) {
+        var verified = s2Data.data.filter(function(hit){return hit && hit.abstract && externalAbstractIdentityMatches(paper,hit);})[0];
+        if (verified) {
+        var s2Profile = buildPaperStructuredSummary(paper, verified.abstract, null);
         aims = s2Profile.aims;
         methods = s2Profile.methods;
         findings = s2Profile.findings;
         source = 'Semantic Scholar';
         if (!s2Profile.isFallback) return { aims: aims, methods: methods, findings: findings, source: source };
+        }
       }
     }
   } catch(e) {}
@@ -10530,7 +10567,7 @@ function pubMedTopicUrlMap() {
 }
 function loadStoredPubMedStats() {
   try {
-    var raw = localStorage.getItem(pubMedStatsStorageKey('live_v6_multilabel_type_reasons'));
+    var raw = localStorage.getItem(pubMedStatsStorageKey('live_v7_expanded_disease_query'));
     if (!raw) return null;
     var parsed = JSON.parse(raw);
     return parsed && typeof parsed === 'object' ? parsed : null;
@@ -10539,7 +10576,7 @@ function loadStoredPubMedStats() {
   }
 }
 function saveStoredPubMedStats(stats) {
-  try { localStorage.setItem(pubMedStatsStorageKey('live_v6_multilabel_type_reasons'), JSON.stringify(stats)); } catch(e) {}
+  try { localStorage.setItem(pubMedStatsStorageKey('live_v7_expanded_disease_query'), JSON.stringify(stats)); } catch(e) {}
 }
 function buildPubMedStatsFromLiveRecords(records, total, recentCount, exactTopicCounts, oldestRecord) {
   var thisYear = currentYear();
@@ -10596,8 +10633,10 @@ function buildPubMedStatsFromLiveRecords(records, total, recentCount, exactTopic
   var byTopic = {};
   topicNames.forEach(function(topic) { byTopic[topic] = exactTopicCounts && Number.isFinite(exactTopicCounts[topic]) ? exactTopicCounts[topic] : classifiedTopicCounts[topic]; });
   return {
-    total:Math.max(total || 0,(records || []).length),
-    recentCount:Math.max(recentCount || 0,(records || []).filter(function(p){var y=validPubMedYear(p.year);return y && y>=recentCutoff();}).length),
+    total:(Number.isFinite(Number(total)) ? Number(total) : 0),
+    pubmedQueryMatchCount:(Number.isFinite(Number(total)) ? Number(total) : 0),
+    recentCount:(Number.isFinite(Number(recentCount)) ? Number(recentCount) : 0),
+    processedRecentRecordCount:(records || []).filter(function(p){var y=validPubMedYear(p.year);return y && y>=recentCutoff();}).length,
     uniqueJournals:Object.keys(journalBuckets).length,
     oldestRecordYear:oldestRecord && oldestRecord.year || null, oldestRecordPmid:oldestRecord && oldestRecord.pmid || '', oldestRecordTitle:oldestRecord && oldestRecord.title || '',
     minYear:String(oldestRecord && oldestRecord.year || earliestRetrievedYear || ''), byYear:byYear, unknownYearCount:unknownYearCount,
@@ -10609,9 +10648,11 @@ function buildPubMedStatsFromLiveRecords(records, total, recentCount, exactTopic
 
 async function fetchPubMedQueryCount(query) {
   var data = await fetchLivingAtlas(buildLivingAtlasUrl('esearch.fcgi', {db:'pubmed',term:query,retmax:0,retmode:'json',tool:'LipoScope'}), 'json');
-  return parseInt(data && data.esearchresult && data.esearchresult.count, 10) || 0;
+  var count = parseInt(data && data.esearchresult && data.esearchresult.count, 10);
+  if (!Number.isFinite(count) || count < 0) throw new Error('PubMed ESearch returned an invalid count');
+  return count;
 }
-function topicQueryMembershipStorageKey() { return 'liposcope_topic_query_membership_v1'; }
+function topicQueryMembershipStorageKey() { return 'liposcope_topic_query_membership_complete_v3'; }
 function loadTopicQueryMembershipCache() {
   if (_topicQueryMembershipCache) return _topicQueryMembershipCache;
   try {
@@ -10642,7 +10683,7 @@ async function fetchExactTopicPubMedEvidence(force) {
       if (byPmid[pmid].indexOf(topic) === -1) byPmid[pmid].push(topic);
     });
   }
-  var evidence = {version:'topic-query-membership-v1',fetchedAt:Date.now(),counts:counts,idsByTopic:idsByTopic,byPmid:byPmid};
+  var evidence = {version:'topic-query-membership-complete-v3',fetchedAt:Date.now(),counts:counts,idsByTopic:idsByTopic,byPmid:byPmid};
   saveTopicQueryMembershipCache(evidence);
   return evidence;
 }
@@ -10732,6 +10773,10 @@ async function fetchPubMedStats() {
       liveRecords = (livingAtlasPapers || []).slice();
     }
     if (!liveRecords.length) throw new Error('no live PubMed records cached');
+    // refreshLivingAtlasFromPubMed retains the previous cache on failure; do not
+    // present that stale set as freshly complete after a failed PMID page fetch.
+    var refreshError = getLivingAtlasError();
+    if (refreshError) throw new Error('PubMed corpus refresh failed: ' + refreshError);
 
     var total = await fetchPubMedQueryCount(LIPOEDEMA_PUBMED_QUERY);
     var recentCount = await fetchPubMedQueryCount('(' + LIPOEDEMA_PUBMED_QUERY + ') AND ' + cutoff + ':' + thisYear + '[PDAT]');
@@ -10743,6 +10788,10 @@ async function fetchPubMedStats() {
     var stats = buildPubMedStatsFromLiveRecords(liveRecords, total, recentCount, exactTopicEvidence.counts, oldestRecord);
     stats.source = 'live';
     stats.fetchedAt = Date.now();
+    stats.pubmedCountRetrievedAt = stats.fetchedAt;
+    stats.retrievalCompleteness = liveRecords.length === total ? 'query-and-record-count-consistent' : 'distinct-retrieval-time-count-difference';
+    stats.recordCountDifference = total - liveRecords.length;
+    stats.processedRecordsRetrievedAt = getLivingAtlasChecked();
     stats.checkedAt = getLivingAtlasChecked();
     stats.attemptedAt = getLivingAtlasAttempted();
     stats.error = '';
@@ -10762,6 +10811,8 @@ async function fetchPubMedStats() {
       null, localOldest);
     localStats.source = 'local-incomplete';
     localStats.completePubMedCount = false;
+    localStats.pubmedQueryMatchCount = null;
+    localStats.retrievalCompleteness = 'incomplete-offline';
     localStats.fetchedAt = Date.now();
     localStats.checkedAt = getLivingAtlasChecked();
     localStats.attemptedAt = getLivingAtlasAttempted();
@@ -11088,7 +11139,7 @@ async function runLiveSearch() {
 }
 
 async function searchPubMed(q, status, resultsEl) {
-  var scoped = encodeURIComponent(q + ' AND (lipedema[tiab] OR lipoedema[tiab] OR lipedema[MeSH Terms])');
+  var scoped = encodeURIComponent('(' + q + ') AND ' + LIPOEDEMA_PUBMED_QUERY);
   var base   = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
 
   var sr   = await fetch(base + 'esearch.fcgi?db=pubmed&term=' + scoped + '&retmax=20&sort=date&retmode=json');
@@ -11185,7 +11236,7 @@ var NCBI_REQUEST_INTERVAL_MS = 380;
 
 var NCBI_RETRY_LIMIT = 3;
 
-function livingAtlasStorageKey(k) { return 'liposcope_living_atlas_' + k; }
+function livingAtlasStorageKey(k) { return 'liposcope_living_atlas_complete_v3_' + k; }
 try { localStorage.removeItem('lip_scopus_api_key_v1'); } catch(e) {}
 function loadLivingAtlasStore() {
   try {
@@ -11392,9 +11443,12 @@ async function fetchAllLivingAtlasPubMedIds(query) {
     if (!pageIds.length) break;
     ids = ids.concat(pageIds.map(String));
   }
+  // ESearch returned records must be complete. Partial pages and changing results
+  // cannot silently be presented as a complete PubMed bibliometric snapshot.
   var seen = {};
   ids = ids.filter(function(id){ if (seen[id]) return false; seen[id] = true; return true; });
-  return {ids:ids,total:total};
+  if (ids.length !== total) throw new Error('Incomplete PubMed PMID retrieval: expected ' + total + ', received ' + ids.length + ' unique identifiers; previous successful cache retained');
+  return {ids:ids,total:total,complete:true};
 }
 
 function validPubMedYear(value) {
@@ -11519,6 +11573,26 @@ function parsePubMedAbstractXmlByPmid(xml) {
         if (!pmidNode) return;
         out[pmidNode.textContent.trim()] = parseArticleNode(article);
       });
+      // PubMed EFetch may mix standard PubmedArticle and PubmedBookArticle records
+      // in one response.  Book chapters must not be silently dropped.
+      Array.prototype.slice.call(doc.querySelectorAll('PubmedBookArticle')).forEach(function(article) {
+        var book = article.querySelector('BookDocument');
+        if (!book) return;
+        var pmidNode = book.querySelector('PMID');
+        if (!pmidNode) return;
+        var pmid = String(pmidNode.textContent || '').trim();
+        if (!pmid) return;
+        var metadata = parseArticleNode(book);
+        var bookYear = validPubMedYear(nodeText(book,'ContributionDate Year')) ||
+          validPubMedYear(nodeText(book,'Book PubDate Year')) ||
+          validPubMedYear(nodeText(book,'Book BeginDate Year')) ||
+          validPubMedYear(nodeText(book,'DateRevised Year')) || null;
+        metadata.publicationYear = bookYear || metadata.publicationYear;
+        metadata.journal.title = nodeText(book,'Book BookTitle') || '';
+        metadata.recordType = 'book_chapter';
+        metadata.metadataCompleteness = pubMedMetadataCompleteness(metadata);
+        out[pmid] = metadata;
+      });
       if (Object.keys(out).length) return out;
     }
   } catch(e) {}
@@ -11580,6 +11654,31 @@ function parsePubMedAbstractXmlByPmid(xml) {
     };
     record.metadataCompleteness = pubMedMetadataCompleteness(record);
     out[pm] = record;
+  });
+  // Regex fallback for non-DOM environments; book chapters have a separate
+  // PubmedBookArticle element and cannot share the journal-article parser.
+  String(xml || '').split(/<\/PubmedBookArticle>/i).forEach(function(block) {
+    if (block.indexOf('<PubmedBookArticle') < 0) return;
+    var pmid = (block.match(/<BookDocument[\s\S]*?<PMID[^>]*>(\d+)<\/PMID>/i) || [])[1];
+    if (!pmid || out[pmid]) return;
+    var sections = {}, matches, re = /<AbstractText([^>]*)>([\s\S]*?)<\/AbstractText>/gi, idx = 0;
+    while ((matches = re.exec(block))) {
+      var label = (matches[1].match(/\b(?:Label|NlmCategory)="([^"]+)"/i) || [])[1] || ('ABSTRACT_' + idx++);
+      addSection(sections,label,matches[2]);
+    }
+    var year = (block.match(/<ContributionDate>[\s\S]*?<Year>(\d{4})<\/Year>/i) || [])[1] ||
+      (block.match(/<Book>[\s\S]*?<PubDate>[\s\S]*?<Year>(\d{4})<\/Year>/i) || [])[1] || '';
+    var title = (block.match(/<BookTitle[^>]*>([\s\S]*?)<\/BookTitle>/i) || [])[1] || '';
+    var types = [], item, tr = /<PublicationType([^>]*)>([\s\S]*?)<\/PublicationType>/gi;
+    while ((item = tr.exec(block))) types.push({label:livingPlain(item[2]),ui:''});
+    var record = {abstractText:Object.keys(sections).map(function(k){return sections[k];}).join(' '),
+      fullText:Object.keys(sections).map(function(k){return sections[k];}).join(' '),
+      sections:sections,meshHeadings:[],publicationTypes:types,keywords:[],chemicals:[],supplementaryConcepts:[],
+      pmcid:'',publicationYear:validPubMedYear(year),citationStatus:'',indexingMethod:'',
+      dateCompleted:'',dateRevised:'',metadataCheckedAt:Date.now(),
+      journal:{title:livingPlain(title),isoAbbreviation:'',medlineTA:'',nlmUniqueId:'',issnLinking:''},recordType:'book_chapter'};
+    record.metadataCompleteness = pubMedMetadataCompleteness(record);
+    out[pmid] = record;
   });
   return out;
 }
@@ -11684,17 +11783,20 @@ async function refreshLivingAtlasFromPubMed(force) {
       var ab = await fetchPubMedAbstractsBatch(idsToFetch.slice(j, j + LIVING_ATLAS_ABSTRACT_BATCH));
       Object.keys(ab).forEach(function(k){ abstracts[k] = ab[k]; });
     }
+    var missingSummaries = idsToFetch.filter(function(id){return !summaries[id];});
+    if (missingSummaries.length) throw new Error('Incomplete PubMed citation summaries: ' + missingSummaries.length + ' missing of ' + idsToFetch.length + ' requested (e.g. ' + missingSummaries.slice(0,5).join(',') + ')');
     var incoming = [];
     idsToFetch.forEach(function(id) {
       var r = summaries[id];
-      if (!r) return;
       var meta = normalizePubMedMetadata(abstracts[id] || emptyPubMedMetadata(), '');
-      var title = livingPlain(r.title || '');
-      var hasDiseaseMesh = (meta.meshHeadings || []).some(function(h){ return meshLabelEquals(h.descriptor, LIPOEDEMA_MESH.label); });
-      if (!hasDiseaseMesh && !isLipedemaSpecificText(title, meta.abstractText)) return;
+      // An exact PMID returned by our canonical ESearch is eligible by query
+      // definition; do not impose a second title/abstract test which wrongly
+      // discards MeSH-only, incomplete-indexing and alternative-term records.
       incoming.push(pubMedLivingPaperFromSummary(r, meta));
     });
-    livingAtlasPapers = mergeLivingAtlasRecords(livingAtlasPapers, incoming, ids);
+    var candidateRecords = mergeLivingAtlasRecords(livingAtlasPapers, incoming, ids);
+    if (candidateRecords.length !== ids.length) throw new Error('Incomplete PubMed processed corpus: ' + candidateRecords.length + ' of ' + ids.length + ' unique PMID records');
+    livingAtlasPapers = candidateRecords;
     saveLivingAtlasStore();
     fetchExactTopicPubMedEvidence(false).then(function(topicEvidence) {
       var changed = applyTopicQueryMembershipsToRecords(livingAtlasPapers, topicEvidence);
@@ -12120,13 +12222,15 @@ var CCRF_SCHEMA={"schemaVersion":"ccrf-source-schema-1.0.2","generatedAt":"2026-
   function recordWideRows(classificationData,record){
     var fields=(classificationData.fields||[]).filter(function(f){return isInputField(f);});
     var header=['record_id','ccrf_version','ccrf_classification','schema_checksum'].concat(fields.map(function(f){return f.variable;}));
-    var row=[record.recordId,record.ccrfVersion,record.classification,record.schemaChecksum].concat(fields.map(function(f){return (f.identifier||f.type==='file')?'':responseForCsv(f,(record.responses||{})[f.variable]);}));
+    var a=assessRecord(classificationData,record,{excludeIdentifiers:true});
+    var row=[record.recordId,record.ccrfVersion,record.classification,record.schemaChecksum].concat(fields.map(function(f){return (f.identifier||f.type==='file'||!a.fieldStates[f.variable].applicable)?'':responseForCsv(f,(record.responses||{})[f.variable]);}));
     return [header,row];
   }
   function recordLabelWideRows(classificationData,record){
     var fields=(classificationData.fields||[]).filter(function(f){return isInputField(f);});
     var header=['record_id','ccrf_version','ccrf_classification','schema_checksum'].concat(fields.map(function(f){return f.variable;}));
-    var row=[record.recordId,record.ccrfVersion,record.classification,record.schemaChecksum].concat(fields.map(function(f){return (f.identifier||f.type==='file')?'':responseLabelForCsv(f,(record.responses||{})[f.variable]);}));
+    var a=assessRecord(classificationData,record,{excludeIdentifiers:true});
+    var row=[record.recordId,record.ccrfVersion,record.classification,record.schemaChecksum].concat(fields.map(function(f){return (f.identifier||f.type==='file'||!a.fieldStates[f.variable].applicable)?'':responseLabelForCsv(f,(record.responses||{})[f.variable]);}));
     return [header,row];
   }
   function recordCombinedWideRows(classificationData,record){
@@ -12134,8 +12238,9 @@ var CCRF_SCHEMA={"schemaVersion":"ccrf-source-schema-1.0.2","generatedAt":"2026-
     var header=['record_id','ccrf_version','ccrf_classification','schema_checksum'];
     fields.forEach(function(f){header.push(f.variable+'_code',f.variable+'_label');});
     var row=[record.recordId,record.ccrfVersion,record.classification,record.schemaChecksum];
+    var a=assessRecord(classificationData,record,{excludeIdentifiers:true});
     fields.forEach(function(f){
-      var value=(record.responses||{})[f.variable],blocked=f.identifier||f.type==='file';
+      var value=(record.responses||{})[f.variable],blocked=f.identifier||f.type==='file'||!a.fieldStates[f.variable].applicable;
       row.push(blocked?'':responseForCsv(f,value),blocked?'':responseLabelForCsv(f,value));
     });
     return [header,row];
@@ -12155,10 +12260,10 @@ var CCRF_SCHEMA={"schemaVersion":"ccrf-source-schema-1.0.2","generatedAt":"2026-
     var rows=[header];
     records.forEach(function(record){
       var cls=classification(schema,record.classification);if(!cls)return;
-      var map={};(cls.fields||[]).forEach(function(f){map[f.variable]=f;});
+      var map={},assessment=assessRecord(cls,record,{excludeIdentifiers:true});(cls.fields||[]).forEach(function(f){map[f.variable]=f;});
       var row=[record.recordId,record.ccrfVersion,record.classification,record.schemaChecksum,record.updatedAt||''];
       variables.forEach(function(v){
-        var f=map[v],value=(record.responses||{})[v],blocked=!f||f.identifier||f.type==='file';
+        var f=map[v],value=(record.responses||{})[v],blocked=!f||f.identifier||f.type==='file'||!assessment.fieldStates[v].applicable;
         var code=blocked?'':responseForCsv(f,value),label=blocked?'':responseLabelForCsv(f,value);
         if(mode==='combined')row.push(code,label);else row.push(mode==='labels'?label:code);
       });
@@ -12173,7 +12278,7 @@ var CCRF_SCHEMA={"schemaVersion":"ccrf-source-schema-1.0.2","generatedAt":"2026-
       var assessment=assessRecord(cls,record,options||{});
       cls.fields.forEach(function(f){
         if(!isInputField(f)) return;
-        rows.push([record.recordId,record.ccrfVersion,record.classification,record.schemaChecksum,f.variable,f.form,f.section,f.type,f.required?'Y':'N',f.identifier?'Y':'N',assessment.fieldStates[f.variable].status,(f.identifier||f.type==='file')?'':responseForCsv(f,(record.responses||{})[f.variable]),(f.identifier||f.type==='file')?'':responseLabelForCsv(f,(record.responses||{})[f.variable])]);
+        rows.push([record.recordId,record.ccrfVersion,record.classification,record.schemaChecksum,f.variable,f.form,f.section,f.type,f.required?'Y':'N',f.identifier?'Y':'N',assessment.fieldStates[f.variable].status,(f.identifier||f.type==='file'||!assessment.fieldStates[f.variable].applicable)?'':responseForCsv(f,(record.responses||{})[f.variable]),(f.identifier||f.type==='file'||!assessment.fieldStates[f.variable].applicable)?'':responseLabelForCsv(f,(record.responses||{})[f.variable])]);
       });
     });
     return rows;
@@ -12214,7 +12319,7 @@ var CCRF_SCHEMA={"schemaVersion":"ccrf-source-schema-1.0.2","generatedAt":"2026-
     Object.keys(schema.classifications||{}).forEach(function(k){var c=schema.classifications[k];lines.push('- '+k+': '+c.official_cdes+' CDEs ('+c.clinical_cdes+' clinician-completed; '+c.participant_cdes+' participant-completed) | '+c.dictionaryRows+' REDCap dictionary rows');});
     lines.push('','Pinned official source files:');
     Object.keys(schema.source.files||{}).forEach(function(k){var f=schema.source.files[k];lines.push('- '+k+': '+f.filename+' | SHA-256 '+f.sha256);});
-    lines.push('','Count interpretation: official CDE totals and REDCap dictionary-row counts are different measures. Completion statistics in LipoScope use only currently applicable required response fields, excluding identifiers from local storage.','Conditional-response interpretation: a response retained after its official branch becomes inactive is excluded from completion and marked inactive_with_value in the long-format and data-quality files.','Calculated-field policy: calculated rows are preserved exactly as supplied. No value is calculated when the official dictionary expression is blank.','Interpretation: coded CSV values use the official CCRF response codes. Readable labels and the data dictionary provide the corresponding meanings.');
+    lines.push('','Count interpretation: official CDE totals and REDCap dictionary-row counts are different measures. Completion statistics in LipoScope use only currently applicable required response fields, excluding identifiers from local storage.','Conditional-response interpretation: a response retained after its official branch becomes inactive is excluded from completion and masked in analysis-oriented data columns; its inactive_with_value status is retained in the long-format and data-quality files.','Calculated-field policy: calculated rows are preserved exactly as supplied. No value is calculated when the official dictionary expression is blank.','Interpretation: coded CSV values use the official CCRF response codes. Readable labels and the data dictionary provide the corresponding meanings.');
     return lines.join('\n')+'\n';
   }
 
@@ -12264,8 +12369,9 @@ function ccrfRecordsForExport(){
   }
   return records;
 }
+function ccrfRecordMatchesSource(record){var cls=CCRFEngine.classification(CCRF_SCHEMA,record&&record.classification);return !!(cls&&record.ccrfVersion===CCRF_SCHEMA.source.ccrfVersion&&record.schemaVersion===CCRF_SCHEMA.schemaVersion&&record.schemaChecksum===CCRF_SCHEMA.source.files[record.classification].sha256);}
 function ccrfInactiveResponseCount(records){var total=0;(records||[]).forEach(function(record){var cls=CCRFEngine.classification(CCRF_SCHEMA,record.classification);if(!cls)return;var a=CCRFEngine.assessRecord(cls,record,{excludeIdentifiers:true});total+=a.counts.inactive_with_value||0;});return total;}
-function ccrfRequireExportRecords(){var records=ccrfRecordsForExport();if(!records.length){if(typeof showToast==='function')showToast('Enter at least one response or save a CCRF record before downloading research data.','error');return [];}var inactive=ccrfInactiveResponseCount(records);if(inactive&&typeof window!=='undefined'&&typeof window.confirm==='function'&&!window.confirm(inactive+' stored response(s) belong to fields that are currently not applicable under the official CCRF branching rules. They will remain in the export and be marked in the data-quality file. Continue?'))return [];return records;}
+function ccrfRequireExportRecords(){var records=ccrfRecordsForExport();if(!records.length){if(typeof showToast==='function')showToast('Enter at least one response or save a CCRF record before downloading research data.','error');return [];}if(records.some(function(r){return !ccrfRecordMatchesSource(r);})){if(typeof showToast==='function')showToast('One or more saved records use a different CCRF schema. Export stopped: review or migrate these records before combining datasets.','error');return [];}var inactive=ccrfInactiveResponseCount(records);if(inactive&&typeof window!=='undefined'&&typeof window.confirm==='function'&&!window.confirm(inactive+' stored response(s) belong to fields that are currently not applicable under the official CCRF branching rules. Their values will be blank in analysis-oriented exports and their inactive status will be listed in the separate data-quality file. Continue?'))return [];return records;}
 
 
 function ccrfInitialize(){
@@ -12283,7 +12389,7 @@ function ccrfInitialize(){
 
 function ccrfRenderSourceStatus(){
   var el=document.getElementById('ccrf-source-status');if(!el)return;
-  el.innerHTML='<strong>CCRF source:</strong> Lipedema Foundation CCRF '+ccrfEsc(CCRF_SCHEMA.source.ccrfVersion)+'. Official CDE totals were checked against the Foundation webpage on '+ccrfEsc(ccrfDisplayDate(CCRF_SCHEMA.source.officialCountAccessedDate))+'. The separate REDCap dictionary-row counts describe the technical implementation used by LipoScope. Calculated fields are preserved exactly as marked in the dictionaries; where the official calculation expression is blank, LipoScope does not invent one. <a href="https://www.lipedema.org/ccrf" target="_blank" rel="noopener">Official CCRF page</a> · <a href="https://doi.org/10.3389/fgwh.2026.1833913" target="_blank" rel="noopener">CCRF development paper</a>.';
+  el.innerHTML='<strong>CCRF source:</strong> Lipedema Foundation CCRF '+ccrfEsc(CCRF_SCHEMA.source.ccrfVersion)+'. Official CDE totals were checked against the Foundation webpage on '+ccrfEsc(ccrfDisplayDate(CCRF_SCHEMA.source.officialCountAccessedDate))+'. The original v1.0.0 GitHub REDCap dictionary metadata are the authoritative CCRF definitions for this revision; the September 2026 consolidated workbook is used only for secondary comparison. The separate REDCap dictionary-row counts describe the technical implementation used by LipoScope. Calculated fields are preserved exactly as marked in the dictionaries; where the official calculation expression is blank, LipoScope does not invent one. <a href="https://www.lipedema.org/ccrf" target="_blank" rel="noopener">Official CCRF page</a> · <a href="https://doi.org/10.3389/fgwh.2026.1833913" target="_blank" rel="noopener">CCRF development paper</a>.';
 }
 
 function ccrfChangeClassification(){
@@ -12319,9 +12425,9 @@ function ccrfToggleFilter(kind){var el=document.getElementById(kind==='required'
 function ccrfRenderBuilder(){
   var empty=document.getElementById('ccrf-builder-empty'),workspace=document.getElementById('ccrf-builder-workspace'),cls=ccrfClass();
   if(!empty||!workspace)return;
-  if(!cls){empty.style.display='block';workspace.style.display='none';empty.innerHTML='<h4>Select a CCRF classification</h4><p>Choose Core, Supplemental Highly Recommended, Supplemental, or Exploratory. LipoScope will generate browser-based controls from the fields, coded choices, required flags and branching rules represented in that official source dictionary. Some native REDCap presentation features, including matrix grouping and shared matrix instructions, are not reproduced in the Builder.</p>';ccrfRenderLedger();return;}
+  if(!cls){empty.style.display='block';workspace.style.display='none';empty.innerHTML='<h4>Select a CCRF classification</h4><p>Choose Core, Supplemental Highly Recommended, Supplemental, or Exploratory. LipoScope will generate browser-based controls from the fields, coded choices, required flags and branching rules represented in that official source dictionary. Original matrix group titles and shared instructions are displayed where present; responses use separate controls rather than the native REDCap matrix grid.</p>';ccrfRenderLedger();return;}
   empty.style.display='none';workspace.style.display='block';ccrfEnsureRecord();ccrfPopulateNavigation(cls);
-  var meta=document.getElementById('ccrf-classification-meta');if(meta)meta.innerHTML='<strong>'+ccrfEsc(cls.label)+'</strong>: '+cls.official_cdes+' official CDEs ('+cls.clinical_cdes+' clinician-completed and '+cls.participant_cdes+' participant-completed). LipoScope uses '+cls.dictionaryRows+' REDCap dictionary rows as the official source dictionary for this browser-based implementation, preserving the represented source schema and metadata while adapting some presentation features for the LipoScope interface. Native REDCap matrix grouping and shared matrix instructions are not reproduced in the Builder. Conditional questions are included normally when their official branching conditions are met. Completion below is calculated only from applicable required response fields that can be assessed in this browser; it is not a percentage of all '+cls.official_cdes+' CDEs.';
+  var meta=document.getElementById('ccrf-classification-meta');if(meta)meta.innerHTML='<strong>'+ccrfEsc(cls.label)+'</strong>: '+cls.official_cdes+' official CDEs ('+cls.clinical_cdes+' clinician-completed and '+cls.participant_cdes+' participant-completed). LipoScope uses '+cls.dictionaryRows+' REDCap dictionary rows as the official source dictionary for this browser-based implementation, preserving the represented source schema and metadata while adapting some presentation features for the LipoScope interface. Original matrix group headings and shared instructions are displayed where supplied. Matrix responses remain individual browser controls, not a replica of the REDCap grid. Conditional questions are included normally when their official branching conditions are met. Completion below is calculated only from applicable required response fields that can be assessed in this browser; it is not a percentage of all '+cls.official_cdes+' CDEs.';
   var search=document.getElementById('ccrf-search');if(search&&search.value!==CCRF_APP_STATE.search)search.value=CCRF_APP_STATE.search;
   var req=document.getElementById('ccrf-required-only');if(req)req.checked=CCRF_APP_STATE.requiredOnly;
   var miss=document.getElementById('ccrf-missing-only');if(miss)miss.checked=CCRF_APP_STATE.missingOnly;
@@ -12367,7 +12473,15 @@ function ccrfRenderFields(){
   var html='<div class="ccrf-section-heading"><div><h4>'+ccrfEsc(CCRF_APP_STATE.section)+'</h4><p>'+fields.length+' field(s) currently shown from '+ccrfEsc(CCRF_APP_STATE.form)+'. Conditional questions appear only when their official branching conditions are met.</p></div></div>';
   if(!fields.length){container.innerHTML=html+'<div class="atlas-result">No currently applicable fields match the selected filters.</div>';return;}
   html+='<div class="ccrf-field-list">';
+  var priorMatrixGroup='';
   fields.forEach(function(field){
+    if(field.matrixGroup){
+      if(field.matrixGroup!==priorMatrixGroup){
+        var sharedInstructions=CCRFEngine.cleanText(field.matrixGroup);
+        html+='<div class="ccrf-matrix-context" data-matrix-group="'+ccrfEsc(sharedInstructions)+'"><strong>CCRF matrix group and shared instructions</strong><p>'+ccrfEsc(sharedInstructions)+'</p><p class="ccrf-matrix-info">Questions in this group appear as individual controls; their original response codes and labels are retained.</p></div>';
+      }
+      priorMatrixGroup=field.matrixGroup;
+    }else{priorMatrixGroup='';}
     var state=assessment.fieldStates[field.variable];
     var errors=(state.errors||[]).map(function(e){return '<li>'+ccrfEsc(e)+'</li>';}).join('');
     var label=CCRFEngine.cleanText(field.label||field.variable);
@@ -12424,7 +12538,7 @@ function ccrfRenderLedger(){
   el.innerHTML='<div class="ccrf-ledger-head"><div><h4>Saved CCRF records</h4><p>'+records.length+' record(s). '+(agg.versionMismatches.length?agg.versionMismatches.length+' record(s) use a different schema checksum and require explicit migration.':'All records match the embedded source checksums.')+'</p></div><div class="atlas-actions"><button class="atlas-btn primary" onclick="ccrfDownloadResearchPackage()">Download research package</button><button class="atlas-btn" onclick="ccrfClearAllRecords()">Clear saved records</button></div></div><div class="atlas-table-wrap"><table class="atlas-table"><thead><tr><th>Local record ID</th><th>Classification</th><th>Updated</th><th>Source status</th><th>Actions</th></tr></thead><tbody>'+records.map(function(r){var mismatch=agg.versionMismatches.indexOf(r.recordId)>=0;return '<tr><td><code>'+ccrfEsc(r.recordId)+'</code></td><td>'+ccrfEsc(ccrfClassLabel(r.classification))+'</td><td>'+ccrfEsc(String(r.updatedAt||'').replace('T',' ').slice(0,19))+'</td><td><span class="ccrf-status '+(mismatch?'invalid':'ready')+'">'+(mismatch?'Version mismatch':'Verified')+'</span></td><td><button class="atlas-btn" onclick="ccrfLoadRecord('+ccrfJsArg(r.recordId)+')">Load</button> <button class="atlas-btn" onclick="ccrfDownloadSavedRecord('+ccrfJsArg(r.recordId)+')">Codes + labels</button> <button class="atlas-btn" onclick="ccrfDeleteRecord('+ccrfJsArg(r.recordId)+')">Delete</button></td></tr>';}).join('')+'</tbody></table></div>';
 }
 function ccrfDownloadCurrentRecord(){var cls=ccrfClass(),record=ccrfEnsureRecord();if(!cls||!record||!ccrfConfirmRecordExport(record))return;ccrfDownload('LipoScope_CCRF_'+record.classification+'_'+record.recordId+'_codes_and_labels.csv',CCRFEngine.toCsv(CCRFEngine.recordCombinedWideRows(cls,record)),'text/csv;charset=utf-8');}
-function ccrfConfirmRecordExport(record){var inactive=ccrfInactiveResponseCount([record]);return !inactive||typeof window==='undefined'||typeof window.confirm!=='function'||window.confirm(inactive+' stored response(s) belong to fields that are currently not applicable under the official CCRF branching rules. They will remain in the export and be marked in the data-quality file. Continue?');}
+function ccrfConfirmRecordExport(record){if(!ccrfRecordMatchesSource(record)){if(typeof showToast==='function')showToast('The record uses a different CCRF schema; export requires explicit migration.','error');return false;}var inactive=ccrfInactiveResponseCount([record]);return !inactive||typeof window==='undefined'||typeof window.confirm!=='function'||window.confirm(inactive+' stored response(s) belong to fields that are currently not applicable under the official CCRF branching rules. Their values will be blank in analysis-oriented exports and their inactive status will be listed in the separate data-quality file. Continue?');}
 function ccrfDownloadSavedRecord(id){var r=ccrfLoadLedger().filter(function(x){return x.recordId===id;})[0];if(!r||!ccrfConfirmRecordExport(r))return;var cls=CCRFEngine.classification(CCRF_SCHEMA,r.classification);ccrfDownload('LipoScope_CCRF_'+r.classification+'_'+r.recordId+'_codes_and_labels.csv',CCRFEngine.toCsv(CCRFEngine.recordCombinedWideRows(cls,r)),'text/csv;charset=utf-8');}
 function ccrfDownloadCodesAndLabels(){var records=ccrfRequireExportRecords();if(!records.length)return;ccrfDownload('LipoScope_CCRF_records_codes_and_labels_'+new Date().toISOString().slice(0,10)+'.csv',CCRFEngine.toCsv(CCRFEngine.cohortWideRows(CCRF_SCHEMA,records,'combined')),'text/csv;charset=utf-8');}
 function ccrfDownloadCodedData(){var records=ccrfRequireExportRecords();if(!records.length)return;ccrfDownload('LipoScope_CCRF_records_coded_'+new Date().toISOString().slice(0,10)+'.csv',CCRFEngine.toCsv(CCRFEngine.cohortWideRows(CCRF_SCHEMA,records,'coded')),'text/csv;charset=utf-8');}
@@ -12674,11 +12788,11 @@ function renderNotifDropdown() {
     var shortTitle = n.title.length > 90 ? n.title.slice(0,90) + '…' : n.title;
     var isAdded = isAlreadyAdded(n.pmid);
     html += '<div class="notif-item' + (n.unread ? ' unread' : '') + '">';
-    html += '<div class="notif-item-title">' + shortTitle + '</div>';
+    html += '<div class="notif-item-title">' + escHtml(shortTitle) + '</div>';
     html += '<div class="notif-item-meta">';
     html += (n.unread ? '<span class="notif-new-pill">NEW</span>' : '');
-    html += '<span>' + (n.authors || '') + '</span>';
-    html += '<span>' + (n.journal || '') + ' ' + (n.year || '') + '</span>';
+    html += '<span>' + escHtml(n.authors || '') + '</span>';
+    html += '<span>' + escHtml((n.journal || '') + ' ' + (n.year || '')) + '</span>';
     html += '<span>PMID: ' + (n.pmid || '') + '</span>';
     html += '</div>';
     html += '<div class="notif-item-actions">';
@@ -12762,17 +12876,19 @@ async function checkForNewPapers(force) {
   var checkedLabel = checkedDate.toLocaleDateString('en-AU');
   var rangeLabel = sinceDate.toLocaleDateString('en-AU') + ' to ' + checkedLabel;
 
-  setLastNotifCheck(String(now));
-
+  // Only a successful check advances the throttling timestamp.
   try {
     var base   = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
-    var term   = encodeURIComponent('(lipedema[tiab] OR lipoedema[tiab]) AND ("' + mindate.replace(/\//g,'/') + '"[PDAT] : "3000"[PDAT])');
+    var term   = encodeURIComponent(LIPOEDEMA_PUBMED_QUERY + ' AND ("' + mindate.replace(/\//g,'/') + '"[PDAT] : "3000"[PDAT])');
     var sr     = await fetch(base + 'esearch.fcgi?db=pubmed&term=' + term + '&retmax=15&sort=date&retmode=json');
+    if (!sr.ok) throw new Error('PubMed ESearch HTTP ' + sr.status);
     var sd     = await sr.json();
+    if (!sd || !sd.esearchresult || !/^\d+$/.test(String(sd.esearchresult.count))) throw new Error('PubMed ESearch returned an invalid response');
     var ids    = (sd.esearchresult && sd.esearchresult.idlist) || [];
     var total  = parseInt((sd.esearchresult && sd.esearchresult.count) || 0);
 
     if (!ids.length) {
+      setLastNotifCheck(String(now));
       renderNotifDropdown();
       var badge = document.getElementById('notif-badge');
       if (badge) badge.classList.remove('visible');
@@ -12784,7 +12900,9 @@ async function checkForNewPapers(force) {
 
     // Fetch summaries
     var er  = await fetch(base + 'esummary.fcgi?db=pubmed&id=' + ids.join(',') + '&retmode=json');
+    if (!er.ok) throw new Error('PubMed ESummary HTTP ' + er.status);
     var ed  = await er.json();
+    if (!ed || !ed.result) throw new Error('PubMed ESummary returned an invalid response');
     var existingPmids = getAllPapers().map(function(p) { return String(p.pmid || ''); }).filter(Boolean);
 
     var newItems = [];
@@ -12805,6 +12923,9 @@ async function checkForNewPapers(force) {
       });
     });
 
+    // A completed request, including a window with no new-to-library items,
+    // may advance the next-check time. Failed requests must not do so.
+    setLastNotifCheck(String(now));
     if (newItems.length) {
       // Merge with existing, keeping most recent at top
       var existingPmidsNotif = _notifications.map(function(n){ return String(n.pmid); });
@@ -12978,7 +13099,7 @@ function buildTopicPubMedQuery(definition) {
   if (majorTerms.length) arms.push('(\"Lipedema\"[Majr] AND (' + majorTerms.join(' OR ') + '))');
 
   if ((definition.titleQueryTerms || []).length) {
-    arms.push('((lipedema[Title] OR lipoedema[Title]) AND (' + definition.titleQueryTerms.join(' OR ') + '))');
+    arms.push('((lipedema[Title] OR lipoedema[Title] OR lipedemas[Title] OR lipoedemas[Title] OR lipolymphedema[Title] OR lipolymphedemas[Title] OR "lipohyperplasia dolorosa"[Title]) AND (' + definition.titleQueryTerms.join(' OR ') + '))');
   }
   return '(' + arms.join(' OR ') + ')';
 }
@@ -13156,8 +13277,8 @@ function classifyPaperTopicDetailed(title, abstract, metadata) {
   var meshHeadings = meta.meshHeadings || [], publicationTypes = meta.publicationTypes || [];
   var hasLipedemaMesh = meshHeadings.some(function(h) { return meshLabelEquals(h.descriptor, LIPOEDEMA_MESH.label); });
   var lipedemaMajor = meshHeadings.some(function(h) { return meshLabelEquals(h.descriptor, LIPOEDEMA_MESH.label) && !!h.descriptorMajor; });
-  var titleHasDisease = /\b(?:lipedema|lipoedema)\b/i.test(title);
-  var diseaseEvidence = hasLipedemaMesh || titleHasDisease || /\b(?:lipedema|lipoedema)\b/i.test(abstract);
+  var titleHasDisease = /\b(?:lipedema|lipoedema|lipedemas|lipoedemas|lipolymphedema|lipolymphedemas)\b|lipohyperplasia\s+dolorosa/i.test(title);
+  var diseaseEvidence = hasLipedemaMesh || titleHasDisease || /\b(?:lipedema|lipoedema|lipedemas|lipoedemas|lipolymphedema|lipolymphedemas)\b|lipohyperplasia\s+dolorosa/i.test(abstract);
   var queryMembership = (meta.topicQueryMembership || []).filter(function(topic){ return !!TOPIC_DEFINITIONS[topic]; });
   var keywordsText = (meta.keywords || []).join(' ');
   var indexedText = (meta.chemicals || []).concat(meta.supplementaryConcepts || []).join(' ');
@@ -13524,7 +13645,7 @@ function refreshStoredDynamicBrowseClassifications() {
 if (typeof window !== 'undefined') window.refreshStoredDynamicBrowseClassifications = refreshStoredDynamicBrowseClassifications;
 
 function isLipedemaSpecificText(title, abstract) {
-  return /\b(lipedema|lipoedema|lipedematous|lipoedematous)\b/i.test((title || '') + ' ' + (abstract || ''));
+  return /\b(lipedema|lipoedema|lipedemas|lipoedemas|lipolymphedema|lipolymphedemas|lipedematous|lipoedematous)\b|lipohyperplasia\s+dolorosa/i.test((title || '') + ' ' + (abstract || ''));
 }
 
 // ── Build topic checkbox grid ──

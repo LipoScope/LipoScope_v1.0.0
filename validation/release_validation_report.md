@@ -1,6 +1,6 @@
 # LipoScope v1.0.0 validation report
 
-Generated: 2026-08-12T15:39:55+00:00
+Generated: 2026-10-21T13:49:32+00:00
 
 ## Application structure
 
@@ -19,7 +19,7 @@ The four dictionaries are cumulative. Technical row totals are not presented as 
 
 ## Validation
 
-- Automated tests: **37 passed; 0 failed**
+- Automated tests: **46 passed; 0 failed**
 - Browser audit: **passed**
 - JSZip 3.10.1 embedded ZIP component: **passed**
 - Python syntax errors: **0**

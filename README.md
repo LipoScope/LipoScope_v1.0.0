@@ -8,7 +8,7 @@ LipoScope is a browser-local research workbench for lipoedema/lipedema literatur
 
 ## Application tabs
 
-- **Start Here** — orientation, visual guides and workflow overview.
+- **Start Here** — orientation, guided walkthrough and workflow overview.
 - **Browse Papers** — filter, review and curate the public literature collection and user-added records.
 - **Live Search** — search PubMed or Google Scholar and add selected PubMed records to the local Browse workspace.
 - **Analytics** — compare the wider PubMed literature landscape with the currently visible Browse collection.
@@ -30,7 +30,7 @@ The embedded CCRF schema is generated from frozen row-level snapshots of the fou
 
 The package records the official source URLs, SHA-256 checksums, official CDE counts and every REDCap dictionary row. The schema generator preserves source variable names, form names, section headings, field types, labels, coded choices, notes, validation settings, required-field flags, branching expressions, matrix metadata and annotations.
 
-Direct identifiers are excluded from browser-local storage and exports. Conditional questions use the official branching expressions. A stored response is retained and flagged if its branch later becomes inactive. Calculated fields are not inferred when the official source dictionary does not provide an executable calculation expression.
+Direct identifiers are excluded from browser-local storage and exports. Conditional questions use the official branching expressions. An inactive response can remain in local record history and is flagged for review, but its value is masked in analysis-oriented exports. Calculated fields are not inferred when the official source dictionary does not provide an executable calculation expression.
 
 ## Build and validation
 
@@ -42,6 +42,8 @@ python -m playwright install chromium
 python scripts/19_embed_jszip.py
 python -m pytest -q
 python scripts/18_browser_smoke_test.py --html LipoScope.html
+python scripts/22_browser_pubmed_regression.py --html LipoScope.html --out validation/pubmed_browser_regression.json
+python scripts/23_browser_literature_regression.py --html LipoScope.html --out validation/literature_browser_regression.json
 python scripts/20_generate_validation_reports.py
 ```
 
@@ -61,7 +63,7 @@ The source-to-schema workflow is documented in `scripts/ccrf/README.md`. The imp
 
 ## Citation
 
-Citation metadata are supplied in `CITATION.cff`.
+Citation metadata are supplied in `CITATION.cff`. The exact software release should be identified using its repository commit or archived release identifier.
 
 ## Licence
 

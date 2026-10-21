@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-08-12T15:39:55+00:00",
+  "generated_at": "2026-10-21T13:49:32+00:00",
   "application_version": "v1.0.0",
-  "html_sha256": "056d2ea06fe7cca6c1a98779473b50fd2614ca75486bdf300f192ae1088384d8",
+  "html_sha256": "56236c9dd97bfb4e845b0f2291c02d8fea19a11c2f2686372cbf3f60e8a3c63a",
   "ccrf": {
     "version": "Version 1",
     "classifications": {
@@ -32,8 +32,10 @@
     }
   },
   "automated_tests": {
-    "passed": 37,
-    "failed": 0
+    "passed": 46,
+    "failed": 0,
+    "source": "2026-10-22 python -X utf8 -m pytest -q",
+    "scope": "maintained application code, CCRF source, retrieval-integrity and distribution tests"
   },
   "browser_test": {
     "passed": true,

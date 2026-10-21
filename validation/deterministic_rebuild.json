@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-12T15:39:55+00:00",
+  "generated_at": "2026-10-21T13:49:32+00:00",
   "schema_embedded_exactly": true,
   "jszip_version": "3.10.1",
   "jszip_sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e",
   "jszip_embedded_exactly": true,
   "template_matches": true,
   "release_copy_matches": true,
-  "html_sha256": "056d2ea06fe7cca6c1a98779473b50fd2614ca75486bdf300f192ae1088384d8",
+  "html_sha256": "56236c9dd97bfb4e845b0f2291c02d8fea19a11c2f2686372cbf3f60e8a3c63a",
   "schema_sha256": "8f80d7e35f153ab4c2c443bd8d2e5ea5df0c6edbe8b0e690c1815a8ef07dbf6c",
   "passed": true
 }

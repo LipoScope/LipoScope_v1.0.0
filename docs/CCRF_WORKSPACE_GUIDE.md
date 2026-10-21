@@ -17,3 +17,7 @@ The dictionary view shows source variables, labels, choices, validation, branchi
 ## Privacy and calculated fields
 
 Direct identifiers, signatures and uploaded files are not stored as CCRF record values. Calculated fields are displayed as unavailable when the official source dictionary does not contain an executable calculation expression; LipoScope does not substitute a conventional formula.
+
+## Validation-related improvements for the revision
+
+The Builder displays shared matrix-group instructions where supplied by the pinned Version 1 source. Inactive branch responses are retained in the local record for correction/review but are blanked from analytical exports, and the quality report contains their inactive status. Records with incompatible version, schema, or checksum metadata cannot be exported together without an explicit migration.

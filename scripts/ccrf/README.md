@@ -15,7 +15,7 @@ The CCRF scripts validate and reconstruct the browser schema from the frozen off
 | `08_embed_ccrf_schema.py` | Embed the generated schema into the template, active HTML and versioned release copy. |
 | `run_ccrf_build.py` | Run schema generation, reconciliation, count checks, calculated-field audit and HTML embedding in sequence. |
 
-Conditional fields use the official branching expression. Direct identifiers remain unpopulated, and inactive conditional responses are retained and flagged rather than silently deleted.
+Conditional fields use the official branching expression. Direct identifiers remain unpopulated, and inactive conditional responses remain available in local record history for audit, but are masked in analysis-oriented exports and flagged in the data-quality report.
 
 Run the complete offline build with:
 

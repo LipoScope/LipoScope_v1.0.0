@@ -28,4 +28,12 @@ The displayed completion percentage is a LipoScope workspace measure calculated 
 
 ## Exports
 
-The research package can contain coded data, readable labels, paired codes and labels, long-format records, the data dictionary, a data-quality report and a source manifest. Identifier and file values are blank. Stored responses in inactive branches remain available but are marked in the data-quality file unless cleared before export.
+The research package can contain coded data, readable labels, paired codes and labels, long-format records, the data dictionary, a data-quality report and a source manifest. Identifier and file values are blank. Stored responses in inactive branches remain in the browser-local record for review, but their values are blank in coded, labelled, combined and long-format analysis exports; their inactive status remains in the separate data-quality report.
+
+## Pinned source definitions
+
+The release uses the Version 1 CCRF definitions recorded in `data/ccrf_source_snapshot.tsv`, `data/ccrf_schema.json`, and `data/ccrf_source_manifest.json`. The frozen source files preserve the official variable identifiers, original coded options, branching expressions, identifier flags, and technical rows. Application display and exports must retain these definitions.
+
+## Matrix contextual instructions
+
+For source fields carrying original REDCap matrix-group metadata, the Builder displays a shared group title and associated instructions before the group of questions. The response controls remain individual browser controls rather than a full reproduction of the REDCap visual matrix.
