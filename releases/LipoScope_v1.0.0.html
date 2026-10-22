@@ -259,6 +259,8 @@ select:focus{border-color:var(--rose)}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--teal-pale);border-top-color:var(--teal);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 .live-results{display:flex;flex-direction:column;gap:12px}
+.live-pagination{display:flex;justify-content:center;margin-top:18px}
+.live-pagination[hidden]{display:none}
 .live-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;cursor:pointer;transition:all 0.2s}
 .live-card:hover{border-color:var(--rose-light);box-shadow:var(--shadow-sm);transform:translateY(-1px)}
 .live-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
@@ -2489,7 +2491,7 @@ select:focus{border-color:var(--rose)}
         <div class="source-card active" id="src-pubmed" onclick="setLiveSource('pubmed',this)">
           <div class="source-card-icon">🔬</div>
           <div class="source-card-name">PubMed (NIH)</div>
-          <div class="source-card-desc">Full-text indexed MEDLINE database. Returns up to 20 recent results scoped to lipedema/lipoedema.</div>
+          <div class="source-card-desc">Search PubMed citations, including MEDLINE. Browse all matching results in batches, scoped to lipedema/lipoedema.</div>
         </div>
         <div class="source-card" id="src-scholar" onclick="setLiveSource('scholar',this)">
           <div class="source-card-icon">🎓</div>
@@ -2505,11 +2507,14 @@ select:focus{border-color:var(--rose)}
       </div>
 
       <div class="live-tip">
-        <strong>Tips:</strong> Use <code>PubMed</code> for peer-reviewed results — automatically scoped to lipedema/lipoedema. Click <strong>+ Add to Browse</strong> on any result to save it as a card with generated aims, methods, and findings. Use <code>Google Scholar</code> to find grey literature, preprints, and conference proceedings.
+        <strong>Tips:</strong> PubMed searches are automatically scoped to lipedema/lipoedema. Use <strong>Load more results</strong> to browse every match, then click <strong>+ Add to Browse</strong> on any result to save it as a card with generated aims, methods, and findings. Use <code>Google Scholar</code> to find grey literature, preprints, and conference proceedings.
       </div>
 
-      <div class="live-status" id="live-status"></div>
+      <div class="live-status" id="live-status" role="status" aria-live="polite"></div>
       <div class="live-results" id="live-results"></div>
+      <div class="live-pagination" id="live-pagination" hidden>
+        <button class="live-btn" id="live-more-btn" onclick="loadMoreLiveResults()" aria-controls="live-results">Load more results</button>
+      </div>
 
       <!-- ═══ AUTO-DISCOVERY ENGINE ═══ -->
       <div style="margin-top:28px;padding-top:24px;border-top:2px dashed var(--border)">
@@ -11121,6 +11126,7 @@ function guessType(title) {
 async function addPaperFromLive(pd) {
   if (isAlreadyAdded(pd.pmid)) { showToast('Already in database.','warn'); return; }
   var metadata = pd.pmid ? await fetchPubMedAbstract(pd.pmid) : emptyPubMedMetadata();
+  if (isAlreadyAdded(pd.pmid)) { showToast('Already in database.','warn'); return; }
   if (!metadata.abstractText && pd.abstract) metadata.abstractText = metadata.fullText = pd.abstract;
   metadata.topicQueryMembership = topicMembershipForPmid(pd.pmid);
   var topicClassification = classifyPaperTopicDetailed(pd.title, metadata.abstractText, metadata);
@@ -11174,91 +11180,187 @@ async function addPaperFromLive(pd) {
 //  LIVE SEARCH
 // ═══════════════════════════════════════════════════════════════════════
 var liveSource = 'pubmed';
+var LIVE_SEARCH_BATCH_SIZE = 50;
+var liveSearchGeneration = 0;
+var liveSearchState = null;
+
+function resetLiveSearch() {
+  liveSearchGeneration++;
+  liveSearchState = null;
+  window._live = {};
+  document.getElementById('live-results').innerHTML = '';
+  document.getElementById('live-pagination').hidden = true;
+  var btn = document.getElementById('live-btn');
+  btn.disabled = false; btn.textContent = 'Search →';
+}
 
 function setLiveSource(src, el) {
   liveSource = src;
+  resetLiveSearch();
   document.querySelectorAll('.source-card').forEach(function(c) { c.classList.remove('active','scholar-active'); });
   el.classList.add('active');
   if (src === 'scholar') el.classList.add('scholar-active');
-  document.getElementById('live-results').innerHTML = '';
   var st = document.getElementById('live-status');
   st.textContent = ''; st.className = 'live-status';
 }
 
 async function runLiveSearch() {
   var q = document.getElementById('live-query').value.trim();
-  if (!q) { document.getElementById('live-status').innerHTML = '<span>⚠️ Enter a search term.</span>'; return; }
-  var btn     = document.getElementById('live-btn');
-  var status  = document.getElementById('live-status');
+  if (!q) { document.getElementById('live-status').textContent = '⚠️ Enter a search term.'; return; }
+  resetLiveSearch();
+  var generation = liveSearchGeneration;
+  var btn = document.getElementById('live-btn');
+  var status = document.getElementById('live-status');
   var results = document.getElementById('live-results');
   btn.disabled = true; btn.textContent = 'Searching…';
-  results.innerHTML = ''; status.className = 'live-status loading';
-  status.innerHTML = '<span class="spin"></span> Searching…';
+  status.className = 'live-status loading';
+  status.textContent = 'Searching all matching PubMed records…';
   try {
-    if (liveSource === 'pubmed') await searchPubMed(q, status, results);
-    else                              searchGoogleScholar(q, status, results);
+    if (liveSource === 'pubmed') await searchPubMed(q, status, results, generation);
+    else searchGoogleScholar(q, status, results);
   } catch(err) {
-    status.className = 'live-status';
-    status.innerHTML = '⚠️ ' + err.message + '. Check your connection.';
+    if (generation === liveSearchGeneration) {
+      status.className = 'live-status';
+      status.textContent = '⚠️ ' + err.message + ' Please retry the search.';
+    }
+  } finally {
+    if (generation === liveSearchGeneration) { btn.disabled = false; btn.textContent = 'Search →'; }
   }
-  btn.disabled = false; btn.textContent = 'Search →';
 }
 
-async function searchPubMed(q, status, resultsEl) {
-  var scoped = encodeURIComponent('(' + q + ') AND ' + LIPOEDEMA_PUBMED_QUERY);
-  var base   = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
-
-  var sr   = await fetch(base + 'esearch.fcgi?db=pubmed&term=' + scoped + '&retmax=20&sort=date&retmode=json');
-  var sd   = await sr.json();
-  var ids  = sd.esearchresult.idlist;
-  var tot  = parseInt(sd.esearchresult.count) || 0;
-
-  if (!ids.length) { status.className='live-status'; status.textContent='No results found.'; return; }
-  status.innerHTML = '<span class="spin"></span> Found ' + tot + ' — fetching top ' + ids.length + '…';
-
-  var er   = await fetch(base + 'esummary.fcgi?db=pubmed&id=' + ids.join(',') + '&retmode=json');
-  var ed   = await er.json();
-  var paps = ids.map(function(id) { return ed.result[id]; }).filter(Boolean);
-
-  status.className  = 'live-status';
-  status.textContent = 'Showing ' + paps.length + ' of ' + tot + ' PubMed results (lipedema-scoped). Click "+ Add to Browse" to save.';
-
-  window._live = {};
-  var html = '';
-  paps.forEach(function(r) {
-    var authors = r.authors ? r.authors.slice(0,3).map(function(a) { return a.name; }).join(', ') + (r.authors.length>3?' et al.':'') : 'N/A';
-    var allAuth = r.authors ? r.authors.map(function(a) { return a.name; }).join(', ') : 'N/A';
-    var year    = r.pubdate ? r.pubdate.slice(0,4) : '';
-    var journal = r.fulljournalname || r.source || '';
-    var pmid    = r.uid;
-    var doiObj  = r.articleids ? r.articleids.filter(function(a){return a.idtype==='doi';})[0] : null;
-    var doi     = doiObj ? doiObj.value : null;
-    var schUrl  = 'https://scholar.google.com/scholar?q=' + encodeURIComponent(r.title);
-    var added   = isAlreadyAdded(pmid);
-    window._live[pmid] = { pmid:pmid, title:r.title, authors:allAuth, journal:journal, year:year, doi:doi, abstract:'' };
-
-    html += '<div class="live-card" onclick="window.open(\'https://pubmed.ncbi.nlm.nih.gov/' + pmid + '/\',\'_blank\')">';
-    html += '<div class="live-card-head"><div class="live-card-title">' + r.title + '</div>';
-    html += year ? '<div class="live-card-year">' + year + '</div>' : '';
-    html += '</div>';
-    html += '<div class="live-card-authors">' + authors + '</div>';
-    html += '<div class="live-card-journal">' + journal + '</div>';
-    html += '<div class="live-card-foot">';
-    html += '<span class="live-pmid">PMID: ' + pmid + '</span>';
-    html += '<a class="live-open pubmed" href="https://pubmed.ncbi.nlm.nih.gov/' + pmid + '/" target="_blank" rel="noopener" onclick="event.stopPropagation()">PubMed ↗</a>';
-    html += doi ? '<a class="live-open doi" href="https://doi.org/' + doi + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Full Text ↗</a>' : '';
-    html += '<a class="live-open scholar" href="' + schUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Scholar ↗</a>';
-    html += '<button id="add-btn-' + pmid + '" class="add-to-browse-btn' + (added?' added':'') + '" onclick="event.stopPropagation();addFromCard(\'' + pmid + '\')" ' + (added?'disabled':'') + '>';
-    html += added ? '✓ In Database' : '+ Add to Browse';
-    html += '</button></div></div>';
-  });
-  resultsEl.innerHTML = html;
+// PubMed limits each ESearch result set to 10,000 PMIDs. Partition larger
+// sets into disjoint UID ranges, and verify completeness before showing a total.
+async function fetchAllLiveSearchIds(query, isCurrent) {
+  var limit = 9999;
+  async function collect(term, parentTotal) {
+    if (!isCurrent()) return null;
+    var data = await fetchLivingAtlas(buildLivingAtlasUrl('esearch.fcgi', {
+      db:'pubmed', term:term, retmax:limit, sort:'pub_date', retmode:'json', tool:'LipoScope'
+    }), 'json');
+    if (!isCurrent()) return null;
+    var result = data && data.esearchresult;
+    var total = result && Number(result.count);
+    var ids = result && result.idlist;
+    if (!Number.isSafeInteger(total) || total < 0 || !Array.isArray(ids) ||
+        ids.some(function(id){ return !/^\d+$/.test(String(id)) || !Number.isSafeInteger(Number(id)) || Number(id)<1; })) throw new Error('PubMed returned an invalid search response.');
+    if (parentTotal !== undefined && total >= parentTotal) throw new Error('PubMed could not divide the complete result set into retrievable batches.');
+    ids = ids.map(String);
+    if (new Set(ids).size !== ids.length) throw new Error('PubMed returned duplicate search identifiers.');
+    if (total <= limit) {
+      if (ids.length !== total) throw new Error('PubMed returned an incomplete result list.');
+      return {ids:ids,total:total};
+    }
+    if (ids.length < 2) throw new Error('PubMed could not provide identifiers for the complete search.');
+    var ordered = ids.map(Number).sort(function(a,b){return a-b;});
+    var pivot = ordered[Math.floor((ordered.length-1)/2)];
+    var range = '1:' + pivot + '[UID]';
+    var newer = await collect('(' + term + ') NOT (' + range + ')', total);
+    if (!newer) return null;
+    var older = await collect('(' + term + ') AND (' + range + ')', total);
+    if (!older) return null;
+    var combined = newer.ids.concat(older.ids);
+    if (newer.total + older.total !== total || new Set(combined).size !== total) {
+      throw new Error('PubMed results changed during retrieval; the complete search could not be verified.');
+    }
+    return {ids:combined,total:total};
+  }
+  return collect(query);
 }
 
-function addFromCard(pmid) {
-  var d = window._live && window._live[pmid];
-  if (!d) { showToast('Data not available.','warn'); return; }
-  addPaperFromLive(d);
+function updateLiveSearchPagination() {
+  var state = liveSearchState;
+  var more = document.getElementById('live-more-btn');
+  document.getElementById('live-pagination').hidden = !state || state.generation !== liveSearchGeneration || state.loaded >= state.total;
+  more.disabled = !!(state && state.loading);
+  more.textContent = state && state.loading ? 'Loading…' : state && state.error ? 'Retry loading results' : 'Load more results';
+}
+
+async function searchPubMed(q, status, resultsEl, generation) {
+  if (generation === undefined) { resetLiveSearch(); generation = liveSearchGeneration; }
+  var query = '(' + q + ') AND ' + LIPOEDEMA_PUBMED_QUERY;
+  var search = await fetchAllLiveSearchIds(query, function(){return generation === liveSearchGeneration;});
+  if (!search || generation !== liveSearchGeneration) return;
+  liveSearchState = {generation:generation,ids:search.ids,total:search.total,loaded:0,loading:false,error:false};
+  if (!search.total) {
+    status.className = 'live-status'; status.textContent = 'No results found.';
+    updateLiveSearchPagination();
+    return;
+  }
+  await loadMoreLiveResults();
+}
+
+async function loadMoreLiveResults() {
+  var state = liveSearchState;
+  if (!state || state.generation !== liveSearchGeneration || state.loading || state.loaded >= state.total) return;
+  var status = document.getElementById('live-status');
+  state.loading = true; state.error = false;
+  updateLiveSearchPagination();
+  status.className = 'live-status loading';
+  status.textContent = 'Showing ' + state.loaded.toLocaleString() + ' of ' + state.total.toLocaleString() + ' results — loading more…';
+  var ids = state.ids.slice(state.loaded, state.loaded + LIVE_SEARCH_BATCH_SIZE);
+  try {
+    var data = await fetchLivingAtlas(buildLivingAtlasUrl('esummary.fcgi', {db:'pubmed',id:ids.join(','),retmode:'json',tool:'LipoScope'}), 'json');
+    if (state.generation !== liveSearchGeneration) return;
+    var records = ids.map(function(id){ return data && data.result && data.result[id]; });
+    if (records.some(function(record,i){return !record || record.error || !record.title || String(record.uid) !== ids[i];})) {
+      throw new Error('PubMed did not return every citation in this batch.');
+    }
+    var html = '';
+    records.forEach(function(record) {
+      var authors = Array.isArray(record.authors) ? record.authors : [];
+      var title = String(record.title || '');
+      var shortAuthors = authors.length ? authors.slice(0,3).map(function(a){return a.name;}).join(', ') + (authors.length>3?' et al.':'') : 'N/A';
+      var allAuthors = authors.length ? authors.map(function(a){return a.name;}).join(', ') : 'N/A';
+      var year = String(record.pubdate || '').slice(0,4);
+      var journal = record.fulljournalname || record.source || '';
+      var pmid = String(record.uid);
+      var doiEntry = (record.articleids || []).filter(function(a){return a.idtype==='doi';})[0];
+      var doi = doiEntry ? doiEntry.value : '';
+      var added = isAlreadyAdded(pmid);
+      window._live[pmid] = {pmid:pmid,title:title,authors:allAuthors,journal:journal,year:year,doi:doi,abstract:''};
+      html += '<div class="live-card" onclick="window.open(\'https://pubmed.ncbi.nlm.nih.gov/' + pmid + '/\',\'_blank\')">';
+      html += '<div class="live-card-head"><div class="live-card-title">' + escHtml(title) + '</div>';
+      html += year ? '<div class="live-card-year">' + escHtml(year) + '</div>' : '';
+      html += '</div><div class="live-card-authors">' + escHtml(shortAuthors) + '</div>';
+      html += '<div class="live-card-journal">' + escHtml(journal) + '</div><div class="live-card-foot">';
+      html += '<span class="live-pmid">PMID: ' + pmid + '</span>';
+      html += '<a class="live-open pubmed" href="https://pubmed.ncbi.nlm.nih.gov/' + pmid + '/" target="_blank" rel="noopener" onclick="event.stopPropagation()">PubMed ↗</a>';
+      html += doi ? '<a class="live-open doi" href="https://doi.org/' + encodeURIComponent(doi) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Full Text ↗</a>' : '';
+      html += '<a class="live-open scholar" href="https://scholar.google.com/scholar?q=' + encodeURIComponent(title) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Scholar ↗</a>';
+      html += '<button id="add-btn-' + pmid + '" class="add-to-browse-btn' + (added?' added':'') + '" onclick="event.stopPropagation();addFromCard(\'' + pmid + '\')" ' + (added?'disabled':'') + '>';
+      html += added ? '✓ In Database' : '+ Add to Browse';
+      html += '</button></div></div>';
+    });
+    document.getElementById('live-results').insertAdjacentHTML('beforeend', html);
+    state.loaded += records.length;
+    status.className = 'live-status';
+    status.textContent = 'Showing ' + state.loaded.toLocaleString() + ' of ' + state.total.toLocaleString() + ' PubMed results (lipedema-scoped). ' +
+      (state.loaded < state.total ? 'Load more results to continue. ' : 'All matching results are shown. ') + 'Click "+ Add to Browse" on any result to save it.';
+  } catch(err) {
+    if (state.generation !== liveSearchGeneration) return;
+    state.error = true;
+    status.className = 'live-status';
+    status.textContent = 'Showing ' + state.loaded.toLocaleString() + ' of ' + state.total.toLocaleString() + ' results. ' + err.message + ' Retry loading results; displayed records are retained.';
+  } finally {
+    if (state.generation === liveSearchGeneration) { state.loading = false; updateLiveSearchPagination(); }
+  }
+}
+
+async function addFromCard(pmid) {
+  var data = window._live && window._live[pmid];
+  var button = document.getElementById('add-btn-' + pmid);
+  if (!data || (button && button.disabled)) return;
+  if (button) button.disabled = true;
+  try { await addPaperFromLive(data); }
+  catch(err) { showToast('Could not add this paper. Please retry.', 'warn'); }
+  finally {
+    if (button) {
+      var added = isAlreadyAdded(pmid);
+      button.disabled = added;
+      button.textContent = added ? '✓ In Database' : '+ Add to Browse';
+      button.classList.toggle('added', added);
+    }
+  }
 }
 
 function searchGoogleScholar(q, status, resultsEl) {

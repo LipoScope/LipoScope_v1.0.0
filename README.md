@@ -12,7 +12,7 @@ LipoScope is a browser-local research workbench for lipoedema/lipedema literatur
 
 - **Start Here** — orientation, guided walkthrough and workflow overview.
 - **Browse Papers** — filter, review and curate the public literature collection and user-added records.
-- **Live Search** — search PubMed or Google Scholar and add selected PubMed records to the local Browse workspace.
+- **Live Search** — browse all matching PubMed records in batches of 50 and add any result to the local Browse workspace, or open a search in Google Scholar. Use **Load more results** until every match is displayed; the batch size is not a total-result limit.
 - **Analytics** — compare the wider PubMed literature landscape with the currently visible Browse collection.
 - **CCRF Workspace** — select an official CCRF classification, complete applicable fields, review required-field gaps, inspect the data dictionary and export research datasets.
 - **About** — software information, privacy, citation, licensing and local workspace controls.
@@ -24,6 +24,7 @@ LipoScope is a browser-local research workbench for lipoedema/lipedema literatur
 - Improved New Paper Alerts handling so failed retrievals do not advance the last successful check time.
 - Added source-defined CCRF matrix instructions, masked inactive responses in analysis exports, and preserved the version-pinned CCRF Version 1 field definitions.
 - Renamed the unresolved research-topic bucket to **Unresolved category** throughout the literature workspace, including classification output, with migration of existing saved records, shared records and cached Analytics counts. The categorisation criteria and ten research topics are unchanged.
+- Removed the Live Literature Search total-result cap. Complete PMID retrieval, larger-query partitioning and retryable citation batches make all matches available while preserving existing results and duplicate detection.
 
 Literature-topic and study-type classifications are automated, rule-based navigation aids. Researchers should review them before using them as research classifications. See [the changelog](docs/CHANGELOG.md) and [release status](RELEASE_STATUS.md) for implementation scope.
 
@@ -59,11 +60,14 @@ python -X utf8 scripts/18_browser_smoke_test.py --html LipoScope.html
 python -X utf8 scripts/22_browser_pubmed_regression.py --html LipoScope.html --out validation/pubmed_browser_regression.json
 python -X utf8 scripts/23_browser_literature_regression.py --html LipoScope.html --out validation/literature_browser_regression.json
 python -X utf8 scripts/24_browser_topic_category_regression.py --html LipoScope.html --out validation/topic_category_browser_regression.json
+python -X utf8 scripts/25_browser_live_search_regression.py --html LipoScope.html --out validation/live_search_browser_regression.json
 ```
 
 The committed test summary records **46 passed, 0 failed** for the maintained application. The browser smoke test covers all six tabs, CCRF behaviour and the seven-file research-package ZIP export. The two PubMed browser regressions use synthetic responses; they do not verify current external-service availability or establish literature-classification accuracy.
 
 The topic-category browser regression checks the five non-CCRF tabs, classifier output, legacy storage and shared-record migration, Browse filtering, Live Search imports and Auto-Discovery wording using synthetic records. CI runs this check alongside the main tests and browser smoke test.
+
+The Live Search browser regression uses synthetic PubMed responses to check complete retrieval (including result sets larger than a single API search can return), loading subsequent batches, adding later results, duplicate protection, partial-response retries and isolation between searches. CI runs this check as well.
 
 `pytest` reports the current test result but does not update `validation/automated_test_summary.json`. Before regenerating aggregate validation reports, update that file to reflect the completed test run, including its command, date, passed and failed counts. Then run:
 

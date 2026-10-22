@@ -1,0 +1,103 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "First batch shows 50 of all 123 matching records",
+      "passed": true
+    },
+    {
+      "name": "The complete search retains the canonical disease scope",
+      "passed": true
+    },
+    {
+      "name": "Repeated Load more clicks fetch a batch only once",
+      "passed": true
+    },
+    {
+      "name": "A record beyond the first 20 and first batch can be added once",
+      "passed": true
+    },
+    {
+      "name": "Added records retain current topic classification",
+      "passed": true
+    },
+    {
+      "name": "Final batch makes every match available and hides Load more",
+      "passed": true
+    },
+    {
+      "name": "Citation metadata remains text when cards are appended",
+      "passed": true
+    },
+    {
+      "name": "First and last results both retain Add to Browse controls",
+      "passed": true
+    },
+    {
+      "name": "Incomplete citation batches retain previous results and a retry control",
+      "passed": true
+    },
+    {
+      "name": "Retry resumes the failed batch without omissions or duplicates",
+      "passed": true
+    },
+    {
+      "name": "An incomplete PMID inventory is reported instead of silently truncated",
+      "passed": true
+    },
+    {
+      "name": "A zero-result search clears old records and pagination",
+      "passed": true
+    },
+    {
+      "name": "Failed searches restore controls and display errors as text",
+      "passed": true
+    },
+    {
+      "name": "A late search response cannot overwrite a newer query",
+      "passed": true
+    },
+    {
+      "name": "A late citation batch cannot overwrite a newer query",
+      "passed": true
+    },
+    {
+      "name": "Changing sources clears and cancels pending PubMed results",
+      "passed": true
+    },
+    {
+      "name": "Google Scholar continues to open its own disease-scoped search",
+      "passed": true
+    },
+    {
+      "name": "Searches above the PubMed single-query limit retain all matching PMIDs",
+      "passed": true
+    },
+    {
+      "name": "A server that ignores partition constraints cannot cause infinite retrieval",
+      "passed": true
+    },
+    {
+      "name": "resources tab opens without the obsolete 20-result limit",
+      "passed": true
+    },
+    {
+      "name": "browse tab opens without the obsolete 20-result limit",
+      "passed": true
+    },
+    {
+      "name": "live tab opens without the obsolete 20-result limit",
+      "passed": true
+    },
+    {
+      "name": "analytics tab opens without the obsolete 20-result limit",
+      "passed": true
+    },
+    {
+      "name": "about tab opens without the obsolete 20-result limit",
+      "passed": true
+    }
+  ],
+  "scope": "Synthetic PubMed responses: complete inventories, batches, imports, retries, source/query races, large searches, and five non-CCRF tabs.",
+  "page_errors": []
+}

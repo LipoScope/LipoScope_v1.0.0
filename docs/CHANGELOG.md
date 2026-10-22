@@ -1,3 +1,10 @@
+# Complete Live Literature Search — 22 October 2026
+
+- Removed the 20-result total limit from Live Literature Search. All matching PubMed identifiers are retrieved and validated; citations are displayed in batches of 50 using Load more results.
+- Partitioned large searches into disjoint PMID ranges so the PubMed per-query identifier limit does not silently truncate the result list.
+- Preserved displayed records during failed batches and added retry controls, protection against obsolete search responses, and duplicate-safe imports from later batches.
+- Updated the relevant interface guidance and README. Added a browser regression for retrieval, batching, imports, failures and all five non-CCRF tabs. CCRF Workspace and v1.0.0 are unchanged.
+
 # Topic-category terminology — 22 October 2026
 
 - Renamed the literature topic bucket from "Unsupported records" to "Unresolved category" across Browse Papers, Analytics, About and Auto-Discovery.

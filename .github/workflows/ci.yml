@@ -16,4 +16,5 @@ jobs:
       - run: python -m pytest -q
       - run: python scripts/18_browser_smoke_test.py --html LipoScope.html
       - run: python scripts/24_browser_topic_category_regression.py --html LipoScope.html --out validation/topic_category_browser_regression.json
+      - run: python scripts/25_browser_live_search_regression.py --html LipoScope.html --out validation/live_search_browser_regression.json
       - run: python scripts/20_generate_validation_reports.py
