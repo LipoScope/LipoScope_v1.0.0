@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-22T00:47:59+00:00",
+  "generated_at": "2026-10-22T14:26:44+00:00",
   "application_version": "v1.0.0",
-  "html_sha256": "47c495f1a0df0f0116086149bce531f6d72974f9d2f5ae53d1d7c7e69a413420",
+  "html_sha256": "17ef9c635cb39be623e63b118817eddc5dd96a8f3970361ef57b750c09e785b1",
   "ccrf": {
     "version": "Version 1",
     "classifications": {
@@ -34,7 +34,7 @@
   "automated_tests": {
     "passed": 46,
     "failed": 0,
-    "source": "2026-10-22 python -X utf8 -m pytest -q",
+    "source": "2026-10-23 python -X utf8 -m pytest -q",
     "scope": "maintained application code, CCRF source, retrieval-integrity and distribution tests"
   },
   "browser_test": {
@@ -102,6 +102,139 @@
     },
     "page_errors": [],
     "console_errors": []
+  },
+  "analytics_snapshot_regression": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "Completed query, unique inventory and processed corpus reconcile exactly",
+        "passed": true
+      },
+      {
+        "name": "Fresh complete retrieval has a shared snapshot identity and two recorded timestamps",
+        "passed": true
+      },
+      {
+        "name": "Analytics does not fetch an independent fresh disease-query total",
+        "passed": true
+      },
+      {
+        "name": "Unresolved topics remain in the processed denominator",
+        "passed": true
+      },
+      {
+        "name": "Missing year, journal and abstract fields retain valid PMIDs",
+        "passed": true
+      },
+      {
+        "name": "Year, journal and study-type counts reconcile with the full denominator",
+        "passed": true
+      },
+      {
+        "name": "Overlapping topic-query counts are independent of the unique corpus size",
+        "passed": true
+      },
+      {
+        "name": "Independent topic-query timestamps remain separate from corpus provenance",
+        "passed": true
+      },
+      {
+        "name": "Enrichment-only saves do not advance successful corpus timestamps",
+        "passed": true
+      },
+      {
+        "name": "Different retrieval operations display both counts and their original timestamps",
+        "passed": true
+      },
+      {
+        "name": "Mixed snapshots show the difference without a false completeness or missing-publication claim",
+        "passed": true
+      },
+      {
+        "name": "Equal counts alone cannot prove a common retrieval",
+        "passed": true
+      },
+      {
+        "name": "A claimed same-snapshot mismatch remains incomplete across repeated rendering",
+        "passed": true
+      },
+      {
+        "name": "Failed refresh preserves the last complete corpus and original successful timestamp",
+        "passed": true
+      },
+      {
+        "name": "Failed refresh retains the last successful Analytics cache without overwriting it",
+        "passed": true
+      },
+      {
+        "name": "Subsequent enrichment saves cannot clear a failed-refresh flag",
+        "passed": true
+      },
+      {
+        "name": "Missing ESummary citations fail retrieval and never commit partial records",
+        "passed": true
+      },
+      {
+        "name": "A failed newer inventory and an older corpus keep distinct count provenance",
+        "passed": true
+      },
+      {
+        "name": "An omitted EFetch record is distinguished from a present citation with no abstract",
+        "passed": true
+      },
+      {
+        "name": "A same-count but wrong-PMID processed corpus is rejected",
+        "passed": true
+      },
+      {
+        "name": "Duplicate processed PMIDs are explicitly rejected",
+        "passed": true
+      },
+      {
+        "name": "Later complete retrieval restores synchronised status and accurate counts",
+        "passed": true
+      },
+      {
+        "name": "The Analytics refresh control returns to its usable state after recovery",
+        "passed": true
+      },
+      {
+        "name": "Reloaded valid statistics are labelled cached while preserving successful timestamps",
+        "passed": true
+      },
+      {
+        "name": "Independent topic-query failures do not invalidate a complete corpus",
+        "passed": true
+      },
+      {
+        "name": "Concurrent refresh requests await one completed inventory",
+        "passed": true
+      },
+      {
+        "name": "Analytics presents query and processed denominators separately from Browse Papers",
+        "passed": true
+      }
+    ],
+    "scope": "Synthetic responses only; exact inventory reconciliation, unknown metadata, overlapping topics, legacy/mixed caches, failures, concurrency and recovery.",
+    "page_errors": []
+  },
+  "optional_real_pubmed_smoke": {
+    "validation_type": "real_service_smoke",
+    "query": "(lipedema[Title/Abstract] OR lipoedema[Title/Abstract] OR \"Lipedema\"[Mesh] OR lipedemas[Title/Abstract] OR lipoedemas[Title/Abstract] OR lipolymphedema[Title/Abstract] OR lipolymphedemas[Title/Abstract] OR \"lipohyperplasia dolorosa\"[Title/Abstract])",
+    "query_match_count": 806,
+    "unique_processed_pmids": 806,
+    "records_processed": 806,
+    "query_retrieved_at": 1792678892758,
+    "corpus_retrieved_at": 1792678929977,
+    "retrieval_completeness": "complete",
+    "record_count_difference": 0,
+    "source": "live",
+    "error": "",
+    "topic_query_error": "",
+    "topic_query_retrieved_at": 1792678940484,
+    "passed": true,
+    "notice": "Real PubMed responses; no expected publication count was hardcoded. This is not a validation of classification accuracy.",
+    "page_errors": []
   },
   "python_syntax_errors": [],
   "static_html_validation_passed": true,

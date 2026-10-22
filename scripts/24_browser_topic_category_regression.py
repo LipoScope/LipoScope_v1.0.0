@@ -82,7 +82,7 @@ CHECKS = """async () => {
     buildShareSafePaper({topic:'Unsupported records'}).topic===label &&
     assignSharedIdsToInline([{topic:'Unspported records',title:'Shared test'}],990000000)[0].topic===label);
   const fresh=buildPubMedStatsFromLiveRecords([
-    {title:'Observations in lipedema',abstractText:'General observations.',year:2026,journal:'Synthetic journal'}
+    {pmid:'999999998',title:'Observations in lipedema',abstractText:'General observations.',year:2026,journal:'Synthetic journal'}
   ],1,1);
   check('Fresh Analytics reports count unresolved records under the new properties',fresh.unresolvedTopicCount===1 &&
     Object.values(fresh.unresolvedTopicReasons).reduce((a,b)=>a+b,0)===1 && !('unsupportedTopicCount' in fresh));

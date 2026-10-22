@@ -1,3 +1,12 @@
+# Analytics count provenance — 23 October 2026
+
+- Bound completed query totals and processed-record denominators to the same validated PMID inventory. Rejected duplicate/invalid PMIDs, missing ESummary or EFetch citations, and wrong-PMID processed sets before replacing the corpus; absent abstract, year, journal and resolved topic information do not exclude valid records.
+- Separated corpus persistence from successful-retrieval timestamp updates. Classification/summary enrichment preserves the original timestamp and refresh-error flag. Concurrent refresh callers await the same retrieval.
+- Added query and corpus timestamps, processed-record counts, status, differences and a refresh control to the existing Analytics summary. Cached and mixed snapshots are explicit; a difference between separate retrievals is not automatically evidence of missing publications.
+- Retained independent topic-query counts and timestamps, record-level classifications and local Browse counts as distinct quantities. Record-level recent/oldest metrics now use the processed corpus rather than additional fresh queries.
+- Verified mismatch mechanisms in the previous code: a fresh ESearch count combined with a TTL-cached corpus, unconditional Live labelling, and enrichment saves advancing the corpus timestamp. These findings do not retrospectively establish the cause of any particular historical count difference.
+- Added synthetic count/provenance regression scenarios and an optional real-PubMed smoke test; retained the existing v1.0.0 layout, disease query, classifiers, Live Search and CCRF source bytes.
+
 # Complete Live Literature Search — 22 October 2026
 
 - Removed the 20-result total limit from Live Literature Search. All matching PubMed identifiers are retrieved and validated; citations are displayed in batches of 50 using Load more results.

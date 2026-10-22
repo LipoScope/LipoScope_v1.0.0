@@ -31,7 +31,7 @@ def test_start_here_is_task_guided_and_has_no_condition_visuals(html_text):
 
 def test_version_header_and_date(html_text):
     assert "const LIPOSCOPE_VERSION = 'v1.0.0'" in html_text
-    assert "const LIPOSCOPE_UPDATED = '22 October 2026'" in html_text
+    assert "const LIPOSCOPE_UPDATED = '23 October 2026'" in html_text
     assert 'An open research workbench for lipoedema literature discovery, PubMed monitoring, and standardised CCRF data collection' in html_text
 
 

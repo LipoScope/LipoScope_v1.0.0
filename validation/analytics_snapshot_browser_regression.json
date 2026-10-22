@@ -1,0 +1,115 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "Completed query, unique inventory and processed corpus reconcile exactly",
+      "passed": true
+    },
+    {
+      "name": "Fresh complete retrieval has a shared snapshot identity and two recorded timestamps",
+      "passed": true
+    },
+    {
+      "name": "Analytics does not fetch an independent fresh disease-query total",
+      "passed": true
+    },
+    {
+      "name": "Unresolved topics remain in the processed denominator",
+      "passed": true
+    },
+    {
+      "name": "Missing year, journal and abstract fields retain valid PMIDs",
+      "passed": true
+    },
+    {
+      "name": "Year, journal and study-type counts reconcile with the full denominator",
+      "passed": true
+    },
+    {
+      "name": "Overlapping topic-query counts are independent of the unique corpus size",
+      "passed": true
+    },
+    {
+      "name": "Independent topic-query timestamps remain separate from corpus provenance",
+      "passed": true
+    },
+    {
+      "name": "Enrichment-only saves do not advance successful corpus timestamps",
+      "passed": true
+    },
+    {
+      "name": "Different retrieval operations display both counts and their original timestamps",
+      "passed": true
+    },
+    {
+      "name": "Mixed snapshots show the difference without a false completeness or missing-publication claim",
+      "passed": true
+    },
+    {
+      "name": "Equal counts alone cannot prove a common retrieval",
+      "passed": true
+    },
+    {
+      "name": "A claimed same-snapshot mismatch remains incomplete across repeated rendering",
+      "passed": true
+    },
+    {
+      "name": "Failed refresh preserves the last complete corpus and original successful timestamp",
+      "passed": true
+    },
+    {
+      "name": "Failed refresh retains the last successful Analytics cache without overwriting it",
+      "passed": true
+    },
+    {
+      "name": "Subsequent enrichment saves cannot clear a failed-refresh flag",
+      "passed": true
+    },
+    {
+      "name": "Missing ESummary citations fail retrieval and never commit partial records",
+      "passed": true
+    },
+    {
+      "name": "A failed newer inventory and an older corpus keep distinct count provenance",
+      "passed": true
+    },
+    {
+      "name": "An omitted EFetch record is distinguished from a present citation with no abstract",
+      "passed": true
+    },
+    {
+      "name": "A same-count but wrong-PMID processed corpus is rejected",
+      "passed": true
+    },
+    {
+      "name": "Duplicate processed PMIDs are explicitly rejected",
+      "passed": true
+    },
+    {
+      "name": "Later complete retrieval restores synchronised status and accurate counts",
+      "passed": true
+    },
+    {
+      "name": "The Analytics refresh control returns to its usable state after recovery",
+      "passed": true
+    },
+    {
+      "name": "Reloaded valid statistics are labelled cached while preserving successful timestamps",
+      "passed": true
+    },
+    {
+      "name": "Independent topic-query failures do not invalidate a complete corpus",
+      "passed": true
+    },
+    {
+      "name": "Concurrent refresh requests await one completed inventory",
+      "passed": true
+    },
+    {
+      "name": "Analytics presents query and processed denominators separately from Browse Papers",
+      "passed": true
+    }
+  ],
+  "scope": "Synthetic responses only; exact inventory reconciliation, unknown metadata, overlapping topics, legacy/mixed caches, failures, concurrency and recovery.",
+  "page_errors": []
+}

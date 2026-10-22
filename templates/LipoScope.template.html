@@ -210,6 +210,7 @@ select:focus{border-color:var(--rose)}
 .stat-box{flex:1;min-width:120px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow-sm);text-align:center}
 .stat-box-n{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--rose);display:block;line-height:1}
 .stat-box-l{font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-soft);margin-top:4px}
+#analytics-refresh-btn{margin-bottom:18px}
 
 /* ── ABOUT ── */
 #panel-about{max-width:1180px;margin:0 auto;width:100%}
@@ -2351,20 +2352,22 @@ select:focus{border-color:var(--rose)}
 
   <!-- ═══ ANALYTICS PANEL ═══ -->
   <div class="panel" id="panel-analytics">
-    <div class="tab-guide"><strong>Analytics:</strong> Compare two signals that should not be mixed: the live PubMed lipoedema landscape at the top, and your currently visible Browse workspace below. Use this tab to see whether your local curation over- or under-represents topics and years relative to the broader field.</div>
+    <div class="tab-guide"><strong>Analytics:</strong> Compare two signals that should not be mixed: the retrieved PubMed lipoedema landscape at the top, and your currently visible Browse workspace below. Use this tab to see whether your local curation over- or under-represents topics and years relative to the broader field.</div>
     <div class="analytics-source-note">
-      <span class="analytics-source-badge" id="analytics-source-badge">🟢 Live</span>
-      The top charts track the <strong>complete live PubMed landscape</strong> for lipedema/lipoedema using one consistent disease query: <code style="font-family:monospace;font-size:10px;background:rgba(255,255,255,0.5);padding:1px 5px;border-radius:3px">lipedema[Title/Abstract] OR lipoedema[Title/Abstract] OR &quot;Lipedema&quot;[Mesh] OR lipedemas[Title/Abstract] OR lipoedemas[Title/Abstract] OR lipolymphedema[Title/Abstract] OR lipolymphedemas[Title/Abstract] OR &quot;lipohyperplasia dolorosa&quot;[Title/Abstract]</code>. Record-level charts use exhaustive paginated retrieval; topic counts use the exact category queries opened by the topic links. The visible-corpus charts below update immediately when users add, hide, restore, or expand papers.
+      <span class="analytics-source-badge" id="analytics-source-badge">Checking retrieval status…</span>
+      The top charts describe the <strong>retrieved PubMed literature</strong> for lipedema/lipoedema using one consistent disease query: <code style="font-family:monospace;font-size:10px;background:rgba(255,255,255,0.5);padding:1px 5px;border-radius:3px">lipedema[Title/Abstract] OR lipoedema[Title/Abstract] OR &quot;Lipedema&quot;[Mesh] OR lipedemas[Title/Abstract] OR lipoedemas[Title/Abstract] OR lipolymphedema[Title/Abstract] OR lipolymphedemas[Title/Abstract] OR &quot;lipohyperplasia dolorosa&quot;[Title/Abstract]</code>. Record-level charts use exhaustive paginated retrieval; topic counts use the exact category queries opened by the topic links. The visible-corpus charts below update immediately when users add, hide, restore, or expand papers.
       <span id="analytics-fetch-date" style="margin-left:auto;font-size:10px;color:var(--text-faint)"></span>
     </div>
     <div class="stat-row" id="stat-row"></div>
+    <div class="live-tip" id="analytics-provenance" role="status" aria-live="polite">Checking query and processed-record provenance…</div>
+    <button class="btn-clear" id="analytics-refresh-btn" onclick="refreshPubMedAnalytics()">Refresh PubMed data</button>
     <div class="analytics-grid">
       <div class="analytics-card">
         <h3><span class="a-icon">📁</span> Research Topics <span style="font-size:10px;font-weight:400;color:var(--text-faint);margin-left:6px">exact query matches and mutually exclusive primary categorisation</span></h3>
         <div class="bar-chart" id="chart-topics"></div>
       </div>
       <div class="analytics-card">
-        <h3><span class="a-icon">📅</span> Publication Timeline <span style="font-size:10px;font-weight:400;color:var(--text-faint);margin-left:6px">PubMed live · <span id="timeline-year-label"></span></span></h3>
+        <h3><span class="a-icon">📅</span> Publication Timeline <span style="font-size:10px;font-weight:400;color:var(--text-faint);margin-left:6px">Processed corpus · <span id="timeline-year-label"></span></span></h3>
         <div id="timeline-note" style="font-size:10.5px;color:var(--text-soft);margin-bottom:8px"></div><div class="timeline-wrap"><div class="timeline-chart" id="chart-timeline"></div></div>
       </div>
       <div class="analytics-card">
@@ -2375,7 +2378,7 @@ select:focus{border-color:var(--rose)}
 
     <div class="analytics-grid wide-sidebar">
       <div class="analytics-card">
-        <h3><span class="a-icon">🏷️</span> Topic Cloud — open category search on PubMed <span style="font-size:10px;font-weight:400;color:var(--text-faint);margin-left:6px">exact query counts</span></h3>
+        <h3><span class="a-icon">🏷️</span> Topic Cloud — open category search on PubMed <span style="font-size:10px;font-weight:400;color:var(--text-faint);margin-left:6px"><span id="topics-cloud-source-label">independent topic-query counts</span></span></h3>
         <div class="topics-cloud" id="topics-cloud"></div>
       </div>
       <div class="analytics-card">
@@ -3016,7 +3019,7 @@ select:focus{border-color:var(--rose)}
 
 <footer class="app-footer">
   <span><strong>LipoScope</strong> <span id="app-version-label">v1.0.0</span> · Lipoedema literature, research evidence mapping, and official CCRF data standardisation</span>
-  <span>Updated <span id="app-updated-label">22 October 2026</span> · Public GitHub Pages build</span>
+  <span>Updated <span id="app-updated-label">23 October 2026</span> · Public GitHub Pages build</span>
 </footer>
 <button class="scroll-top-btn" id="scroll-top-btn" onclick="scrollToTop()" title="Back to top" aria-label="Back to top">↑</button>
 
@@ -3076,7 +3079,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
 <script>
 const LIPOSCOPE_VERSION = 'v1.0.0';
-const LIPOSCOPE_UPDATED = '22 October 2026';
+const LIPOSCOPE_UPDATED = '23 October 2026';
 
 const PAPERS = [
   {
@@ -10641,6 +10644,8 @@ function loadStoredPubMedStats() {
     if (!parsed || typeof parsed !== 'object') return null;
     normalizeStoredTopicStats(parsed);
     if (JSON.stringify(parsed) !== raw) saveStoredPubMedStats(parsed);
+    normalizePubMedStatsProvenance(parsed);
+    if (parsed.source!=='local-incomplete') parsed.source='cached-live';
     return parsed;
   } catch(e) {
     return null;
@@ -10650,6 +10655,7 @@ function saveStoredPubMedStats(stats) {
   try { localStorage.setItem(pubMedStatsStorageKey('live_v7_expanded_disease_query'), JSON.stringify(stats)); } catch(e) {}
 }
 function buildPubMedStatsFromLiveRecords(records, total, recentCount, exactTopicCounts, oldestRecord) {
+  validatePubMedCorpus(records);
   var thisYear = currentYear();
   var topicPubMedURLs = pubMedTopicUrlMap();
   var topicNames = Object.keys(topicPubMedURLs);
@@ -10707,7 +10713,7 @@ function buildPubMedStatsFromLiveRecords(records, total, recentCount, exactTopic
     total:(Number.isFinite(Number(total)) ? Number(total) : 0),
     pubmedQueryMatchCount:(Number.isFinite(Number(total)) ? Number(total) : 0),
     recentCount:(Number.isFinite(Number(recentCount)) ? Number(recentCount) : 0),
-    processedRecentRecordCount:(records || []).filter(function(p){var y=validPubMedYear(p.year);return y && y>=recentCutoff();}).length,
+    processedRecentRecordCount:(records || []).filter(function(p){var y=validPubMedYear(p.year);return y && y>=recentCutoff() && y<=thisYear;}).length,
     uniqueJournals:Object.keys(journalBuckets).length,
     oldestRecordYear:oldestRecord && oldestRecord.year || null, oldestRecordPmid:oldestRecord && oldestRecord.pmid || '', oldestRecordTitle:oldestRecord && oldestRecord.title || '',
     minYear:String(oldestRecord && oldestRecord.year || earliestRetrievedYear || ''), byYear:byYear, unknownYearCount:unknownYearCount,
@@ -10797,100 +10803,143 @@ async function fetchOldestPubMedRecord(total) {
   var meta = normalizePubMedMetadata(metaMap[id] || emptyPubMedMetadata(), '');
   return {pmid:String(id),year:extractPubMedYearFromSummary(record,meta),title:livingPlain(record.title || '')};
 }
-function analyticsSourceMeta(stats) {
-  var stamp = stats && (stats.checkedAt || stats.fetchedAt || Date.now());
-  if (stats && stats.source === 'live') {
-    return {
-      badge:'🟢 Live',
-      line:'🟢 Live · refreshed ' + livingStamp(stamp),
-      chip:'✅ live',
-      timelineSuffix:' · PubMed live',
-      topicHeader:'Exact PubMed ESearch category counts · ' + livingStamp(stamp)
-    };
-  }
-  if (stats && stats.source === 'cached-live') {
-    return {
-      badge:'🟡 Cached live',
-      line:'🟡 Cached live · last successful PubMed refresh ' + livingStamp(stamp),
-      chip:'🟡 cached live',
-      timelineSuffix:' (cached live)',
-      topicHeader:'Cached exact PubMed category counts · ' + livingStamp(stamp)
-    };
-  }
-  return {
-    badge:'⚠️ Local cache',
-    line:'⚠️ PubMed totals unavailable · showing locally cached records only',
-    chip:'⚠️ local cache only',
-    timelineSuffix:' (local cache only)',
-    topicHeader:'Local record classifications only · complete PubMed counts unavailable'
-  };
+function pubMedCountValue(value) {
+  return value !== null && value !== undefined && value !== '' && Number.isSafeInteger(Number(value)) && Number(value)>=0 ? Number(value) : null;
 }
-
-async function fetchPubMedStats() {
-  if (_pubmedCache && (Date.now() - _pubmedCache.fetchedAt < pubMedStatsCacheTtl(_pubmedCache))) return _pubmedCache;
-  var storedStats = loadStoredPubMedStats();
-  if (!_pubmedCache && storedStats && (Date.now() - (storedStats.fetchedAt || 0) < pubMedStatsCacheTtl(storedStats))) {
-    _pubmedCache = storedStats;
-    return _pubmedCache;
+function normalizePubMedStatsProvenance(stats) {
+  if (!Object.prototype.hasOwnProperty.call(stats,'pubmedQueryMatchCount')) stats.pubmedQueryMatchCount = stats.source==='local-incomplete' ? null : pubMedCountValue(stats.total);
+  stats.pubmedQueryMatchCount = pubMedCountValue(stats.pubmedQueryMatchCount);
+  stats.liveRecordCount = pubMedCountValue(stats.liveRecordCount);
+  stats.processedRecordsRetrievedAt = stats.processedRecordsRetrievedAt || stats.checkedAt || null;
+  stats.pubmedCountRetrievedAt = stats.pubmedCountRetrievedAt || null;
+  stats.recordCountDifference = stats.pubmedQueryMatchCount===null || stats.liveRecordCount===null ? null : stats.pubmedQueryMatchCount-stats.liveRecordCount;
+  if (stats.retrievalCompleteness==='complete' && stats.snapshotId && stats.recordCountDifference===0) return stats;
+  if (stats.retrievalCompleteness==='complete' || stats.retrievalCompleteness==='incomplete' || stats.retrievalCompleteness==='incomplete-offline') {
+    stats.retrievalCompleteness='incomplete';
+    return stats;
   }
-
-  var thisYear = currentYear();
-  var cutoff = recentCutoff();
-  try {
-    await refreshLivingAtlasFromPubMed(false);
-    var liveRecords = (livingAtlasPapers || []).slice();
-    if (!liveRecords.length) {
-      await refreshLivingAtlasFromPubMed(true);
-      liveRecords = (livingAtlasPapers || []).slice();
-    }
-    if (!liveRecords.length) throw new Error('no live PubMed records cached');
-    // refreshLivingAtlasFromPubMed retains the previous cache on failure; do not
-    // present that stale set as freshly complete after a failed PMID page fetch.
-    var refreshError = getLivingAtlasError();
-    if (refreshError) throw new Error('PubMed corpus refresh failed: ' + refreshError);
-
-    var total = await fetchPubMedQueryCount(LIPOEDEMA_PUBMED_QUERY);
-    var recentCount = await fetchPubMedQueryCount('(' + LIPOEDEMA_PUBMED_QUERY + ') AND ' + cutoff + ':' + thisYear + '[PDAT]');
-    var oldestRecord = await fetchOldestPubMedRecord(total);
-    var exactTopicEvidence = await fetchExactTopicPubMedEvidence(false);
-    var membershipChanged = applyTopicQueryMembershipsToRecords(liveRecords, exactTopicEvidence);
-    if (membershipChanged) saveLivingAtlasStore();
-
-    var stats = buildPubMedStatsFromLiveRecords(liveRecords, total, recentCount, exactTopicEvidence.counts, oldestRecord);
-    stats.source = 'live';
-    stats.fetchedAt = Date.now();
-    stats.pubmedCountRetrievedAt = stats.fetchedAt;
-    stats.retrievalCompleteness = liveRecords.length === total ? 'query-and-record-count-consistent' : 'distinct-retrieval-time-count-difference';
-    stats.recordCountDifference = total - liveRecords.length;
-    stats.processedRecordsRetrievedAt = getLivingAtlasChecked();
-    stats.checkedAt = getLivingAtlasChecked();
-    stats.attemptedAt = getLivingAtlasAttempted();
-    stats.error = '';
-    _pubmedCache = stats;
-    saveStoredPubMedStats(stats);
-    return _pubmedCache;
-  } catch(err) {
-    if (storedStats) {
-      _pubmedCache = Object.assign({}, storedStats, {source:'cached-live',fetchedAt:Date.now(),error:(err && err.message) || 'Using the last successful PubMed analytics cache'});
+  if (stats.retrievalCompleteness==='distinct-retrieval-time-count-difference' || stats.retrievalCompleteness==='different-snapshots' ||
+      (stats.pubmedCountRetrievedAt && stats.processedRecordsRetrievedAt && stats.pubmedCountRetrievedAt!==stats.processedRecordsRetrievedAt)) stats.retrievalCompleteness='different-snapshots';
+  else if (stats.source==='local-incomplete') stats.retrievalCompleteness='incomplete';
+  else stats.retrievalCompleteness='unverified-cache';
+  return stats;
+}
+function analyticsRetrievedLabel(stamp) {
+  return stamp ? new Date(stamp).toLocaleString('en-AU',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',timeZoneName:'short'}) : 'Not recorded';
+}
+function analyticsSourceMeta(stats) {
+  normalizePubMedStatsProvenance(stats);
+  var complete = stats.retrievalCompleteness==='complete';
+  var badge, line;
+  if (complete && stats.source==='live' && !stats.error) {
+    badge='🟢 Synchronised complete'; line='Complete PMID inventory and processed records verified together.';
+  } else if (complete) {
+    badge=stats.error ? '⚠️ Cached · refresh failed' : '🟡 Cached complete';
+    line='Showing the previously completed retrieval.';
+  } else if (stats.retrievalCompleteness==='different-snapshots') {
+    badge=stats.error ? '⚠️ Different snapshots · refresh failed' : '🟡 Different snapshots';
+    line='Query matches and processed records come from different retrieval operations.';
+  } else {
+    badge=stats.retrievalCompleteness==='incomplete' || stats.source==='local-incomplete' || stats.error ? '⚠️ Incomplete retrieval' : '🟡 Cached · unverified';
+    line='Same-retrieval completeness has not been verified. Refresh PubMed data to obtain a verified corpus.';
+  }
+  var topicHeader=stats.topicCountsExact ? 'Independent PubMed category-query counts · '+analyticsRetrievedLabel(stats.topicCountsRetrievedAt) : 'Record-level counts only · topic-query counts unavailable';
+  return {badge:badge,line:line,chip:badge,timelineSuffix:' · processed corpus',topicHeader:topicHeader};
+}
+function renderAnalyticsProvenance(stats) {
+  var meta=analyticsSourceMeta(stats), count=stats.pubmedQueryMatchCount, processed=stats.liveRecordCount;
+  var difference=stats.recordCountDifference, text='';
+  if (difference!==null) text='<strong>Difference:</strong> '+difference.toLocaleString()+' (query matches minus records processed). ';
+  if (stats.retrievalCompleteness==='different-snapshots') text+='These measurements come from different retrieval operations; the difference alone does not establish missing publications.';
+  else if (stats.retrievalCompleteness==='complete') text+='Both counts refer to the same validated PMID inventory.';
+  else text+='A complete common retrieval has not been established; counts must not be interpreted as a verified live corpus.';
+  document.getElementById('analytics-provenance').innerHTML=
+    '<strong>PubMed query matches:</strong> '+(count===null?'Unavailable':count.toLocaleString())+' · retrieved '+escHtml(analyticsRetrievedLabel(stats.pubmedCountRetrievedAt))+'<br>'+
+    '<strong>Records processed:</strong> '+(processed===null?'Not recorded':processed.toLocaleString())+' · '+(stats.snapshotId?'corpus retrieved ':'original cache timestamp (retrieval unverified) ')+escHtml(analyticsRetrievedLabel(stats.processedRecordsRetrievedAt))+'<br>'+
+    '<strong>Retrieval status:</strong> '+escHtml(meta.line)+' '+text+
+    (stats.error?'<br><strong>Latest refresh unsuccessful:</strong> '+escHtml(stats.error)+' Previously completed records are retained.':'')+
+    '<br>Record-level charts use the processed records, including Unresolved category and records without an identified year, journal or abstract. Topic-query counts are separate searches that may overlap; Browse Papers is your local collection.';
+}
+function buildPubMedSnapshotStats(records, snapshot, evidence) {
+  // Aggregation must not mutate the retained corpus when a refresh has failed.
+  records=clonePaperCollection(records);
+  var recent=(records || []).filter(function(p){var y=validPubMedYear(p.year);return y && y>=recentCutoff() && y<=currentYear();}).length;
+  var dated=(records || []).filter(function(p){return validPubMedYear(p.year);}).slice().sort(function(a,b){return validPubMedYear(a.year)-validPubMedYear(b.year);});
+  var first=dated[0];
+  var oldest={year:first?validPubMedYear(first.year):null,pmid:first?first.pmid:'',title:first?first.title:''};
+  var stats=buildPubMedStatsFromLiveRecords(records,snapshot?snapshot.queryMatchCount:records.length,recent,evidence?evidence.counts:null,oldest);
+  stats.pubmedQueryMatchCount=snapshot?snapshot.queryMatchCount:null;
+  stats.pubmedCountRetrievedAt=snapshot?snapshot.queryRetrievedAt:null;
+  stats.processedRecordsRetrievedAt=snapshot?snapshot.processedRecordsRetrievedAt:(getLivingAtlasChecked() || null);
+  stats.checkedAt=stats.processedRecordsRetrievedAt;
+  stats.fetchedAt=stats.processedRecordsRetrievedAt || 0;
+  stats.snapshotId=snapshot?snapshot.id:null;
+  stats.retrievalCompleteness=snapshot?'complete':'unverified-cache';
+  stats.topicCountsRetrievedAt=evidence?evidence.fetchedAt:null;
+  stats.attemptedAt=getLivingAtlasAttempted();
+  stats.source=snapshot?'cached-live':'local-incomplete';
+  stats.error='';
+  return normalizePubMedStatsProvenance(stats);
+}
+function pubMedStatsWithFailedRefresh(stats, error) {
+  stats=Object.assign({},stats,{source:stats.source==='local-incomplete'?'local-incomplete':'cached-live',error:error,attemptedAt:getLivingAtlasAttempted()});
+  var attempt=livingAtlasSnapshot && livingAtlasSnapshot.lastAttempt;
+  if (attempt && pubMedCountValue(attempt.queryMatchCount)!==null && attempt.queryRetrievedAt) {
+    stats.total=stats.pubmedQueryMatchCount=attempt.queryMatchCount;
+    stats.pubmedCountRetrievedAt=attempt.queryRetrievedAt;
+    stats.retrievalCompleteness='different-snapshots';
+  }
+  return normalizePubMedStatsProvenance(stats);
+}
+async function fetchPubMedStats(force) {
+  if (_pubmedStatsPromise) {
+    if (!force) return _pubmedStatsPromise;
+    await _pubmedStatsPromise;
+  }
+  _pubmedStatsPromise=retrievePubMedStats(force);
+  try { return await _pubmedStatsPromise; }
+  finally { _pubmedStatsPromise=null; }
+}
+async function retrievePubMedStats(force) {
+  var storedStats=loadStoredPubMedStats();
+  var cached=_pubmedCache || storedStats, previous=getLivingAtlasSnapshot();
+  if (!force && cached && (!previous || cached.snapshotId===previous.id || cached.retrievalCompleteness!=='complete')) {
+    var age=Date.now()-(cached.error?cached.attemptedAt:cached.fetchedAt || 0);
+    if (age<pubMedStatsCacheTtl(cached)) {
+      _pubmedCache=getLivingAtlasError()?pubMedStatsWithFailedRefresh(cached,getLivingAtlasError()):_livingAtlasRefreshing?Object.assign({},cached,{source:'cached-live'}):cached;
       return _pubmedCache;
     }
-    var localRecords = (livingAtlasPapers || []).slice();
-    var localYears = localRecords.map(function(p){ return validPubMedYear(p && p.year); }).filter(Boolean);
-    var localOldest = {pmid:'',year:localYears.length ? Math.min.apply(null, localYears) : null,title:''};
-    var localStats = buildPubMedStatsFromLiveRecords(localRecords, localRecords.length,
-      localRecords.filter(function(p){ var y=validPubMedYear(p && p.year); return y && y>=recentCutoff(); }).length,
-      null, localOldest);
-    localStats.source = 'local-incomplete';
-    localStats.completePubMedCount = false;
-    localStats.pubmedQueryMatchCount = null;
-    localStats.retrievalCompleteness = 'incomplete-offline';
-    localStats.fetchedAt = Date.now();
-    localStats.checkedAt = getLivingAtlasChecked();
-    localStats.attemptedAt = getLivingAtlasAttempted();
-    localStats.error = (err && err.message) || 'Complete PubMed analytics unavailable';
-    _pubmedCache = localStats;
+  }
+  try {
+    await refreshLivingAtlasFromPubMed(!!force);
+    if (getLivingAtlasError()) throw new Error(getLivingAtlasError());
+    var snapshot=getLivingAtlasSnapshot();
+    if (!snapshot) throw new Error('The stored corpus has no verified complete retrieval provenance.');
+    var records=(livingAtlasPapers || []).slice();
+    if (validatePubMedCorpus(records)!==snapshot.queryMatchCount) throw new Error('Incomplete PubMed processed corpus: query and processed counts disagree');
+    var evidence=loadTopicQueryMembershipCache(), topicError='';
+    try { evidence=await fetchExactTopicPubMedEvidence(false); }
+    catch(err) { topicError=(err && err.message) || 'Topic-query counts unavailable'; }
+    if (evidence && applyTopicQueryMembershipsToRecords(records,evidence)) saveLivingAtlasStore();
+    var stats=buildPubMedSnapshotStats(records,snapshot,evidence);
+    stats.source=previous && previous.id===snapshot.id?'cached-live':'live';
+    stats.topicQueryError=topicError;
+    _pubmedCache=stats;
+    saveStoredPubMedStats(stats);
+    return stats;
+  } catch(err) {
+    var fallback=storedStats;
+    var snapshot=getLivingAtlasSnapshot();
+    if (snapshot || !fallback) fallback=buildPubMedSnapshotStats((livingAtlasPapers || []).slice(),snapshot,loadTopicQueryMembershipCache());
+    _pubmedCache=pubMedStatsWithFailedRefresh(fallback,(err && err.message) || 'PubMed refresh unsuccessful');
     return _pubmedCache;
   }
+}
+async function refreshPubMedAnalytics() {
+  var button=document.getElementById('analytics-refresh-btn');
+  button.disabled=true; button.textContent='Refreshing PubMed data…';
+  try { await fetchPubMedStats(true); await renderAnalytics(); }
+  finally { button.disabled=false; button.textContent='Refresh PubMed data'; }
 }
 // ═══════════════════════════════════════════════════════════════════════
 //  ANALYTICS — ALL FROM PUBMED
@@ -10900,9 +10949,12 @@ async function renderAnalytics() {
   var spinHtml = '<div style="text-align:center;color:var(--text-faint);font-size:11px;padding:16px 0"><span style="display:inline-block;animation:spin 1s linear infinite">⟳</span> Fetching live PubMed data…</div>';
 
   // Show loading state immediately
+  _set('analytics-source-badge','Checking retrieval status…');
+  _set('analytics-provenance','Checking query and processed-record provenance…');
   document.getElementById('stat-row').innerHTML =
-    '<div class="stat-box" style="border-color:#c8d8f0"><span class="stat-box-n" style="color:var(--indigo);font-size:1.5rem" id="pubmed-total-n"><span style="animation:spin 1s linear infinite;display:inline-block">⟳</span></span><div class="stat-box-l" id="pubmed-total-label">PubMed Total</div></div>' +
-    '<div class="stat-box"><span class="stat-box-n" id="pubmed-recent-n">…</span><div class="stat-box-l">' + recentLabel() + '</div></div>' +
+    '<div class="stat-box" style="border-color:#c8d8f0"><span class="stat-box-n" style="color:var(--indigo);font-size:1.5rem" id="pubmed-total-n"><span style="animation:spin 1s linear infinite;display:inline-block">⟳</span></span><div class="stat-box-l" id="pubmed-total-label">PubMed query matches</div></div>' +
+    '<div class="stat-box"><span class="stat-box-n" id="pubmed-processed-n">…</span><div class="stat-box-l">Records processed</div></div>' +
+    '<div class="stat-box"><span class="stat-box-n" id="pubmed-recent-n">…</span><div class="stat-box-l">' + recentLabel() + ' · processed</div></div>' +
     '<div class="stat-box"><span class="stat-box-n" id="pubmed-journals-n">…</span><div class="stat-box-l">Unique Journals</div></div>' +
     '<div class="stat-box" id="pubmed-oldest-box"><span class="stat-box-n" id="pubmed-miny-n">…</span><div class="stat-box-l">Oldest Record</div></div>' +
     '<div class="stat-box"><span class="stat-box-n">' + getAllPapers().length + '</span><div class="stat-box-l">Browse Papers</div></div>';
@@ -10926,10 +10978,12 @@ async function renderAnalytics() {
 
     // Stat boxes
     var totalEl = document.getElementById('pubmed-total-n');
-    if (totalEl) totalEl.textContent = Number(stats.total || 0).toLocaleString();
+    if (totalEl) totalEl.textContent = stats.pubmedQueryMatchCount===null?'—':stats.pubmedQueryMatchCount.toLocaleString();
+    _set('pubmed-processed-n',stats.liveRecordCount===null?'—':stats.liveRecordCount.toLocaleString());
+    renderAnalyticsProvenance(stats);
     var totalLabel = document.getElementById('pubmed-total-label');
-    if (totalLabel) totalLabel.textContent = stats.source === 'local-incomplete' ? 'Locally Cached Records' : 'PubMed Total';
-    _set('pubmed-recent-n',  (stats.recentCount || '—').toLocaleString ? (stats.recentCount||0).toLocaleString() : '—');
+    if (totalLabel) totalLabel.textContent = 'PubMed query matches';
+    _set('pubmed-recent-n',stats.processedRecentRecordCount===undefined?'—':stats.processedRecentRecordCount.toLocaleString());
     _set('pubmed-journals-n', (stats.uniqueJournals || '—').toLocaleString ? (stats.uniqueJournals||0).toLocaleString() : '—');
     _set('pubmed-miny-n', stats.oldestRecordYear || stats.minYear || '—');
     var oldestBox = document.getElementById('pubmed-oldest-box');
@@ -10940,11 +10994,11 @@ async function renderAnalytics() {
     var allYrs  = Object.keys(yearC).sort(function(a,b){ return parseInt(a,10)-parseInt(b,10); });
     var maxYC   = Math.max.apply(null, allYrs.map(function(y) { return yearC[y] || 0; }).concat([1]));
     var tlLabel = document.getElementById('timeline-year-label');
-    if (tlLabel) tlLabel.textContent = (allYrs[0] || '1940') + '–' + thisYear + sourceMeta.timelineSuffix;
+    if (tlLabel) tlLabel.textContent = (allYrs.length ? allYrs[0]+'–'+thisYear : 'No identified publication years') + sourceMeta.timelineSuffix;
     var timelineNote = document.getElementById('timeline-note');
     if (timelineNote) timelineNote.innerHTML =
-      '<div style="font-size:10px;color:var(--text-faint);margin-bottom:4px;text-align:right">complete canonical PubMed query · ' + sourceMeta.chip + '</div>' +
-      '<div>' + (stats.unknownYearCount || 0).toLocaleString() + ' record(s) have an unidentified publication year and are excluded from the annual bars.</div>';
+      '<div style="font-size:10px;color:var(--text-faint);margin-bottom:4px;text-align:right">processed-record denominator: ' + (stats.liveRecordCount===null?'not recorded':stats.liveRecordCount.toLocaleString()) + ' · ' + sourceMeta.chip + '</div>' +
+      '<div>' + (stats.unknownYearCount || 0).toLocaleString() + ' record(s) have an unidentified publication year and are excluded from the annual bars, while remaining in the processed-record denominator.</div>';
     document.getElementById('chart-timeline').innerHTML = allYrs.map(function(y) {
         var cnt = yearC[y] || 0;
         var h = cnt > 0 ? Math.max(4, Math.round(cnt / maxYC * 100)) : 2;
@@ -10962,12 +11016,12 @@ async function renderAnalytics() {
     var unresolvedReasons = Object.keys(stats.unresolvedTopicReasons || {}).map(function(reason){return [reason,stats.unresolvedTopicReasons[reason]];}).sort(function(a,b){return b[1]-a[1];});
     document.getElementById('chart-topics').innerHTML =
       '<div style="font-size:10px;color:var(--text-faint);margin-bottom:6px;text-align:right">' + sourceMeta.topicHeader + '</div>' +
-      '<div style="font-size:10.5px;color:var(--text-soft);margin-bottom:8px"><strong>PubMed category-query matches:</strong> each count comes from the exact query opened by the topic link; categories may overlap.</div>' +
+      (stats.topicCountsExact ? '<div style="font-size:10.5px;color:var(--text-soft);margin-bottom:8px"><strong>PubMed category-query matches:</strong> independent searches may overlap and need not sum to the processed-record count.</div>' : '<div style="font-size:10.5px;color:var(--text-soft);margin-bottom:8px"><strong>Record-level topic counts:</strong> independent topic-query counts are unavailable.</div>') +
       topicSorted.map(function(arr){
         var t=arr[0],c=arr[1],tc=TOPIC_COLORS[t] || {fill:'#888'};
         return '<div class="bar-row"><div class="bar-label">' + t + '</div><div class="bar-track"><div class="bar-fill" style="width:' + Math.round(c/maxT*100) + '%;background:' + tc.fill + '"></div></div><div class="bar-count">' + c.toLocaleString() + '</div></div>';
       }).join('') +
-      '<div style="border-top:1px solid var(--border);margin:12px 0 8px;padding-top:10px;font-size:10.5px;color:var(--text-soft)"><strong>Primary record-level categorisation:</strong> every retrieved PMID is counted once as one primary topic or in the Unresolved category. This distribution does not use overlapping query totals.</div>' +
+      '<div style="border-top:1px solid var(--border);margin:12px 0 8px;padding-top:10px;font-size:10.5px;color:var(--text-soft)"><strong>Primary record-level categorisation:</strong> every processed record is counted once as one primary topic or in the Unresolved category. This distribution does not use overlapping query totals.</div>' +
       primaryPairs.map(function(arr){
         var t=arr[0],c=arr[1],tc=TOPIC_COLORS[t] || {fill:'#888'};
         return '<div class="bar-row"><div class="bar-label">' + t + '</div><div class="bar-track"><div class="bar-fill" style="width:' + Math.round(c/maxPrimary*100) + '%;background:' + tc.fill + '"></div></div><div class="bar-count">' + c.toLocaleString() + '</div></div>';
@@ -10991,7 +11045,7 @@ async function renderAnalytics() {
     var maxJ = Math.max(1, topJ.length ? topJ[0][1] : 0);
     var identifiedJournalRecords = Object.keys(stats.byJournal).reduce(function(sum,j){ return sum + (stats.byJournal[j] || 0); }, 0);
     document.getElementById('chart-journals').innerHTML =
-      '<div style="font-size:10.5px;color:var(--text-soft);margin-bottom:8px">Each journal is shown as <strong>record count (percentage)</strong>. Percentage = records assigned to that harmonised journal ÷ all PubMed records with an identified journal × 100. The denominator is <strong>' + identifiedJournalRecords.toLocaleString() + '</strong> identified-journal record(s); <strong>' + (stats.unknownJournalCount || 0).toLocaleString() + '</strong> record(s) without an identified journal are excluded from the percentage calculation. Counts are refreshed from the live PubMed-derived record set.</div>' +
+      '<div style="font-size:10.5px;color:var(--text-soft);margin-bottom:8px">Each journal is shown as <strong>record count (percentage)</strong>. Percentage = records assigned to that harmonised journal ÷ all PubMed records with an identified journal × 100. The denominator is <strong>' + identifiedJournalRecords.toLocaleString() + '</strong> identified-journal record(s); <strong>' + (stats.unknownJournalCount || 0).toLocaleString() + '</strong> record(s) without an identified journal are excluded from the percentage calculation. Counts use the processed corpus shown above. Records without an identified journal remain in its overall denominator.</div>' +
       topJ.map(function(arr) {
         var fullJ = arr[0] || 'Unknown journal';
         var j = fullJ.length > 64 ? fullJ.slice(0,61)+'…' : fullJ;
@@ -11001,6 +11055,7 @@ async function renderAnalytics() {
       }).join('');
 
     // Topic cloud — chips open PubMed search in new tab
+    _set('topics-cloud-source-label',stats.topicCountsExact?'independent topic-query counts':'record-level topic counts');
     var el = document.getElementById('topics-cloud');
     if (el) {
       var urlMap = stats.topicPubMedURLs || {};
@@ -11028,6 +11083,8 @@ async function renderAnalytics() {
       var node = document.getElementById(id); if(node) node.innerHTML = errMsg;
     });
     _set('pubmed-total-n', '—');
+    _set('pubmed-processed-n', '—');
+    _set('analytics-provenance','No verified PubMed analysis is available. Refresh PubMed data to retry.');
     _set('pubmed-recent-n', '—');
     _set('pubmed-journals-n', '—');
     _set('pubmed-miny-n', '—');
@@ -11053,7 +11110,7 @@ function updateAboutStats() {
   if (grid) {
     // Show loading state for PubMed stats
     grid.innerHTML =
-      '<div class="about-stat-card"><span class="about-stat-n" id="about-pubmed-total" style="color:var(--indigo)">…</span><span class="about-stat-l">PubMed Total</span></div>' +
+      '<div class="about-stat-card"><span class="about-stat-n" id="about-pubmed-total" style="color:var(--indigo)">…</span><span class="about-stat-l">PubMed query matches</span></div>' +
       '<div class="about-stat-card"><span class="about-stat-n" id="about-pubmed-recent">…</span><span class="about-stat-l">' + recentLabel() + '</span></div>' +
       '<div class="about-stat-card"><span class="about-stat-n" id="about-pubmed-topics">10</span><span class="about-stat-l">PubMed Topic Queries</span></div>' +
       '<div class="about-stat-card"><span class="about-stat-n" id="about-pubmed-journals">…</span><span class="about-stat-l">Unique Journals</span></div>' +
@@ -11061,15 +11118,15 @@ function updateAboutStats() {
       '<div class="about-stat-card" style="border-color:var(--teal-light)"><span class="about-stat-n" style="color:var(--teal)">' + n + '</span><span class="about-stat-l">Curated Papers</span></div>';
   }
 
-  // Use fetchPubMedStats (cached, [tiab] restricted) for all PubMed counts
+  // Reuse the Analytics provenance and processed-corpus counts.
   fetchPubMedStats().then(function(stats) {
-    _set('about-pubmed-total',   Number(stats.total || 0).toLocaleString() + (stats.source==='local-incomplete'?'†':''));
-    _set('about-pubmed-recent',  (stats.recentCount||0).toLocaleString() + (stats.source==='local-incomplete'?'†':''));
+    _set('about-pubmed-total',stats.pubmedQueryMatchCount===null?'—':stats.pubmedQueryMatchCount.toLocaleString());
+    _set('about-pubmed-recent',stats.processedRecentRecordCount===undefined?'—':stats.processedRecentRecordCount.toLocaleString());
     _set('about-pubmed-journals',(stats.uniqueJournals||0).toLocaleString() + (stats.source==='local-incomplete'?'†':''));
-    _set('about-pubmed-years',   (stats.minYear||'1940') + '–' + currentYear());
+    _set('about-pubmed-years',stats.minYear?stats.minYear+'–'+currentYear():'Not identified');
     var topicSorted = Object.keys(stats.byTopic).map(function(t){return[t,stats.byTopic[t]];}).sort(function(a,b){return b[1]-a[1];});
     updateAboutTopics(topicSorted);
-    _set('pubmed-about-total', Number(stats.total || 0).toLocaleString() + (stats.source==='local-incomplete'?'†':''));
+    _set('pubmed-about-total',stats.pubmedQueryMatchCount===null?'—':stats.pubmedQueryMatchCount.toLocaleString());
   }).catch(function(){
     _set('about-pubmed-total', '—');
     _set('about-pubmed-recent', '—');
@@ -11375,6 +11432,9 @@ function searchGoogleScholar(q, status, resultsEl) {
 //  PUBMED METADATA, CCRF WORKSPACE, COHORTS, EXPORTS
 // ═══════════════════════════════════════════════════════════════════════
 var livingAtlasPapers = [];
+var livingAtlasSnapshot = null;
+var _livingAtlasRefreshPromise = null;
+var _pubmedStatsPromise = null;
 var _livingAtlasRefreshing = false;
 var _ncbiNextRequestAt = 0;
 var LIVING_ATLAS_TTL = 12 * 60 * 60 * 1000;
@@ -11411,14 +11471,46 @@ function loadLivingAtlasStore() {
     var s = localStorage.getItem(livingAtlasStorageKey('papers_v1'));
     livingAtlasPapers = normalizeStoredTopicPapers(s ? JSON.parse(s) : [], livingAtlasStorageKey('papers_v1'));
   } catch(e) { livingAtlasPapers = []; }
+  try { livingAtlasSnapshot = JSON.parse(localStorage.getItem(livingAtlasStorageKey('snapshot_v1')) || 'null'); }
+  catch(e) { livingAtlasSnapshot = null; }
   return livingAtlasPapers;
 }
-function saveLivingAtlasStore() {
+function saveLivingAtlasStore(snapshot) {
+  if (snapshot) livingAtlasSnapshot = snapshot;
   try {
+    // Invalidate old provenance before replacing the persisted corpus. Enrichment
+    // saves do not change successful-retrieval timestamps or clear refresh errors.
+    if (snapshot) localStorage.removeItem(livingAtlasStorageKey('snapshot_v1'));
     localStorage.setItem(livingAtlasStorageKey('papers_v1'), JSON.stringify(livingAtlasPapers || []));
-    localStorage.setItem(livingAtlasStorageKey('checked_v1'), String(Date.now()));
-    localStorage.removeItem(livingAtlasStorageKey('error_v1'));
+    if (snapshot) {
+      localStorage.setItem(livingAtlasStorageKey('checked_v1'), String(snapshot.processedRecordsRetrievedAt));
+      localStorage.setItem(livingAtlasStorageKey('snapshot_v1'), JSON.stringify(snapshot));
+      localStorage.removeItem(livingAtlasStorageKey('error_v1'));
+    }
   } catch(e) {}
+}
+function validatePubMedCorpus(records, expectedIds) {
+  var ids = (records || []).map(function(p){ return String(p && p.pmid || ''); });
+  var unique = new Set(ids);
+  if (ids.some(function(id){return !/^[1-9]\d*$/.test(id);}) || unique.size !== ids.length) {
+    throw new Error('Incomplete PubMed processed corpus: invalid or duplicate PMIDs');
+  }
+  if (expectedIds && (ids.length !== expectedIds.length || new Set(expectedIds.map(String)).size !== ids.length || expectedIds.some(function(id){return !unique.has(String(id));}))) {
+    throw new Error('Incomplete PubMed processed corpus: records do not match the complete PMID inventory');
+  }
+  return ids.length;
+}
+function getLivingAtlasSnapshot() {
+  var snapshot = livingAtlasSnapshot;
+  if (!snapshot || !snapshot.complete || snapshot.query !== LIPOEDEMA_PUBMED_QUERY || !snapshot.id ||
+      !snapshot.queryRetrievedAt || !snapshot.processedRecordsRetrievedAt) return null;
+  try { if (validatePubMedCorpus(livingAtlasPapers) !== snapshot.queryMatchCount) return null; }
+  catch(e) { return null; }
+  return snapshot;
+}
+function saveLivingAtlasFailedAttempt(attempt) {
+  livingAtlasSnapshot = Object.assign({}, livingAtlasSnapshot || {}, {lastAttempt:attempt});
+  try { localStorage.setItem(livingAtlasStorageKey('snapshot_v1'), JSON.stringify(livingAtlasSnapshot)); } catch(e) {}
 }
 function getLivingAtlasChecked() {
   return parseInt(localStorage.getItem(livingAtlasStorageKey('checked_v1')) || '0') || 0;
@@ -11595,28 +11687,38 @@ function mergeLivingAtlasRecords(existing, incoming, preferredPmids) {
   });
 }
 async function fetchAllLivingAtlasPubMedIds(query) {
+  var startedAt = Date.now();
   var first = await fetchLivingAtlas(buildLivingAtlasUrl('esearch.fcgi', {
     db:'pubmed', term:query, retstart:0, retmax:LIVING_ATLAS_SEARCH_PAGE,
     sort:'pub_date', retmode:'json', tool:'LipoScope'
   }), 'json');
+  var queryRetrievedAt = Date.now();
   var result = first && first.esearchresult || {};
-  var total = parseInt(result.count, 10) || 0;
-  var ids = (result.idlist || []).map(String);
+  var total = Number(result.count);
+  if (!/^\d+$/.test(String(result.count)) || !Number.isSafeInteger(total) || total < 0 || !Array.isArray(result.idlist)) throw new Error('Incomplete PubMed PMID retrieval: invalid search response');
+  if (total > 9999) {
+    var expanded = await fetchAllLiveSearchIds(query, function(){return true;});
+    if (expanded.total !== total) throw new Error('Incomplete PubMed PMID retrieval: query count changed during retrieval');
+    return {ids:expanded.ids,total:total,complete:true,startedAt:startedAt,queryRetrievedAt:queryRetrievedAt};
+  }
+  var ids = result.idlist.map(String);
+  if (ids.length !== Math.min(total,LIVING_ATLAS_SEARCH_PAGE)) throw new Error('Incomplete PubMed PMID retrieval: incomplete first page');
   for (var retstart = ids.length; retstart < total; retstart += LIVING_ATLAS_SEARCH_PAGE) {
     var page = await fetchLivingAtlas(buildLivingAtlasUrl('esearch.fcgi', {
       db:'pubmed', term:query, retstart:retstart, retmax:LIVING_ATLAS_SEARCH_PAGE,
       sort:'pub_date', retmode:'json', tool:'LipoScope'
     }), 'json');
-    var pageIds = page && page.esearchresult && page.esearchresult.idlist || [];
-    if (!pageIds.length) break;
+    var pageResult = page && page.esearchresult || {};
+    var pageIds = pageResult.idlist;
+    if (Number(pageResult.count) !== total || !Array.isArray(pageIds) || pageIds.length !== Math.min(LIVING_ATLAS_SEARCH_PAGE,total-retstart)) {
+      throw new Error('Incomplete PubMed PMID retrieval: partial page or changed query count');
+    }
     ids = ids.concat(pageIds.map(String));
   }
-  // ESearch returned records must be complete. Partial pages and changing results
-  // cannot silently be presented as a complete PubMed bibliometric snapshot.
-  var seen = {};
-  ids = ids.filter(function(id){ if (seen[id]) return false; seen[id] = true; return true; });
-  if (ids.length !== total) throw new Error('Incomplete PubMed PMID retrieval: expected ' + total + ', received ' + ids.length + ' unique identifiers; previous successful cache retained');
-  return {ids:ids,total:total,complete:true};
+  if (ids.length !== total || new Set(ids).size !== total || ids.some(function(id){return !/^[1-9]\d*$/.test(id);})) {
+    throw new Error('Incomplete PubMed PMID retrieval: invalid, duplicate or missing identifiers; previous successful cache retained');
+  }
+  return {ids:ids,total:total,complete:true,startedAt:startedAt,queryRetrievedAt:queryRetrievedAt};
 }
 
 function validPubMedYear(value) {
@@ -11914,13 +12016,17 @@ function pubMedRecordNeedsContentRefresh(paper) {
 }
 
 async function refreshLivingAtlasFromPubMed(force) {
-  if (_livingAtlasRefreshing) return livingAtlasPapers;
+  if (_livingAtlasRefreshPromise) return _livingAtlasRefreshPromise;
+  _livingAtlasRefreshPromise = retrieveLivingAtlasSnapshot(force);
+  try { return await _livingAtlasRefreshPromise; }
+  finally { _livingAtlasRefreshPromise = null; }
+}
+async function retrieveLivingAtlasSnapshot(force) {
   var last = getLivingAtlasChecked();
   var classifierStale = (livingAtlasPapers || []).some(function(p){
     return p && (p.topicClassifierVersion !== TOPIC_CLASSIFIER_VERSION || p.typeClassifierVersion !== PUBMED_TYPE_CLASSIFIER_VERSION || p.pubMedMetadataVersion !== PUBMED_METADATA_VERSION || pubMedRecordNeedsContentRefresh(p));
   });
-  if (!force && !classifierStale && last && (Date.now() - last < LIVING_ATLAS_TTL) && livingAtlasPapers.length) {
-    setLivingAtlasAttempted(last);
+  if (!force && !classifierStale && getLivingAtlasSnapshot() && last && (Date.now() - last < LIVING_ATLAS_TTL) && !getLivingAtlasError()) {
     syncLivingAtlasStatusSnapshot('PubMed literature view ready');
     fetchExactTopicPubMedEvidence(false).then(function(topicEvidence){
       if (applyTopicQueryMembershipsToRecords(livingAtlasPapers,topicEvidence)) { saveLivingAtlasStore(); refreshStoredDynamicBrowseClassifications(); _pubmedCache = null; }
@@ -11928,13 +12034,15 @@ async function refreshLivingAtlasFromPubMed(force) {
     return livingAtlasPapers;
   }
   _livingAtlasRefreshing = true;
-  setLivingAtlasAttempted(Date.now());
+  var startedAt = Date.now();
+  var search = null;
+  setLivingAtlasAttempted(startedAt);
   setLivingAtlasError('');
   syncLivingAtlasStatusSnapshot();
   try {
-    var search = await fetchAllLivingAtlasPubMedIds(LIPOEDEMA_PUBMED_QUERY);
+    search = await fetchAllLivingAtlasPubMedIds(LIPOEDEMA_PUBMED_QUERY);
     var ids = search.ids || [];
-    if (!ids.length) throw new Error('no PubMed ids returned');
+    if (!search.complete || ids.length !== search.total || new Set(ids).size !== ids.length || ids.some(function(id){return !/^[1-9]\d*$/.test(String(id));})) throw new Error('Incomplete PubMed PMID retrieval: invalid inventory');
     var cachedByPmid = {};
     (livingAtlasPapers || []).forEach(function(p) { if (p && p.pmid) cachedByPmid[String(p.pmid)] = p; });
     var idsToFetch = ids.filter(function(id) {
@@ -11945,7 +12053,7 @@ async function refreshLivingAtlasFromPubMed(force) {
     for (var i = 0; i < idsToFetch.length; i += LIVING_ATLAS_SUMMARY_BATCH) {
       var chunk = idsToFetch.slice(i, i + LIVING_ATLAS_SUMMARY_BATCH);
       var ed = await fetchLivingAtlas(buildLivingAtlasUrl('esummary.fcgi', {db:'pubmed',id:chunk.join(','),retmode:'json',tool:'LipoScope'}), 'json');
-      chunk.forEach(function(id) { if (ed.result && ed.result[id]) summaries[id] = ed.result[id]; });
+      chunk.forEach(function(id) { var record = ed.result && ed.result[id]; if (record && !record.error && String(record.uid) === id) summaries[id] = record; });
     }
     for (var j = 0; j < idsToFetch.length; j += LIVING_ATLAS_ABSTRACT_BATCH) {
       var ab = await fetchPubMedAbstractsBatch(idsToFetch.slice(j, j + LIVING_ATLAS_ABSTRACT_BATCH));
@@ -11953,6 +12061,8 @@ async function refreshLivingAtlasFromPubMed(force) {
     }
     var missingSummaries = idsToFetch.filter(function(id){return !summaries[id];});
     if (missingSummaries.length) throw new Error('Incomplete PubMed citation summaries: ' + missingSummaries.length + ' missing of ' + idsToFetch.length + ' requested (e.g. ' + missingSummaries.slice(0,5).join(',') + ')');
+    var missingCitations = idsToFetch.filter(function(id){return !Object.prototype.hasOwnProperty.call(abstracts,id) || !abstracts[id] || typeof abstracts[id] !== 'object';});
+    if (missingCitations.length) throw new Error('Incomplete PubMed EFetch citations: ' + missingCitations.length + ' requested records were not parsed');
     var incoming = [];
     idsToFetch.forEach(function(id) {
       var r = summaries[id];
@@ -11963,9 +12073,14 @@ async function refreshLivingAtlasFromPubMed(force) {
       incoming.push(pubMedLivingPaperFromSummary(r, meta));
     });
     var candidateRecords = mergeLivingAtlasRecords(livingAtlasPapers, incoming, ids);
-    if (candidateRecords.length !== ids.length) throw new Error('Incomplete PubMed processed corpus: ' + candidateRecords.length + ' of ' + ids.length + ' unique PMID records');
+    validatePubMedCorpus(candidateRecords,ids);
+    var completedAt = Date.now();
+    var snapshot = {id:startedAt+'-'+completedAt+'-'+Math.random().toString(36).slice(2),query:LIPOEDEMA_PUBMED_QUERY,
+      queryMatchCount:search.total,queryRetrievedAt:search.queryRetrievedAt || completedAt,
+      processedRecordsRetrievedAt:completedAt,startedAt:search.startedAt || startedAt,complete:true};
     livingAtlasPapers = candidateRecords;
-    saveLivingAtlasStore();
+    saveLivingAtlasStore(snapshot);
+    setLivingAtlasError('');
     fetchExactTopicPubMedEvidence(false).then(function(topicEvidence) {
       var changed = applyTopicQueryMembershipsToRecords(livingAtlasPapers, topicEvidence);
       if (changed) { saveLivingAtlasStore(); refreshStoredDynamicBrowseClassifications(); _pubmedCache = null; }
@@ -11979,7 +12094,10 @@ async function refreshLivingAtlasFromPubMed(force) {
     if (document.getElementById('panel-about') && document.getElementById('panel-about').classList.contains('active')) updateAboutStats();
     return livingAtlasPapers;
   } catch(err) {
-    setLivingAtlasError((err && err.message) ? err.message : 'PubMed refresh failed');
+    var message = (err && err.message) ? err.message : 'PubMed refresh failed';
+    saveLivingAtlasFailedAttempt({startedAt:startedAt,failedAt:Date.now(),queryMatchCount:search ? search.total : null,queryRetrievedAt:search ? search.queryRetrievedAt : null,error:message});
+    setLivingAtlasError(message);
+    _pubmedCache = null;
     updateLivingAtlasStatus('warn', livingAtlasPapers.length ? 'PubMed literature view using cached records' : 'PubMed literature view could not reach PubMed');
     return livingAtlasPapers;
   } finally {

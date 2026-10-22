@@ -1,6 +1,6 @@
 # LipoScope v1.0.0 validation report
 
-Generated: 2026-10-22T00:47:59+00:00
+Generated: 2026-10-22T14:26:44+00:00
 
 ## Application structure
 
@@ -25,3 +25,10 @@ The four dictionaries are cumulative. Technical row totals are not presented as 
 - Python syntax errors: **0**
 - Static HTML validation: **passed**
 - Deterministic schema and HTML-copy check: **passed**
+
+## Analytics retrieval provenance
+
+- Synthetic snapshot regression: **passed** (27 scenarios)
+- Optional real PubMed smoke: **passed**
+The real-service smoke obtains its expected corpus size from the actual canonical query; its counts are not hardcoded and it does not establish classification accuracy.
+PubMed collection spans a retrieval interval. Independently retrieved topic-query counts retain their own timestamps and may overlap.

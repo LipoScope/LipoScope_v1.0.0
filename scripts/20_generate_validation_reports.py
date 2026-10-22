@@ -46,17 +46,26 @@ def main():
         except Exception as e:py_errors.append({'file':str(f.relative_to(ROOT)),'error':str(e)})
     browser_path=VALIDATION/'browser_smoke_test.json';browser=json.loads(browser_path.read_text()) if browser_path.exists() else {'passed':False,'status':'not_run'}
     tests_path=VALIDATION/'automated_test_summary.json';tests=json.loads(tests_path.read_text()) if tests_path.exists() else {'passed':None,'failed':None}
+    analytics_path=VALIDATION/'analytics_snapshot_browser_regression.json'
+    analytics=json.loads(analytics_path.read_text(encoding='utf-8')) if analytics_path.exists() else {'passed':False,'status':'not_run'}
+    live_path=VALIDATION/'pubmed_analytics_live_smoke.json'
+    live=json.loads(live_path.read_text(encoding='utf-8')) if live_path.exists() else {'passed':None,'status':'not_run'}
     summary={
       'generated_at':utc_now(),'application_version':'v1.0.0','html_sha256':sha256_file(html_path),
       'ccrf':{'version':schema['source']['ccrfVersion'],'classifications':{k:{'official_cdes':v['official_cdes'],'clinical_cdes':v['clinical_cdes'],'participant_cdes':v['participant_cdes'],'dictionary_rows':v['dictionaryRows']} for k,v in schema['classifications'].items()}},
-      'automated_tests':tests,'browser_test':browser,'python_syntax_errors':py_errors,
+      'automated_tests':tests,'browser_test':browser,'analytics_snapshot_regression':analytics,'optional_real_pubmed_smoke':live,'python_syntax_errors':py_errors,
       'static_html_validation_passed':static['passed'],'deterministic_rebuild_passed':rebuild['passed']
     }
-    summary['passed']=static['passed'] and rebuild['passed'] and not py_errors and bool(browser.get('passed')) and tests.get('failed',1)==0
+    summary['passed']=static['passed'] and rebuild['passed'] and not py_errors and bool(browser.get('passed')) and bool(analytics.get('passed')) and tests.get('failed',1)==0
     dump_json(VALIDATION/'local_validation_summary.json',summary)
     lines=['# LipoScope v1.0.0 validation report','',f"Generated: {summary['generated_at']}",'','## Application structure','',f"- Six main tabs and panels: **{'passed' if static['main_panels_present'] else 'failed'}**",f"- CCRF Workspace section order: **{'passed' if static['ccrf_order_matches'] else 'failed'}**",f"- Duplicate HTML identifiers: **{len(static['duplicate_html_ids'])}**",'','## CCRF Version 1','']
     for key,c in summary['ccrf']['classifications'].items():lines.append(f"- {key}: {c['official_cdes']} official CDEs ({c['clinical_cdes']} clinician; {c['participant_cdes']} participant); {c['dictionary_rows']} technical REDCap rows")
     lines += ['','The four dictionaries are cumulative. Technical row totals are not presented as unique CDE totals. Completion uses currently applicable required response fields and excludes direct identifiers from local assessment.','','## Validation','',f"- Automated tests: **{tests.get('passed','not recorded')} passed; {tests.get('failed','not recorded')} failed**",f"- Browser audit: **{'passed' if browser.get('passed') else 'not passed or not recorded'}**",f"- JSZip {rebuild['jszip_version']} embedded ZIP component: **{'passed' if rebuild['jszip_embedded_exactly'] else 'failed'}**",f"- Python syntax errors: **{len(py_errors)}**",f"- Static HTML validation: **{'passed' if static['passed'] else 'failed'}**",f"- Deterministic schema and HTML-copy check: **{'passed' if rebuild['passed'] else 'failed'}**"]
+    lines += ['', '## Analytics retrieval provenance', '',
+      f"- Synthetic snapshot regression: **{'passed' if analytics.get('passed') else 'not passed or not recorded'}** ({len(analytics.get('checks',[]))} scenarios)",
+      f"- Optional real PubMed smoke: **{'passed' if live.get('passed') else 'not passed' if live.get('passed') is False else 'not run'}**",
+      'The real-service smoke obtains its expected corpus size from the actual canonical query; its counts are not hardcoded and it does not establish classification accuracy.',
+      'PubMed collection spans a retrieval interval. Independently retrieved topic-query counts retain their own timestamps and may overlap.']
     (VALIDATION/'release_validation_report.md').write_text('\n'.join(lines)+'\n',encoding='utf-8',newline='\n')
     if not summary['passed']:raise SystemExit('Validation failed')
     print('Validation reports generated')

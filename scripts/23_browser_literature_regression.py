@@ -11,6 +11,8 @@ with sync_playwright() as pw:
  page.evaluate('''()=>{const s=new Map();let api={getItem:k=>s.get(k)??null,setItem:(k,v)=>s.set(k,String(v)),removeItem:k=>s.delete(k),clear:()=>s.clear()};Object.defineProperty(window,'localStorage',{configurable:true,value:api});Object.defineProperty(window,'sessionStorage',{configurable:true,value:api});}''')
  page.set_content(html,wait_until='domcontentloaded',timeout=75000)
  results=page.evaluate('''async()=>{
+  if (_pubmedStatsPromise) await _pubmedStatsPromise;
+  if (_livingAtlasRefreshPromise) await _livingAtlasRefreshPromise;
   let failures=[],steps=[];
   function check(ok,label){steps.push({label,passed:!!ok});if(!ok)failures.push(label);}
   const originalFetcher=fetchLivingAtlas;
@@ -35,7 +37,7 @@ with sync_playwright() as pw:
     if(url.includes('esummary.fcgi')) return {result:{'99910':{uid:'99910',title:'Lipedema diagnosis',source:'Example',pubdate:'2025'},'99911':{uid:'99911',title:'Secondary vascular observations',source:'Example',pubdate:'2024'}}};
     throw Error('Unexpected request '+url);
   };
-  fetchPubMedAbstractsBatch=async()=>({});
+  fetchPubMedAbstractsBatch=async ids=>Object.fromEntries(ids.map(id=>[id,emptyPubMedMetadata()]));
   fetchExactTopicPubMedEvidence=async()=>({counts:{},byPmid:{},idsByTopic:{},fetchedAt:Date.now()});
   livingAtlasPapers=[];_livingAtlasRefreshing=false;
   await refreshLivingAtlasFromPubMed(true);

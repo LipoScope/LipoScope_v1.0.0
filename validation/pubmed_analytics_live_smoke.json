@@ -1,0 +1,18 @@
+{
+  "validation_type": "real_service_smoke",
+  "query": "(lipedema[Title/Abstract] OR lipoedema[Title/Abstract] OR \"Lipedema\"[Mesh] OR lipedemas[Title/Abstract] OR lipoedemas[Title/Abstract] OR lipolymphedema[Title/Abstract] OR lipolymphedemas[Title/Abstract] OR \"lipohyperplasia dolorosa\"[Title/Abstract])",
+  "query_match_count": 806,
+  "unique_processed_pmids": 806,
+  "records_processed": 806,
+  "query_retrieved_at": 1792678892758,
+  "corpus_retrieved_at": 1792678929977,
+  "retrieval_completeness": "complete",
+  "record_count_difference": 0,
+  "source": "live",
+  "error": "",
+  "topic_query_error": "",
+  "topic_query_retrieved_at": 1792678940484,
+  "passed": true,
+  "notice": "Real PubMed responses; no expected publication count was hardcoded. This is not a validation of classification accuracy.",
+  "page_errors": []
+}

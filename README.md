@@ -6,7 +6,7 @@ LipoScope is a browser-local research workbench for lipoedema/lipedema literatur
 
 **Launch LipoScope:** https://liposcope.github.io/LipoScope_v1.0.0/
 
-**Maintained build:** the application footer reads **Updated 22 October 2026**. The package retains the v1.0.0 version, directory and release filenames, but its contents include maintenance changes since the historical v1.0.0 release. Record the Git commit SHA (`git rev-parse HEAD`) when identifying the version used for validation or research.
+**Maintained build:** the application footer reads **Updated 23 October 2026**. The package retains the v1.0.0 version, directory and release filenames, but its contents include maintenance changes since the historical v1.0.0 release. Record the Git commit SHA (`git rev-parse HEAD`) when identifying the version used for validation or research.
 
 ## Application tabs
 
@@ -25,8 +25,13 @@ LipoScope is a browser-local research workbench for lipoedema/lipedema literatur
 - Added source-defined CCRF matrix instructions, masked inactive responses in analysis exports, and preserved the version-pinned CCRF Version 1 field definitions.
 - Renamed the unresolved research-topic bucket to **Unresolved category** throughout the literature workspace, including classification output, with migration of existing saved records, shared records and cached Analytics counts. The categorisation criteria and ten research topics are unchanged.
 - Removed the Live Literature Search total-result cap. Complete PMID retrieval, larger-query partitioning and retryable citation batches make all matches available while preserving existing results and duplicate detection.
+- Bound Analytics query and processed counts to one validated PMID inventory, recorded both retrieval times, and separated complete, cached, mixed-snapshot and unsuccessful retrieval states. Classification-only saves preserve the successful corpus timestamp.
 
 Literature-topic and study-type classifications are automated, rule-based navigation aids. Researchers should review them before using them as research classifications. See [the changelog](docs/CHANGELOG.md) and [release status](RELEASE_STATUS.md) for implementation scope.
+
+Analytics shows **PubMed query matches** and **Records processed** with their original retrieval dates and times. A synchronised complete retrieval requires exact PMID identity, uniqueness and count agreement. Records without an identified year, journal, abstract or resolved topic remain in the processed denominator. Overlapping topic-query totals are independent searches and need not sum to that denominator; Browse Papers remains a separate local collection.
+
+Legacy or mixed caches are labelled explicitly; matching numbers alone do not establish a common retrieval. A failed refresh retains the previous corpus and successful timestamps. If a newer attempted query count is available, the difference is shown alongside the older corpus without automatically describing it as missing publications. **Refresh PubMed data** requests a new verified inventory. Topic-query counts retain their own retrieval time. Collection spans a retrieval interval rather than an atomic snapshot of the changing PubMed database, and completeness checks do not establish classification accuracy.
 
 ## Run LipoScope
 
@@ -61,6 +66,7 @@ python -X utf8 scripts/22_browser_pubmed_regression.py --html LipoScope.html --o
 python -X utf8 scripts/23_browser_literature_regression.py --html LipoScope.html --out validation/literature_browser_regression.json
 python -X utf8 scripts/24_browser_topic_category_regression.py --html LipoScope.html --out validation/topic_category_browser_regression.json
 python -X utf8 scripts/25_browser_live_search_regression.py --html LipoScope.html --out validation/live_search_browser_regression.json
+python -X utf8 scripts/26_browser_analytics_snapshot_regression.py --html LipoScope.html --out validation/analytics_snapshot_browser_regression.json
 ```
 
 The committed test summary records **46 passed, 0 failed** for the maintained application. The browser smoke test covers all six tabs, CCRF behaviour and the seven-file research-package ZIP export. The two PubMed browser regressions use synthetic responses; they do not verify current external-service availability or establish literature-classification accuracy.
@@ -68,6 +74,12 @@ The committed test summary records **46 passed, 0 failed** for the maintained ap
 The topic-category browser regression checks the five non-CCRF tabs, classifier output, legacy storage and shared-record migration, Browse filtering, Live Search imports and Auto-Discovery wording using synthetic records. CI runs this check alongside the main tests and browser smoke test.
 
 The Live Search browser regression uses synthetic PubMed responses to check complete retrieval (including result sets larger than a single API search can return), loading subsequent batches, adding later results, duplicate protection, partial-response retries and isolation between searches. CI runs this check as well.
+
+The Analytics snapshot regression covers matching inventories, mixed retrieval times, missing ESummary/EFetch citations, failed-refresh preservation, unknown metadata, overlapping topic searches, duplicate/wrong PMIDs, concurrent requests and recovery. It uses deterministic synthetic responses and runs in CI. An additional optional real-service smoke test obtains counts dynamically and records only a validation summary:
+
+```bash
+python -X utf8 scripts/26_browser_analytics_snapshot_regression.py --live --html LipoScope.html --out validation/pubmed_analytics_live_smoke.json
+```
 
 `pytest` reports the current test result but does not update `validation/automated_test_summary.json`. Before regenerating aggregate validation reports, update that file to reflect the completed test run, including its command, date, passed and failed counts. Then run:
 
