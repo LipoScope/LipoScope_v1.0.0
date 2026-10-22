@@ -23,6 +23,7 @@ LipoScope is a browser-local research workbench for lipoedema/lipedema literatur
 - Added PubMed book-record handling, publication-identity checks for alternative abstract sources, and abstract-source information in paper details.
 - Improved New Paper Alerts handling so failed retrievals do not advance the last successful check time.
 - Added source-defined CCRF matrix instructions, masked inactive responses in analysis exports, and preserved the version-pinned CCRF Version 1 field definitions.
+- Renamed the unresolved research-topic bucket to **Unresolved category** throughout the literature workspace, including classification output, with migration of existing saved records, shared records and cached Analytics counts. The categorisation criteria and ten research topics are unchanged.
 
 Literature-topic and study-type classifications are automated, rule-based navigation aids. Researchers should review them before using them as research classifications. See [the changelog](docs/CHANGELOG.md) and [release status](RELEASE_STATUS.md) for implementation scope.
 
@@ -57,9 +58,12 @@ python -X utf8 -m pytest -q
 python -X utf8 scripts/18_browser_smoke_test.py --html LipoScope.html
 python -X utf8 scripts/22_browser_pubmed_regression.py --html LipoScope.html --out validation/pubmed_browser_regression.json
 python -X utf8 scripts/23_browser_literature_regression.py --html LipoScope.html --out validation/literature_browser_regression.json
+python -X utf8 scripts/24_browser_topic_category_regression.py --html LipoScope.html --out validation/topic_category_browser_regression.json
 ```
 
 The committed test summary records **46 passed, 0 failed** for the maintained application. The browser smoke test covers all six tabs, CCRF behaviour and the seven-file research-package ZIP export. The two PubMed browser regressions use synthetic responses; they do not verify current external-service availability or establish literature-classification accuracy.
+
+The topic-category browser regression checks the five non-CCRF tabs, classifier output, legacy storage and shared-record migration, Browse filtering, Live Search imports and Auto-Discovery wording using synthetic records. CI runs this check alongside the main tests and browser smoke test.
 
 `pytest` reports the current test result but does not update `validation/automated_test_summary.json`. Before regenerating aggregate validation reports, update that file to reflect the completed test run, including its command, date, passed and failed counts. Then run:
 

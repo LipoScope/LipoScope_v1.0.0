@@ -1,3 +1,10 @@
+# Topic-category terminology — 22 October 2026
+
+- Renamed the literature topic bucket from "Unsupported records" to "Unresolved category" across Browse Papers, Analytics, About and Auto-Discovery.
+- Renamed classifier and Analytics fields to use unresolved terminology, preserving existing categorisation criteria, reason codes, counts and retrieval timestamps.
+- Added compatibility for legacy saved records, cached Analytics and shared Browse records, including the misspelled legacy label "Unspported records".
+- Added a browser regression covering all five non-CCRF tabs and the affected import, filter and storage paths. CCRF Workspace and v1.0.0 are unchanged.
+
 # Maintained build — 21 October 2026
 
 - Extended canonical PubMed terminology to recognised lipedema synonyms and lipohyperplasia dolorosa.

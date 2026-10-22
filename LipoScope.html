@@ -2308,7 +2308,7 @@ select:focus{border-color:var(--rose)}
           <option value="Epidemiology &amp; Registry">Epidemiology &amp; Registry</option>
           <option value="Guidelines &amp; Consensus">Guidelines &amp; Consensus</option>
           <option value="Comorbidities &amp; QoL">Comorbidities &amp; QoL</option>
-          <option value="Unsupported records">Unsupported records</option>
+          <option value="Unresolved category">Unresolved category</option>
         </select>
         <select id="f-type" onchange="filterPapers()">
           <option value="">All Study Types</option>
@@ -2631,7 +2631,7 @@ select:focus{border-color:var(--rose)}
       <div class="about-section">
         <h2>📖 About This Resource</h2>
         <p>LipoScope supports research into <strong>lipoedema (lipedema)</strong>, a chronic painful adipose-tissue disorder where delayed recognition, inconsistent case definitions, small cohorts, limited objective measures, and fragmented genetics evidence still slow progress.</p>
-        <p>The public default Browse collection contains <strong>200 lipoedema/lipedema papers</strong> spanning <strong id="about-year-range">2009–2026</strong>, combining a manually curated seed with a PubMed-expanded metadata layer. Each record includes topic and study-type classification, source links, open-access figure lookup where full-text access supports it, and optional local PDF-based figure preview in the browser. Study-type classification uses NLM Publication Type metadata, identity-verified PMC article type, MeSH study-design descriptors, structured abstract Methods/design evidence, and available PMC Methods evidence. The Browse filters include research designs and publication formats such as editorials, letters, protocols, meeting abstracts, corrections and technical articles. Records that cannot be resolved are labelled <strong>Unsupported records</strong> for topic or <strong>Unclassified / Other</strong> for study type. Uploaded PDFs remain in the user's local workspace.</p>
+        <p>The public default Browse collection contains <strong>200 lipoedema/lipedema papers</strong> spanning <strong id="about-year-range">2009–2026</strong>, combining a manually curated seed with a PubMed-expanded metadata layer. Each record includes topic and study-type classification, source links, open-access figure lookup where full-text access supports it, and optional local PDF-based figure preview in the browser. Study-type classification uses NLM Publication Type metadata, identity-verified PMC article type, MeSH study-design descriptors, structured abstract Methods/design evidence, and available PMC Methods evidence. The Browse filters include research designs and publication formats such as editorials, letters, protocols, meeting abstracts, corrections and technical articles. Records that cannot be resolved are labelled <strong>Unresolved category</strong> for topic or <strong>Unclassified / Other</strong> for study type. Uploaded PDFs remain in the user's local workspace.</p>
         <p>The <strong>CCRF Workspace</strong> provides official CCRF Version 1 classifications for standardised data entry, required-field review, saved-record summaries, data-dictionary inspection and de-identified exports. The <strong>Analytics</strong> tab separates whole-field PubMed signals from the visible Browse workspace, and <strong>Live Search</strong> lets users add new PubMed records with one click.</p>
       </div>
 
@@ -2657,7 +2657,7 @@ select:focus{border-color:var(--rose)}
           <!-- Populated dynamically by updateAboutTopics() -->
         </div>
         <p style="font-size:11px;color:var(--text-faint);margin-top:12px;margin-bottom:0">
-          Topic links and displayed category counts use the same exact high-precision PubMed queries. Record-level categorisation combines disease-specific and Major Topic MeSH evidence, exact category-query PMID membership, precise titles, author keywords, indexed substances, structured abstract sections, and identity-verified PMC evidence where available. LipoScope retains secondary topic matches internally and assigns one primary topic only when the leading evidence is sufficiently strong and distinct; records awaiting indexing, lacking usable metadata, or carrying equivalent multi-domain evidence remain Unsupported records with the reason counted separately.
+          Topic links and displayed category counts use the same exact high-precision PubMed queries. Record-level categorisation combines disease-specific and Major Topic MeSH evidence, exact category-query PMID membership, precise titles, author keywords, indexed substances, structured abstract sections, and identity-verified PMC evidence where available. LipoScope retains secondary topic matches internally and assigns one primary topic only when the leading evidence is sufficiently strong and distinct; records awaiting indexing, lacking usable metadata, or carrying equivalent multi-domain evidence remain in the Unresolved category with the reason counted separately.
         </p>
       </div>
 
@@ -7338,7 +7338,7 @@ const TOPIC_COLORS = {
   "Epidemiology & Registry":{ bg:"#f0efed", border:"#ccc8c0", text:"#444038", fill:"#505050" },
   "Guidelines & Consensus": { bg:"#f7f3ea", border:"#d8c7a2", text:"#6a5418", fill:"#8a6b20" },
   "Comorbidities & QoL":    { bg:"#eef9f9", border:"#a8d8d8", text:"#155858", fill:"#1e9090" },
-  "Unsupported records":    { bg:"#f3f3f3", border:"#c8c8c8", text:"#5f5f5f", fill:"#888888" }
+  "Unresolved category":    { bg:"#f3f3f3", border:"#c8c8c8", text:"#5f5f5f", fill:"#888888" }
 };
 
 
@@ -7621,6 +7621,67 @@ function cloneDefaultExpandedPapers() {
   });
 }
 
+// Read legacy topic data without changing classification criteria or retrieval timestamps.
+function normalizeTopicCategoryLabel(topic) {
+  return /^(?:unsupported(?: records?)?|unspported records)$/i.test(String(topic || '').trim()) ? 'Unresolved category' : topic;
+}
+
+function migrateTopicPropertyNames(value, names) {
+  Object.keys(names).forEach(function(legacy) {
+    if (!Object.prototype.hasOwnProperty.call(value, legacy)) return;
+    var current = names[legacy];
+    if (!Object.prototype.hasOwnProperty.call(value, current)) value[current] = value[legacy];
+    delete value[legacy];
+  });
+}
+
+function normalizeTopicCategoryMap(map) {
+  if (!map || typeof map !== 'object') return;
+  Object.keys(map).forEach(function(topic) {
+    var current = normalizeTopicCategoryLabel(topic);
+    if (current === topic) return;
+    if (!Object.prototype.hasOwnProperty.call(map, current)) map[current] = map[topic];
+    delete map[topic];
+  });
+}
+
+function normalizePaperTopicCategory(paper) {
+  if (!paper || typeof paper !== 'object') return paper;
+  if (paper.topic) paper.topic = normalizeTopicCategoryLabel(paper.topic);
+  var classification = paper.topicClassification;
+  if (!classification || typeof classification !== 'object') return paper;
+  migrateTopicPropertyNames(classification, {unsupported:'unresolved', unsupportedReason:'unresolvedReason'});
+  ['topic','primaryTopic'].forEach(function(key) {
+    if (classification[key]) classification[key] = normalizeTopicCategoryLabel(classification[key]);
+  });
+  if (Array.isArray(classification.secondaryTopics)) classification.secondaryTopics = classification.secondaryTopics.map(normalizeTopicCategoryLabel);
+  (classification.matchedTopics || []).forEach(function(match) {
+    if (match && match.topic) match.topic = normalizeTopicCategoryLabel(match.topic);
+  });
+  (classification.evidence || []).forEach(function(evidence) {
+    if (evidence && evidence.source === 'unsupported') evidence.source = 'unresolved';
+  });
+  normalizeTopicCategoryMap(classification.evidenceByTopic);
+  return paper;
+}
+
+function normalizeStoredTopicPapers(list, storageKey) {
+  if (!Array.isArray(list)) return [];
+  var previous = JSON.stringify(list);
+  list.forEach(normalizePaperTopicCategory);
+  if (storageKey && previous !== JSON.stringify(list)) {
+    try { localStorage.setItem(storageKey, JSON.stringify(list)); } catch(e) {}
+  }
+  return list;
+}
+
+function normalizeStoredTopicStats(stats) {
+  if (!stats || typeof stats !== 'object') return stats;
+  migrateTopicPropertyNames(stats, {unsupportedTopicCount:'unresolvedTopicCount', unsupportedTopicReasons:'unresolvedTopicReasons'});
+  ['byTopic','classifiedTopicCounts','topicPubMedURLs'].forEach(function(key) { normalizeTopicCategoryMap(stats[key]); });
+  return stats;
+}
+
 function normalizeExpandedDefaultStore(list) {
   if (!Array.isArray(list)) return cloneDefaultExpandedPapers();
   var changed = false;
@@ -7648,6 +7709,8 @@ function loadStores() {
   if (!localStorage.getItem(defaultCorpusKey('disabled_v1')) && (!Array.isArray(expandedPapers) || !expandedPapers.length)) {
     expandedPapers = cloneDefaultExpandedPapers();
   }
+  userPapers = normalizeStoredTopicPapers(userPapers, profileKey('user_papers_v3'));
+  expandedPapers = normalizeStoredTopicPapers(expandedPapers, profileKey('expanded_default_papers_v1'));
 }
 function saveUserPapers() {
   try { localStorage.setItem(profileKey('user_papers_v3'), JSON.stringify(userPapers)); } catch(e) {}
@@ -7723,7 +7786,7 @@ function buildShareSafePaper(paper) {
   keep.forEach(function(k) {
     if (paper && paper[k] !== undefined) out[k] = clonePaperRecord(paper[k]);
   });
-  return out;
+  return normalizePaperTopicCategory(out);
 }
 
 function currentHiddenBuiltInRefs() {
@@ -8119,7 +8182,7 @@ function updateFilterDropdowns(all) {
     if (p.year)  yearSet[p.year]   = true;
   });
   // Keep explicit unresolved and metadata-defined publication categories available even when the current visible corpus contains none.
-  topicSet['Unsupported records'] = true;
+  topicSet['Unresolved category'] = true;
   ['Systematic Review','Original Research','GWAS / Cohort','Guidelines','Narrative Review','Consensus','Roadmap / Report','Case Report/Series','Editorial / Commentary','Letter / Correspondence','Study Protocol','Conference Abstract','Correction / Retraction Notice','Methods / Technical Article','Unclassified / Other'].forEach(function(type){ typeSet[type] = true; });
 
   var fTopic = document.getElementById('f-topic');
@@ -8511,7 +8574,7 @@ function openModal(id) {
     'linear-gradient(90deg,' + p.color + ',' + p.color + '88)';
 
   var secondaryTopics = p.topicClassification && Array.isArray(p.topicClassification.secondaryTopics) ? p.topicClassification.secondaryTopics : [];
-  var unresolvedTopicReason = p.topicClassification && p.topicClassification.unsupported ? topicUnsupportedReasonLabel(p.topicClassification.unsupportedReason || p.topicClassification.resolutionReason) : '';
+  var unresolvedTopicReason = p.topicClassification && p.topicClassification.unresolved ? topicUnresolvedReasonLabel(p.topicClassification.unresolvedReason || p.topicClassification.resolutionReason) : '';
   var unresolvedTypeReason = p.typeClassification && p.typeClassification.unclassified ? studyTypeUnresolvedReasonLabel(p.typeClassification.unresolvedReason) : '';
   document.getElementById('modal-meta').innerHTML =
     '<span class="badge badge-year">' + p.year + '</span>' +
@@ -10570,7 +10633,10 @@ function loadStoredPubMedStats() {
     var raw = localStorage.getItem(pubMedStatsStorageKey('live_v7_expanded_disease_query'));
     if (!raw) return null;
     var parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : null;
+    if (!parsed || typeof parsed !== 'object') return null;
+    normalizeStoredTopicStats(parsed);
+    if (JSON.stringify(parsed) !== raw) saveStoredPubMedStats(parsed);
+    return parsed;
   } catch(e) {
     return null;
   }
@@ -10584,8 +10650,8 @@ function buildPubMedStatsFromLiveRecords(records, total, recentCount, exactTopic
   var topicNames = Object.keys(topicPubMedURLs);
   var typeNames = ['Systematic Review','Narrative Review','Original Research','GWAS / Cohort','Case Report/Series','Guidelines','Consensus','Roadmap / Report','Editorial / Commentary','Letter / Correspondence','Study Protocol','Conference Abstract','Correction / Retraction Notice','Methods / Technical Article','Unclassified / Other'];
   var byYear = {}, classifiedTopicCounts = {}, byStudyType = {}, journalBuckets = {};
-  var unknownYearCount = 0, unsupportedTopicCount = 0, unknownJournalCount = 0;
-  var unsupportedTopicReasons = {}, unclassifiedTypeReasons = {};
+  var unknownYearCount = 0, unresolvedTopicCount = 0, unknownJournalCount = 0;
+  var unresolvedTopicReasons = {}, unclassifiedTypeReasons = {};
   topicNames.forEach(function(topic) { classifiedTopicCounts[topic] = 0; });
   typeNames.forEach(function(type) { byStudyType[type] = 0; });
   (records || []).forEach(function(p) {
@@ -10598,10 +10664,10 @@ function buildPubMedStatsFromLiveRecords(records, total, recentCount, exactTopic
     var meta = paperPubMedMetadata(p,recordAbstract);
     var classification = classifyPaperTopicDetailed(p.title || '',recordAbstract,meta);
     p.topicClassification = classification; p.topic = classification.topic; p.topicClassifierVersion = TOPIC_CLASSIFIER_VERSION;
-    if (classification.unsupported) {
-      unsupportedTopicCount++;
-      var topicReason = classification.unsupportedReason || classification.resolutionReason || 'no-category-specific-evidence';
-      unsupportedTopicReasons[topicReason] = (unsupportedTopicReasons[topicReason] || 0) + 1;
+    if (classification.unresolved) {
+      unresolvedTopicCount++;
+      var topicReason = classification.unresolvedReason || classification.resolutionReason || 'no-category-specific-evidence';
+      unresolvedTopicReasons[topicReason] = (unresolvedTopicReasons[topicReason] || 0) + 1;
     } else if (classification.topic && classifiedTopicCounts.hasOwnProperty(classification.topic)) classifiedTopicCounts[classification.topic]++;
 
     var typeClassification = classifyPaperTypeDetailed(p.title || '',recordAbstract,meta);
@@ -10640,7 +10706,7 @@ function buildPubMedStatsFromLiveRecords(records, total, recentCount, exactTopic
     uniqueJournals:Object.keys(journalBuckets).length,
     oldestRecordYear:oldestRecord && oldestRecord.year || null, oldestRecordPmid:oldestRecord && oldestRecord.pmid || '', oldestRecordTitle:oldestRecord && oldestRecord.title || '',
     minYear:String(oldestRecord && oldestRecord.year || earliestRetrievedYear || ''), byYear:byYear, unknownYearCount:unknownYearCount,
-    byTopic:byTopic, classifiedTopicCounts:classifiedTopicCounts, unsupportedTopicCount:unsupportedTopicCount, unsupportedTopicReasons:unsupportedTopicReasons,
+    byTopic:byTopic, classifiedTopicCounts:classifiedTopicCounts, unresolvedTopicCount:unresolvedTopicCount, unresolvedTopicReasons:unresolvedTopicReasons,
     topicCountsExact:!!exactTopicCounts, byStudyType:byStudyType, unclassifiedTypeReasons:unclassifiedTypeReasons,
     byJournal:byJournal, unknownJournalCount:unknownJournalCount, topicPubMedURLs:topicPubMedURLs, liveRecordCount:(records || []).length
   };
@@ -10885,10 +10951,10 @@ async function renderAnalytics() {
     var topicSorted = Object.keys(stats.byTopic).map(function(t){return [t,stats.byTopic[t]];}).sort(function(a,b){return b[1]-a[1];});
     var maxT = Math.max(1,topicSorted.length ? topicSorted[0][1] : 0);
     var primaryPairs = Object.keys(stats.classifiedTopicCounts || {}).map(function(t){return [t,stats.classifiedTopicCounts[t] || 0];});
-    primaryPairs.push(['Unsupported records',stats.unsupportedTopicCount || 0]);
+    primaryPairs.push(['Unresolved category',stats.unresolvedTopicCount || 0]);
     primaryPairs.sort(function(a,b){return b[1]-a[1];});
     var maxPrimary = Math.max(1,primaryPairs.length ? primaryPairs[0][1] : 0);
-    var unsupportedReasons = Object.keys(stats.unsupportedTopicReasons || {}).map(function(reason){return [reason,stats.unsupportedTopicReasons[reason]];}).sort(function(a,b){return b[1]-a[1];});
+    var unresolvedReasons = Object.keys(stats.unresolvedTopicReasons || {}).map(function(reason){return [reason,stats.unresolvedTopicReasons[reason]];}).sort(function(a,b){return b[1]-a[1];});
     document.getElementById('chart-topics').innerHTML =
       '<div style="font-size:10px;color:var(--text-faint);margin-bottom:6px;text-align:right">' + sourceMeta.topicHeader + '</div>' +
       '<div style="font-size:10.5px;color:var(--text-soft);margin-bottom:8px"><strong>PubMed category-query matches:</strong> each count comes from the exact query opened by the topic link; categories may overlap.</div>' +
@@ -10896,12 +10962,12 @@ async function renderAnalytics() {
         var t=arr[0],c=arr[1],tc=TOPIC_COLORS[t] || {fill:'#888'};
         return '<div class="bar-row"><div class="bar-label">' + t + '</div><div class="bar-track"><div class="bar-fill" style="width:' + Math.round(c/maxT*100) + '%;background:' + tc.fill + '"></div></div><div class="bar-count">' + c.toLocaleString() + '</div></div>';
       }).join('') +
-      '<div style="border-top:1px solid var(--border);margin:12px 0 8px;padding-top:10px;font-size:10.5px;color:var(--text-soft)"><strong>Primary record-level categorisation:</strong> every retrieved PMID is counted once as one primary topic or as Unsupported records. This distribution does not use overlapping query totals.</div>' +
+      '<div style="border-top:1px solid var(--border);margin:12px 0 8px;padding-top:10px;font-size:10.5px;color:var(--text-soft)"><strong>Primary record-level categorisation:</strong> every retrieved PMID is counted once as one primary topic or in the Unresolved category. This distribution does not use overlapping query totals.</div>' +
       primaryPairs.map(function(arr){
         var t=arr[0],c=arr[1],tc=TOPIC_COLORS[t] || {fill:'#888'};
         return '<div class="bar-row"><div class="bar-label">' + t + '</div><div class="bar-track"><div class="bar-fill" style="width:' + Math.round(c/maxPrimary*100) + '%;background:' + tc.fill + '"></div></div><div class="bar-count">' + c.toLocaleString() + '</div></div>';
       }).join('') +
-      (unsupportedReasons.length ? '<div style="margin-top:9px;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:10.5px;color:var(--text-soft)"><strong>Why records remain unsupported:</strong><br>' + unsupportedReasons.map(function(arr){return escHtml(topicUnsupportedReasonLabel(arr[0])) + ': <strong>' + arr[1].toLocaleString() + '</strong>';}).join(' · ') + '</div>' : '');
+      (unresolvedReasons.length ? '<div style="margin-top:9px;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:10.5px;color:var(--text-soft)"><strong>Why records remain in the Unresolved category:</strong><br>' + unresolvedReasons.map(function(arr){return escHtml(topicUnresolvedReasonLabel(arr[0])) + ': <strong>' + arr[1].toLocaleString() + '</strong>';}).join(' · ') + '</div>' : '');
 
     // Study types: NLM publication types first, then verified PMC JATS article type, MeSH design descriptors, structured abstract Methods, and full-text Methods.
     var typeSorted = Object.keys(stats.byStudyType).map(function(t){return [t,stats.byStudyType[t]];}).sort(function(a,b){return b[1]-a[1];});
@@ -11033,7 +11099,7 @@ var TOPIC_COLOR_MAP = {
   'Treatment & Surgery':'#2f6a3c','Lymphatics & Vasculature':'#6a5020',
   'Adipose Biology':'#c4773a','Epidemiology & Registry':'#505050',
   'Guidelines & Consensus':'#6a3a98','Comorbidities & QoL':'#1e9090',
-  'Unsupported records':'#888888'
+  'Unresolved category':'#888888'
 };
 
 function isAlreadyAdded(pmid) {
@@ -11241,7 +11307,7 @@ try { localStorage.removeItem('lip_scopus_api_key_v1'); } catch(e) {}
 function loadLivingAtlasStore() {
   try {
     var s = localStorage.getItem(livingAtlasStorageKey('papers_v1'));
-    livingAtlasPapers = s ? JSON.parse(s) : [];
+    livingAtlasPapers = normalizeStoredTopicPapers(s ? JSON.parse(s) : [], livingAtlasStorageKey('papers_v1'));
   } catch(e) { livingAtlasPapers = []; }
   return livingAtlasPapers;
 }
@@ -13249,7 +13315,7 @@ function removeFutureRecommendationSentences(text) {
     return !/\b(?:future|further|additional|prospective|subsequent) (?:research|stud(?:y|ies)|work|investigation)|\b(?:is|are|will be) needed\b|\bshould be (?:investigated|evaluated|studied|validated|examined)\b/i.test(sentence);
   }).join(' ');
 }
-function topicUnsupportedReason(meta, candidates) {
+function topicUnresolvedReason(meta, candidates) {
   var status = String(meta.citationStatus || '');
   if (candidates && candidates.length > 1) return 'multiple-equivalent-topic-evidence';
   if (pubMedPendingCitationStatus(status)) return 'awaiting-medline-indexing';
@@ -13259,7 +13325,7 @@ function topicUnsupportedReason(meta, candidates) {
   if (!complete.hasMesh && !complete.hasPublicationTypes && !status) return 'metadata-retrieval-incomplete';
   return 'no-category-specific-evidence';
 }
-function topicUnsupportedReasonLabel(reason) {
+function topicUnresolvedReasonLabel(reason) {
   return ({
     'awaiting-medline-indexing':'Awaiting MEDLINE indexing',
     'pubmed-not-medline':'PubMed-not-MEDLINE',
@@ -13355,8 +13421,8 @@ function classifyPaperTopicDetailed(title, abstract, metadata) {
 
   candidates.sort(function(a,b) { return b.specificity - a.specificity || b.score - a.score || b.priority - a.priority; });
   if (!candidates.length) {
-    var noneReason = topicUnsupportedReason(meta, candidates);
-    return {topic:'Unsupported records',primaryTopic:'Unsupported records',secondaryTopics:[],confidence:'low',score:0,unsupported:true,resolutionReason:noneReason,unsupportedReason:noneReason,evidence:[{source:'unsupported',value:topicUnsupportedReasonLabel(noneReason)}],evidenceByTopic:evidenceByTopic,matchedTopics:[],classifierVersion:TOPIC_CLASSIFIER_VERSION};
+    var noneReason = topicUnresolvedReason(meta, candidates);
+    return {topic:'Unresolved category',primaryTopic:'Unresolved category',secondaryTopics:[],confidence:'low',score:0,unresolved:true,resolutionReason:noneReason,unresolvedReason:noneReason,evidence:[{source:'unresolved',value:topicUnresolvedReasonLabel(noneReason)}],evidenceByTopic:evidenceByTopic,matchedTopics:[],classifierVersion:TOPIC_CLASSIFIER_VERSION};
   }
   var best = candidates[0], second = candidates[1] || null;
   var margin = second ? (best.score - second.score) : best.score;
@@ -13365,8 +13431,8 @@ function classifyPaperTopicDetailed(title, abstract, metadata) {
   if (!adequate) {
     var conflictReason = 'multiple-equivalent-topic-evidence';
     return {
-      topic:'Unsupported records',primaryTopic:'Unsupported records',secondaryTopics:candidates.map(function(c){return c.topic;}),confidence:'low',score:best.score,unsupported:true,
-      resolutionReason:conflictReason,unsupportedReason:conflictReason,evidence:[{source:'abstention',value:topicUnsupportedReasonLabel(conflictReason)}],
+      topic:'Unresolved category',primaryTopic:'Unresolved category',secondaryTopics:candidates.map(function(c){return c.topic;}),confidence:'low',score:best.score,unresolved:true,
+      resolutionReason:conflictReason,unresolvedReason:conflictReason,evidence:[{source:'abstention',value:topicUnresolvedReasonLabel(conflictReason)}],
       evidenceByTopic:evidenceByTopic,matchedTopics:candidates.map(function(c){return {topic:c.topic,score:c.score,specificity:c.specificity};}),classifierVersion:TOPIC_CLASSIFIER_VERSION
     };
   }
@@ -13375,7 +13441,7 @@ function classifyPaperTopicDetailed(title, abstract, metadata) {
     topic:best.topic,primaryTopic:best.topic,secondaryTopics:secondary,
     confidence:best.score >= 90 ? 'high' : (best.score >= 68 ? 'moderate' : 'low'),score:best.score,evidence:best.evidence,
     evidenceByTopic:evidenceByTopic,matchedTopics:candidates.slice(1).map(function(c){ return {topic:c.topic,score:c.score,specificity:c.specificity}; }),
-    unsupported:false,resolutionReason:'supported-primary-topic',unsupportedReason:'',classifierVersion:TOPIC_CLASSIFIER_VERSION
+    unresolved:false,resolutionReason:'supported-primary-topic',unresolvedReason:'',classifierVersion:TOPIC_CLASSIFIER_VERSION
   };
 }
 
@@ -13401,15 +13467,15 @@ function runTopicClassifierValidationTests() {
     {name:'Oestrogen',title:'Oestrogen receptor signalling in lipedema',abstract:'',meta:{meshHeadings:[],publicationTypes:[]},expect:'Hormones & Estrogen'},
     {name:'ECM mechanism',title:'Extracellular matrix remodelling in lipedema',abstract:'',meta:{meshHeadings:[],publicationTypes:[]},expect:'Pathophysiology'},
     {name:'Recent genetics title without MeSH',title:'Genomic variants associated with lipedema',abstract:'',meta:{meshHeadings:[],publicationTypes:[]},expect:'Genetics & Genomics'},
-    {name:'Unsupported record fallback',title:'Observations in lipedema',abstract:'General observations.',meta:{meshHeadings:[],publicationTypes:[]},expect:'Unsupported records',confidence:'low'},
+    {name:'Unresolved category fallback',title:'Observations in lipedema',abstract:'General observations.',meta:{meshHeadings:[],publicationTypes:[]},expect:'Unresolved category',confidence:'low'},
     {name:'Unique exact query membership',title:'Observations in lipedema',abstract:'General observations.',meta:{meshHeadings:[],publicationTypes:[{label:'Journal Article'}],topicQueryMembership:['Adipose Biology']},expect:'Adipose Biology'},
-    {name:'Overlapping exact query membership abstains',title:'Molecular biology of lipedema',abstract:'',meta:{meshHeadings:[],publicationTypes:[{label:'Journal Article'}],topicQueryMembership:['Adipose Biology','Pathophysiology']},expect:'Unsupported records',reason:'multiple-equivalent-topic-evidence'}
+    {name:'Overlapping exact query membership abstains',title:'Molecular biology of lipedema',abstract:'',meta:{meshHeadings:[],publicationTypes:[{label:'Journal Article'}],topicQueryMembership:['Adipose Biology','Pathophysiology']},expect:'Unresolved category',reason:'multiple-equivalent-topic-evidence'}
   ];
   var results = tests.map(function(test) {
     var result = classifyPaperTopicDetailed(test.title,test.abstract,test.meta);
     var pass = test.expect ? result.topic === test.expect : result.topic !== test.not;
     if (test.confidence) pass = pass && result.confidence === test.confidence;
-    if (test.reason) pass = pass && result.unsupportedReason === test.reason;
+    if (test.reason) pass = pass && result.unresolvedReason === test.reason;
     return {name:test.name,pass:pass,expected:test.expect || ('not ' + test.not),actual:result.topic,confidence:result.confidence,score:result.score};
   });
   return {passed:results.filter(function(r){return r.pass;}).length,total:results.length,results:results,classifierVersion:TOPIC_CLASSIFIER_VERSION};
@@ -13911,7 +13977,7 @@ async function runAutoDiscovery() {
     '<strong>Added to database:</strong> ' + _discStats.added + '<br>' +
     '<strong>Skipped (duplicates):</strong> ' + _discStats.skipped + '<br>' +
     (_discStats.errors ? '<strong style="color:var(--rose)">Errors:</strong> ' + _discStats.errors + '<br>' : '') +
-    '<br>All imported papers were processed using LipoScope’s versioned, rule-based topic and study-type classifiers. MeSH and other PubMed metadata were used where available, together with title and abstract evidence. Records with insufficient or conflicting evidence remain classified as Unsupported records or Unclassified/Other. Summaries were generated deterministically from retrieved PubMed abstracts, using structured sections where available. Navigate to <strong>Browse Papers</strong> to review the imported records.';
+    '<br>All imported papers were processed using LipoScope’s versioned, rule-based topic and study-type classifiers. MeSH and other PubMed metadata were used where available, together with title and abstract evidence. Records with insufficient or conflicting evidence remain in the Unresolved category for topic or Unclassified / Other for study type. Summaries were generated deterministically from retrieved PubMed abstracts, using structured sections where available. Navigate to <strong>Browse Papers</strong> to review the imported records.';
 
   discLog('🏁 Done. Added ' + _discStats.added + ', skipped ' + _discStats.skipped + ' dupes, ' + _discStats.errors + ' errors.');
 

@@ -1,0 +1,99 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "Existing topic-classifier scenarios retain their expected categories",
+      "passed": true
+    },
+    {
+      "name": "New classifier output uses the new label and property names",
+      "passed": true
+    },
+    {
+      "name": "Equivalent topic evidence retains its abstention reason",
+      "passed": true
+    },
+    {
+      "name": "Ten research topics remain unchanged",
+      "passed": true
+    },
+    {
+      "name": "Legacy user_papers_v3 migrates and remains saved",
+      "passed": true
+    },
+    {
+      "name": "Legacy expanded_default_papers_v1 migrates and remains saved",
+      "passed": true
+    },
+    {
+      "name": "Cached live records migrate without advancing retrieval time",
+      "passed": true
+    },
+    {
+      "name": "Cached Analytics counts and reasons survive the property rename",
+      "passed": true
+    },
+    {
+      "name": "Renamed Analytics fields are persisted",
+      "passed": true
+    },
+    {
+      "name": "Legacy chart map keys migrate without losing counts",
+      "passed": true
+    },
+    {
+      "name": "Legacy shared records and misspelled labels use the new category",
+      "passed": true
+    },
+    {
+      "name": "Fresh Analytics reports count unresolved records under the new properties",
+      "passed": true
+    },
+    {
+      "name": "Analytics displays the category, count and explanation",
+      "passed": true
+    },
+    {
+      "name": "resources tab opens with no legacy topic labels",
+      "passed": true
+    },
+    {
+      "name": "browse tab opens with no legacy topic labels",
+      "passed": true
+    },
+    {
+      "name": "live tab opens with no legacy topic labels",
+      "passed": true
+    },
+    {
+      "name": "analytics tab opens with no legacy topic labels",
+      "passed": true
+    },
+    {
+      "name": "about tab opens with no legacy topic labels",
+      "passed": true
+    },
+    {
+      "name": "Browse filter selects migrated unresolved records",
+      "passed": true
+    },
+    {
+      "name": "Paper details display the new category and reason",
+      "passed": true
+    },
+    {
+      "name": "Live Search imports use the new category",
+      "passed": true
+    },
+    {
+      "name": "Auto-Discovery results use the new wording",
+      "passed": true
+    },
+    {
+      "name": "Unrelated CCRF storage is untouched",
+      "passed": true
+    }
+  ],
+  "scope": "Five non-CCRF tabs, classifier output, legacy local/cache/shared data, and imports. All records and responses are synthetic.",
+  "page_errors": []
+}
