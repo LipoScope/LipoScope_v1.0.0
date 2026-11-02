@@ -12675,7 +12675,7 @@ function ccrfInitialize(){
 
 function ccrfRenderSourceStatus(){
   var el=document.getElementById('ccrf-source-status');if(!el)return;
-  el.innerHTML='<strong>CCRF source:</strong> Lipedema Foundation CCRF '+ccrfEsc(CCRF_SCHEMA.source.ccrfVersion)+'. Official CDE totals were checked against the Foundation webpage on '+ccrfEsc(ccrfDisplayDate(CCRF_SCHEMA.source.officialCountAccessedDate))+'. The original v1.0.0 GitHub REDCap dictionary metadata are the authoritative CCRF definitions for this revision; the September 2026 consolidated workbook is used only for secondary comparison. The separate REDCap dictionary-row counts describe the technical implementation used by LipoScope. Calculated fields are preserved exactly as marked in the dictionaries; where the official calculation expression is blank, LipoScope does not invent one. <a href="https://www.lipedema.org/ccrf" target="_blank" rel="noopener">Official CCRF page</a> · <a href="https://doi.org/10.3389/fgwh.2026.1833913" target="_blank" rel="noopener">CCRF development paper</a>.';
+  el.innerHTML='<strong>CCRF source:</strong> Lipedema Foundation CCRF '+ccrfEsc(CCRF_SCHEMA.source.ccrfVersion)+'. <a href="https://www.lipedema.org/ccrf" target="_blank" rel="noopener">Official CCRF page</a> · <a href="https://doi.org/10.3389/fgwh.2026.1833913" target="_blank" rel="noopener">CCRF development paper</a>.';
 }
 
 function ccrfChangeClassification(){
