@@ -36,7 +36,7 @@ def test_html_explains_actual_counting_behavior(html_text):
         'it is not a percentage of all ',
         'Conditional questions appear only when their official branching conditions are met.',
         'Applicable required response completion',
-        'Official CDE totals were checked against the Foundation webpage',
+        '<strong>CCRF source:</strong> Lipedema Foundation CCRF ',
         'Conditional questions are included normally when their official branching conditions are met.',
     ]
     for phrase in required: assert phrase in html_text
