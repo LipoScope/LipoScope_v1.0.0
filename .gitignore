@@ -5,6 +5,7 @@ __pycache__/
 node_modules/
 playwright-report/
 test-results/
+.local/
 
 # Preserve directory guides while excluding release-specific network snapshots by default.
 data/molecular_signal_atlas/raw/*

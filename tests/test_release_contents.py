@@ -36,5 +36,23 @@ def test_no_embedded_git_history_or_release_instructions(tmp_path):
     assert Path('LipoScope-v1.0.0/index.html') in members
     assert Path('LipoScope-v1.0.0/LipoScope.html') in members
     assert not any('.git' in member.parts for member in members)
+    assert not any('.local' in member.parts for member in members)
     assert not any(member.suffix.lower()=='.bundle' for member in members)
     assert not any('commit' in member.name.lower() and member.suffix.lower()=='.txt' for member in members)
+
+
+def test_distribution_excludes_local_only_files(tmp_path):
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('distribution',ROOT/'scripts/21_build_distribution_archive.py')
+    distribution=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(distribution)
+    source=tmp_path/'source'
+    source.mkdir()
+    (source/'index.html').write_text('public',encoding='utf-8')
+    (source/'.local').mkdir()
+    (source/'.local/private.txt').write_text('local only',encoding='utf-8')
+    distribution.ROOT=source
+    archive=tmp_path/'release.zip'
+    distribution.build_archive(archive)
+    with zipfile.ZipFile(archive) as z:
+        assert z.namelist()==['LipoScope-v1.0.0/index.html']

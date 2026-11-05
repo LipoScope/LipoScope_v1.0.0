@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT.parent/'LipoScope_v1.0.0_full_release.zip'
 ARCHIVE_ROOT=Path('LipoScope-v1.0.0')
-EXCLUDE={'.git','.venv','__pycache__','.pytest_cache','build'}
+EXCLUDE={'.git','.venv','.local','__pycache__','.pytest_cache','build'}
 
 
 def build_archive(output:Path)->list[Path]:

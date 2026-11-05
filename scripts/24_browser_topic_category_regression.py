@@ -95,10 +95,16 @@ CHECKS = """async () => {
       !legacyText.test(document.getElementById('panel-'+tab).textContent));
   }
   document.getElementById('nav-browse').click();
+  // Built-ins now retain legitimate classifier abstentions too. Assert the
+  // complete expected identity set rather than assuming only two seeded records.
+  const expectedUnresolved=getAllPapers().filter(p=>p.topicClassification && p.topicClassification.unresolved).map(p=>p.id).sort();
   updateFilterDropdowns(getAllPapers());
   document.getElementById('f-topic').value=label;
   filterPapers();
-  check('Browse filter selects migrated unresolved records',filteredPapers.length===2 && filteredPapers.every(p=>p.topic===label));
+  check('Browse filter selects migrated unresolved records',
+    JSON.stringify(filteredPapers.map(p=>p.id).sort())===JSON.stringify(expectedUnresolved) &&
+    filteredPapers.some(p=>p.id===880000001) && filteredPapers.some(p=>p.id===880000002) &&
+    filteredPapers.every(p=>p.topic===label));
   openModal(880000001);
   check('Paper details display the new category and reason',document.getElementById('modal-meta').textContent.includes(label) &&
     document.getElementById('modal-meta').textContent.includes('No category-specific evidence'));
