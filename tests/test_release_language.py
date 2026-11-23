@@ -29,7 +29,7 @@ def test_no_obsolete_workspace_labels_or_assets(html_text):
 def test_lay_user_guidance_and_default_library_management(html_text):
     assert 'hide all 200 default papers' in html_text.lower()
     assert 'official CCRF Version 1 data-collection levels' in html_text
-    assert 'A Simple, Browser-Local Workspace for Lipoedema Research' in html_text
+    assert 'A Simple, Browser-Local Workspace for Lipedema Research' in html_text
     assert 'Visual Guides to Lipoedema' not in html_text
     assert 'Lipoedema Biology Explainer Video' not in html_text
     assert 'Atlas stays live' not in html_text

@@ -12,7 +12,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LipoScope — Lipoedema Research Workbench</title>
+<title>LipoScope — Lipedema Research Workbench</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -2195,7 +2195,7 @@ select:focus{border-color:var(--rose)}
     <div class="header-icon">🔬</div>
     <div class="header-text">
       <h1>Lipo<span>Scope</span></h1>
-      <p>An open research workbench for lipoedema literature discovery, PubMed monitoring, and standardised CCRF data collection · <span id="hdr-subtitle">200 papers, 2009–2026</span></p>
+      <p>An open research workbench for lipedema literature discovery, PubMed monitoring, and standardised CCRF data collection · <span id="hdr-subtitle">200 papers, 2009–2026</span></p>
     </div>
 
   </div>
@@ -2352,10 +2352,10 @@ select:focus{border-color:var(--rose)}
 
   <!-- ═══ ANALYTICS PANEL ═══ -->
   <div class="panel" id="panel-analytics">
-    <div class="tab-guide"><strong>Analytics:</strong> Compare two signals that should not be mixed: the retrieved PubMed lipoedema landscape at the top, and your currently visible Browse workspace below. Use this tab to see whether your local curation over- or under-represents topics and years relative to the broader field.</div>
+    <div class="tab-guide"><strong>Analytics:</strong> Compare two signals that should not be mixed: the retrieved PubMed lipedema landscape at the top, and your currently visible Browse workspace below. Use this tab to see whether your local curation over- or under-represents topics and years relative to the broader field.</div>
     <div class="analytics-source-note">
       <span class="analytics-source-badge" id="analytics-source-badge">Checking retrieval status…</span>
-      The top charts describe the <strong>retrieved PubMed literature</strong> for lipedema/lipoedema using one consistent disease query: <code style="font-family:monospace;font-size:10px;background:rgba(255,255,255,0.5);padding:1px 5px;border-radius:3px">lipedema[Title/Abstract] OR lipoedema[Title/Abstract] OR &quot;Lipedema&quot;[Mesh] OR lipedemas[Title/Abstract] OR lipoedemas[Title/Abstract] OR lipolymphedema[Title/Abstract] OR lipolymphedemas[Title/Abstract] OR &quot;lipohyperplasia dolorosa&quot;[Title/Abstract]</code>. Record-level charts use exhaustive paginated retrieval; topic counts use the exact category queries opened by the topic links. The visible-corpus charts below update immediately when users add, hide, restore, or expand papers.
+      The top charts describe the <strong>retrieved PubMed literature</strong> for lipedema using one consistent disease query: <code style="font-family:monospace;font-size:10px;background:rgba(255,255,255,0.5);padding:1px 5px;border-radius:3px">lipedema[Title/Abstract] OR lipoedema[Title/Abstract] OR &quot;Lipedema&quot;[Mesh] OR lipedemas[Title/Abstract] OR lipoedemas[Title/Abstract] OR lipolymphedema[Title/Abstract] OR lipolymphedemas[Title/Abstract] OR &quot;lipohyperplasia dolorosa&quot;[Title/Abstract]</code>. Record-level charts use exhaustive paginated retrieval; topic counts use the exact category queries opened by the topic links. The visible-corpus charts below update immediately when users add, hide, restore, or expand papers.
       <span id="analytics-fetch-date" style="margin-left:auto;font-size:10px;color:var(--text-faint)"></span>
     </div>
     <div class="stat-row" id="stat-row"></div>
@@ -2483,7 +2483,7 @@ select:focus{border-color:var(--rose)}
 
   <!-- ═══ LIVE SEARCH PANEL ═══ -->
   <div class="panel" id="panel-live">
-    <div class="tab-guide"><strong>Live Search:</strong> Pull fresh records into your browser-local workspace. PubMed searches are automatically scoped to lipoedema/lipedema, Google Scholar opens broader scholarly searches, and Auto-Discovery scans topic-specific PubMed queries before importing only disease-relevant records. Added papers become Browse cards; rejected or unadded results are not stored.</div>
+    <div class="tab-guide"><strong>Live Search:</strong> Pull fresh records into your browser-local workspace. PubMed searches are automatically scoped to lipedema, Google Scholar opens broader scholarly searches, and Auto-Discovery scans topic-specific PubMed queries before importing only disease-relevant records. Added papers become Browse cards; rejected or unadded results are not stored.</div>
     <div class="live-wrap">
       <div class="live-page-header">
         <h2>Live Literature Search <span class="live-badge">Live</span></h2>
@@ -2494,7 +2494,7 @@ select:focus{border-color:var(--rose)}
         <div class="source-card active" id="src-pubmed" onclick="setLiveSource('pubmed',this)">
           <div class="source-card-icon">🔬</div>
           <div class="source-card-name">PubMed (NIH)</div>
-          <div class="source-card-desc">Search PubMed citations, including MEDLINE. Browse all matching results in batches, scoped to lipedema/lipoedema.</div>
+          <div class="source-card-desc">Search PubMed citations, including MEDLINE. Browse all matching results in batches, scoped to lipedema.</div>
         </div>
         <div class="source-card" id="src-scholar" onclick="setLiveSource('scholar',this)">
           <div class="source-card-icon">🎓</div>
@@ -2505,12 +2505,12 @@ select:focus{border-color:var(--rose)}
       </div>
 
       <div class="live-search-bar">
-        <input type="text" id="live-query" placeholder='e.g. "lipedema genetics" or "lipoedema treatment 2025" or "AKR1C1"' onkeydown="if(event.key==='Enter') runLiveSearch()">
+        <input type="text" id="live-query" placeholder='e.g. "lipedema genetics" or "lipedema treatment 2025" or "AKR1C1"' onkeydown="if(event.key==='Enter') runLiveSearch()">
         <button class="live-btn" id="live-btn" onclick="runLiveSearch()">Search →</button>
       </div>
 
       <div class="live-tip">
-        <strong>Tips:</strong> PubMed searches are automatically scoped to lipedema/lipoedema. Use <strong>Load more results</strong> to browse every match, then click <strong>+ Add to Browse</strong> on any result to save it as a card with generated aims, methods, and findings. Use <code>Google Scholar</code> to find grey literature, preprints, and conference proceedings.
+        <strong>Tips:</strong> PubMed searches are automatically scoped to lipedema. Use <strong>Load more results</strong> to browse every match, then click <strong>+ Add to Browse</strong> on any result to save it as a card with generated aims, methods, and findings. Use <code>Google Scholar</code> to find grey literature, preprints, and conference proceedings.
       </div>
 
       <div class="live-status" id="live-status" role="status" aria-live="polite"></div>
@@ -2523,7 +2523,7 @@ select:focus{border-color:var(--rose)}
       <div style="margin-top:28px;padding-top:24px;border-top:2px dashed var(--border)">
         <div class="live-page-header" style="margin-bottom:12px">
           <h2>🔍 Auto-Discovery Engine <span class="live-badge" style="background:#eef7f6;color:#1e6b6b;border-color:#b8dede">Auto</span></h2>
-          <p>Automatically search <strong>PubMed</strong> across all 10 research topics, while enforcing a strict <strong>lipedema/lipoedema disease scope</strong>. Topic terms such as lymphatic, adipose, hormone, or fibrosis are only accepted when the record also discusses lipedema/lipoedema. Results are classified from title + abstract text and deduplicated before import.</p>
+          <p>Automatically search <strong>PubMed</strong> across all 10 research topics, while enforcing a strict <strong>lipedema disease scope</strong>. Topic terms such as lymphatic, adipose, hormone, or fibrosis are only accepted when the record also discusses lipedema. Results are classified from title + abstract text and deduplicated before import.</p>
         </div>
 
         <!-- Source selection & settings -->
@@ -2628,8 +2628,8 @@ select:focus{border-color:var(--rose)}
 
       <!-- ── Live Database Stats ── -->
       <div class="about-section">
-        <h2>📊 Live Database Summary <span style="font-size:11px;font-weight:400;color:var(--text-faint);margin-left:8px">PubMed · canonical lipedema/lipoedema query</span></h2>
-        <p style="font-size:11.5px;color:var(--text-soft);margin-bottom:14px;line-height:1.7">These counts use the same canonical PubMed disease query as Analytics: title or abstract occurrences of lipedema/lipoedema and NLM-listed entry terms, plus lipohyperplasia dolorosa and records indexed with the Lipedema MeSH heading. Record-level analytics use paginated retrieval rather than a fixed record cap. The “Curated Papers” count reflects your visible Browse workspace.</p>
+        <h2>📊 Live Database Summary <span style="font-size:11px;font-weight:400;color:var(--text-faint);margin-left:8px">PubMed · canonical lipedema query</span></h2>
+        <p style="font-size:11.5px;color:var(--text-soft);margin-bottom:14px;line-height:1.7">These counts use the same canonical PubMed disease query as Analytics: title or abstract occurrences of lipedema and NLM-listed entry terms, plus lipohyperplasia dolorosa and records indexed with the Lipedema MeSH heading. Record-level analytics use paginated retrieval rather than a fixed record cap. The “Curated Papers” count reflects your visible Browse workspace.</p>
         <div class="about-stat-grid" id="about-stat-grid">
           <!-- Populated by updateAboutStats() -->
         </div>
@@ -2638,8 +2638,8 @@ select:focus{border-color:var(--rose)}
       <!-- ── About This Resource ── -->
       <div class="about-section">
         <h2>📖 About This Resource</h2>
-        <p>LipoScope supports research into <strong>lipoedema (lipedema)</strong>, a chronic painful adipose-tissue disorder where delayed recognition, inconsistent case definitions, small cohorts, limited objective measures, and fragmented genetics evidence still slow progress.</p>
-        <p>The public default Browse collection contains <strong>200 lipoedema/lipedema papers</strong> spanning <strong id="about-year-range">2009–2026</strong>, combining a manually curated seed with a PubMed-expanded metadata layer. Each record includes topic and study-type classification, source links, open-access figure lookup where full-text access supports it, and optional local PDF-based figure preview in the browser. Study-type classification uses NLM Publication Type metadata, identity-verified PMC article type, MeSH study-design descriptors, structured abstract Methods/design evidence, and available PMC Methods evidence. The Browse filters include research designs and publication formats such as editorials, letters, protocols, meeting abstracts, corrections and technical articles. Records that cannot be resolved are labelled <strong>Unresolved category</strong> for topic or <strong>Unclassified / Other</strong> for study type. Uploaded PDFs remain in the user's local workspace.</p>
+        <p>LipoScope supports research into <strong>lipedema</strong>, a chronic painful adipose-tissue disorder where delayed recognition, inconsistent case definitions, small cohorts, limited objective measures, and fragmented genetics evidence still slow progress.</p>
+        <p>The public default Browse collection contains <strong>200 lipedema papers</strong> spanning <strong id="about-year-range">2009–2026</strong>, combining a manually curated seed with a PubMed-expanded metadata layer. Each record includes topic and study-type classification, source links, open-access figure lookup where full-text access supports it, and optional local PDF-based figure preview in the browser. Study-type classification uses NLM Publication Type metadata, identity-verified PMC article type, MeSH study-design descriptors, structured abstract Methods/design evidence, and available PMC Methods evidence. The Browse filters include research designs and publication formats such as editorials, letters, protocols, meeting abstracts, corrections and technical articles. Records that cannot be resolved are labelled <strong>Unresolved category</strong> for topic or <strong>Unclassified / Other</strong> for study type. Uploaded PDFs remain in the user's local workspace.</p>
         <p>The <strong>CCRF Workspace</strong> provides official CCRF Version 1 classifications for standardised data entry, required-field review, saved-record summaries, data-dictionary inspection and de-identified exports. The <strong>Analytics</strong> tab separates whole-field PubMed signals from the visible Browse workspace, and <strong>Live Search</strong> lets users add new PubMed records with one click.</p>
       </div>
 
@@ -2682,12 +2682,12 @@ select:focus{border-color:var(--rose)}
           <div class="how-to-card">
             <div class="how-to-icon">🔴</div>
             <div class="how-to-title">Live Search</div>
-            <div class="how-to-body">Query <strong>PubMed</strong> in real time — results are auto-scoped to lipedema/lipoedema. Click <strong>+ Add to Browse</strong> on any result to save it as a card with generated aims, methods, and findings from the PubMed abstract. Use <strong>Google Scholar</strong> to supplement with grey literature and preprints.</div>
+            <div class="how-to-body">Query <strong>PubMed</strong> in real time — results are auto-scoped to lipedema. Click <strong>+ Add to Browse</strong> on any result to save it as a card with generated aims, methods, and findings from the PubMed abstract. Use <strong>Google Scholar</strong> to supplement with grey literature and preprints.</div>
           </div>
           <div class="how-to-card">
             <div class="how-to-icon">📊</div>
             <div class="how-to-title">Analytics</div>
-            <div class="how-to-body">Use the top charts to read the <strong>live PubMed landscape</strong> for lipedema/lipoedema. Use the lower charts to inspect your visible Browse workspace. The two views are deliberately separated so local curation does not get confused with the whole-field literature signal.</div>
+            <div class="how-to-body">Use the top charts to read the <strong>live PubMed landscape</strong> for lipedema. Use the lower charts to inspect your visible Browse workspace. The two views are deliberately separated so local curation does not get confused with the whole-field literature signal.</div>
           </div>
           <div class="how-to-card">
             <div class="how-to-icon">🧭</div>
@@ -2803,8 +2803,8 @@ select:focus{border-color:var(--rose)}
     <div class="panel active" id="panel-resources">
     <div class="tab-guide"><strong>Start Here:</strong> Follow the guided walkthrough below to learn the main workflow: find and organise papers, add recent PubMed records, compare your collection with the wider literature, and prepare standardised CCRF research records.</div>
         <div class="resource-hero">
-      <h2>A Simple, Browser-Local Workspace for Lipoedema Research</h2>
-      <p>LipoScope brings together a starting library of 200 lipoedema papers, current PubMed searching, field-level analytics and the official CCRF Version 1 research workspace. Use it to find relevant papers, understand what has been studied, organise a focused reading set and prepare standardised research records.</p>
+      <h2>A Simple, Browser-Local Workspace for Lipedema Research</h2>
+      <p>LipoScope brings together a starting library of 200 lipedema papers, current PubMed searching, field-level analytics and the official CCRF Version 1 research workspace. Use it to find relevant papers, understand what has been studied, organise a focused reading set and prepare standardised research records.</p>
       <p>Your hidden papers, added papers, notes, local PDF figure previews and CCRF records remain in this browser unless you choose to share or export them. LipoScope supports research planning and data organisation; it does not diagnose a patient or replace an institutionally governed data-capture system.</p>
       <div class="hero-feature-list">
         <div class="hero-feature"><strong>Find relevant papers</strong> Search the starting library by topic, study type, year, title, author, journal or findings, and add recent PubMed records through Live Search.</div>
@@ -2872,7 +2872,7 @@ select:focus{border-color:var(--rose)}
         <div class="walkthrough-slide">
           <div class="walkthrough-copy">
             <h3>3. Understand the research landscape</h3>
-            <p>Open <strong>Analytics</strong>. The upper charts summarise the live PubMed lipoedema literature, while the lower charts describe the papers currently visible in your Browse workspace. Use the comparison to identify topics or years that your local collection may over- or under-represent.</p>
+            <p>Open <strong>Analytics</strong>. The upper charts summarise the live PubMed lipedema literature, while the lower charts describe the papers currently visible in your Browse workspace. Use the comparison to identify topics or years that your local collection may over- or under-represent.</p>
           </div>
           <div class="walkthrough-frame">
             <div class="walkthrough-mockbar"><span class="walkthrough-dot"></span><span class="walkthrough-dot"></span><span class="walkthrough-dot"></span></div>
@@ -3018,7 +3018,7 @@ select:focus{border-color:var(--rose)}
 </div><!-- /.main-content -->
 
 <footer class="app-footer">
-  <span><strong>LipoScope</strong> <span id="app-version-label">v1.0.0</span> · Lipoedema literature, research evidence mapping, and official CCRF data standardisation</span>
+  <span><strong>LipoScope</strong> <span id="app-version-label">v1.0.0</span> · Lipedema literature, research evidence mapping, and official CCRF data standardisation</span>
   <span>Updated <span id="app-updated-label">23 October 2026</span> · Public GitHub Pages build</span>
 </footer>
 <button class="scroll-top-btn" id="scroll-top-btn" onclick="scrollToTop()" title="Back to top" aria-label="Back to top">↑</button>
@@ -8159,7 +8159,7 @@ function syncUI() {
   _set('nav-count',    n);
   _set('results-count', filteredPapers.length + " of " + n + " papers");
 
-  document.title = "LipoScope (" + n + ") — Lipoedema Research Workbench";
+  document.title = "LipoScope (" + n + ") — Lipedema Research Workbench";
 
   _set('hidden-count',       hiddenIds.length);
   _set('user-added-count',   userPapers.length);
@@ -8444,7 +8444,7 @@ function normalizePubMedTitle(t) {
 async function bootstrapDefaultCorpus(force) {
   if (!force && localStorage.getItem(defaultCorpusKey('disabled_v1'))) return;
   if (!force && isDefaultCorpusReady() && isDefaultCorpusFresh()) return;
-  if (force && !confirm('Update the browser-local default corpus to ' + DEFAULT_CORPUS_TARGET + ' lipoedema/lipedema records using PubMed metadata?')) return;
+  if (force && !confirm('Update the browser-local default corpus to ' + DEFAULT_CORPUS_TARGET + ' lipedema records using PubMed metadata?')) return;
   if (force) localStorage.removeItem(defaultCorpusKey('disabled_v1'));
   if (force) showToast('Updating default literature from PubMed...', 'info');
   try {
@@ -11386,7 +11386,7 @@ function searchGoogleScholar(q, status, resultsEl) {
   var url  = 'https://scholar.google.com/scholar?q=' + encodeURIComponent(lipQ) + '&hl=en&as_sdt=0,5&sortby=date';
   status.className = 'live-status'; status.textContent = 'Opening Google Scholar…';
   window.open(url, '_blank');
-  resultsEl.innerHTML = '<div class="legato-panel"><div style="font-size:36px;margin-bottom:12px">🎓</div><h3>Google Scholar Search</h3><p>Results open in a new tab, scoped to lipedema/lipoedema.</p><div style="margin-top:18px"><a href="' + url + '" target="_blank" rel="noopener" class="legato-btn">Open Google Scholar ↗</a></div></div>';
+  resultsEl.innerHTML = '<div class="legato-panel"><div style="font-size:36px;margin-bottom:12px">🎓</div><h3>Google Scholar Search</h3><p>Results open in a new tab, scoped to lipedema.</p><div style="margin-top:18px"><a href="' + url + '" target="_blank" rel="noopener" class="legato-btn">Open Google Scholar ↗</a></div></div>';
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -13139,7 +13139,7 @@ async function checkForNewPapers(force) {
       var badge = document.getElementById('notif-badge');
       if (badge) badge.classList.remove('visible');
       var emptyEl2 = document.getElementById('notif-empty');
-      if (emptyEl2) emptyEl2.textContent = 'Checked ' + checkedLabel + '. No new lipedema/lipoedema PubMed records found for ' + rangeLabel + '.';
+      if (emptyEl2) emptyEl2.textContent = 'Checked ' + checkedLabel + '. No new lipedema PubMed records found for ' + rangeLabel + '.';
       if (force) showToast('✅ Checked ' + checkedLabel + ': no new papers found for ' + rangeLabel, 'info');
       return;
     }
@@ -14149,7 +14149,7 @@ async function runAutoDiscovery() {
 
         if (!isLipedemaSpecificText(pd.title, abstractData.fullText)) {
           _discStats.skipped++;
-          discLog('  ↳ Skipped non-lipoedema-specific record: ' + pd.title.slice(0,70));
+          discLog('  ↳ Skipped non-lipedema-specific record: ' + pd.title.slice(0,70));
           continue;
         }
 
